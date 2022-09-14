@@ -12,3 +12,32 @@ Here are the steps:
 https://docs.microsoft.com/nl-nl/windows-server/administration/windows-commands/telnet
 
 try Telnet things, before doing anything
+
+./tools.html
+nc (netcat)//look this up
+
+/***********************************\
+
+/*
+ * This W3C web page contains many
+ * great links about the HTTP protocol
+ */
+https://www.w3.org/Protocols/
+/*
+ * is the official specification for
+ * HTTP/1.1, the current version of the
+ * HTTP protoco
+ */
+
+https://www.ietf.org/rfc/rfc2616.txt
+/*
+ * is an informational RFC that describes
+ * the modern foundation for HTTP
+ */
+https://www.ietf.org/rfc/rfc1945.txt
+/*
+ * This web page contains a description
+ * of the 1991 HTTP/0.9 protocol
+ */
+https://www.w3.org/Protocols/HTTP/AsImplemented.html
+\***********************************/
