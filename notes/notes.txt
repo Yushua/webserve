@@ -1,0 +1,14 @@
+default value of a port is 80
+
+Here are the steps:
+1.The browser extracts the server's hostname from the URL.
+2.The browser converts the server's hostname into the server's IP address.
+3.The browser extracts the port number (if any) from the URL.
+4.The browser establishes a TCP connection with the web server.
+5.The browser sends an HTTP request message to the server.
+6.The server sends an HTTP response back to the browser.
+7.The connection is closed, and the browser displays the document. 
+
+https://docs.microsoft.com/nl-nl/windows-server/administration/windows-commands/telnet
+
+try Telnet things, before doing anything
