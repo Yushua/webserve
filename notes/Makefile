@@ -1,3 +1,3 @@
 st:
-	gcc server.cpp -o server
-	gcc client.cpp -o client
+	gcc server.c -o server
+	gcc client.c -o client
