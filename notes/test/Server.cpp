@@ -17,16 +17,18 @@
 #include <unistd.h>
 #include <poll.h>
 
-#define PORT 8080
+#include <string>
+#include <iostream>
 
-int main(int argc, char const* argv[])
+
+#define PORT 8081
+
+int main(void)
 {
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
     int opt = 1;
     int addrlen = sizeof(address);
-    char buffer[1024] = { 0 };
-    char* hello = "Hello from server";
  
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -44,7 +46,6 @@ int main(int argc, char const* argv[])
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(PORT);
- 
     // Forcefully attaching socket to the port 8080
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0)
     {
@@ -61,10 +62,25 @@ int main(int argc, char const* argv[])
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    valread = read(new_socket, buffer, 1024);
-    printf("%s\n", buffer);
-    send(new_socket, hello, strlen(hello), 0);
-    printf("Hello message sent\n");
+
+    struct pollfd tmp;
+	tmp.fd = new_socket;
+	tmp.events = POLLIN;
+	tmp.revents = 0;
+    while (1)
+    {
+        printf("status [%i]\n",tmp.revents);
+        poll(&tmp, 1, 1);
+        if (tmp.revents != 0)
+        {
+            char buffer[1024] = { 0 };
+            valread = read(new_socket, buffer, 1024);
+            printf("%s\n", buffer);
+            // send(new_socket, hello, strlen(hello), 0);
+            // printf("Hello message sent\n");
+
+        }
+    }
  
     // closing the connected socket
     close(new_socket);

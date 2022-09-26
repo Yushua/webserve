@@ -3,23 +3,23 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+#include <string>
+#include <iostream>
+
 #define PORT 8080
  
-int main(int argc, char const* argv[])
+int main(void)
 {
     int sock = 0, valread, client_fd;
-    if (argc == 1)
-    {
-        return (0);
-    }
-    char* name = argv[1];
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
+    struct sockaddr_in serv_addr;
+    char* hello = "Hello from client";
+    char buffer[1024] = { 0 };
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
         return -1;
     }
  
-    struct sockaddr_in serv_addr;
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(PORT);
  
@@ -39,21 +39,10 @@ int main(int argc, char const* argv[])
         printf("\nConnection Failed \n");
         return -1;
     }
-    char buffer[1024] = { 0 };
-    struct pollfd;
-    {
-        int   fd  = sock;         /* file descriptor */
-        short events;     /* requested events */
-    };
-    std::string string;
-    while (1)
-    {
-        send(sock, hello, strlen(hello), 0);
-        printf("%s: Hello message sent\n" name);
-        valread = read(sock, buffer, 1024);
-        printf("%s\n", buffer);
-    }
-    // closing the connected socket
+    send(sock, hello, strlen(hello), 0);
+    printf("Hello message sent\n");
+    valread = read(sock, buffer, 1024);
+    printf("%s\n", buffer);
     close(client_fd);
     return 0;
 }
