@@ -79,7 +79,7 @@ int main(void)
         {
             hello.clear();
             std::getline(std::cin, hello);
-            std::cout << hello << std::endl;
+            // std::cout << hello << std::endl;
             if (hello == "END")
                 break;
             send(new_socket, hello.c_str(), hello.length(), 0);

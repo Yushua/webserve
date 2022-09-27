@@ -38,7 +38,8 @@ int main(void)
         return -1;
     }
     char buffer[1024] = { 0 };
-    std::string hello;
+    std::string hello = "client here";
+    send(sock, hello.c_str(), hello.length(), 0);
     while(1)
     {
         hello.clear();
@@ -49,5 +50,6 @@ int main(void)
     }
     close(client_fd);
     close(sock);
+    exit(1);
     return 0;
 }
