@@ -44,7 +44,7 @@ int main(void)
         hello.clear();
         std::getline(std::cin, hello);
         if (hello == "END")
-            close(client_fd);
+            break;
         send(sock, hello.c_str(), hello.length(), 0);
     }
     close(client_fd);

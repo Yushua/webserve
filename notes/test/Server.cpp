@@ -91,7 +91,7 @@ int main(void)
                     break;
                 temp_buffer[size] = '\0';
                 hello += temp_buffer;
-                std::cout << hello << std::endl;
+                std::cout << hello << " "  << size << std::endl;
             }
             if (hello == "END")
                 break;
