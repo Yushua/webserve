@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Annoying files
+.DS_Store
+.vscode
