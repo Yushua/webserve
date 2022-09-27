@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-#define PORT 4232
+#define PORT 4234
  
 int main(void)
 {
@@ -38,8 +38,7 @@ int main(void)
         return -1;
     }
     char buffer[1024] = { 0 };
-    std::string hello = "client here";
-    send(sock, hello.c_str(), hello.length(), 0);
+    std::string hello = "";
     while(1)
     {
         hello.clear();

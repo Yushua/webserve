@@ -21,7 +21,8 @@
 #include <iostream>
 
 
-#define PORT 4232
+#define PORT 4234
+#define READ_BUFFER_SIZE 4242
 
 //figure otu closing ports mistake with 4242
 int main(void)
@@ -32,6 +33,7 @@ int main(void)
     int addrlen = sizeof(address);
  
     // Creating socket file descriptor
+    //listens will be the socket, the bound  specified in the config file
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket failed");
         exit(EXIT_FAILURE);
@@ -64,25 +66,40 @@ int main(void)
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    printf("6\n");
     struct pollfd tmp;
 	tmp.fd = new_socket;
 	tmp.events = POLLIN;
 	tmp.revents = 0;
     char buffer[1024] = { 0 };
     std::string hello = "";
+    int size = 1;
+    std::cout << "start server" << std::endl;
     while (1)
     {
         poll(&tmp, 1, 1);
-        std::cout << tmp.revents << std::endl;
-        if (tmp.revents != 0)
+        //maybe place which client joined here
+        if (tmp.revents == POLLIN)
         {
             hello.clear();
-            std::getline(std::cin, hello);
-            // std::cout << hello << std::endl;
+            // size = read(tmp.fd, tmpString, READ_BUFFER_SIZE);
+            while(true)
+            {
+                printf("startsize = %i\n", size);
+                char temp_buffer[READ_BUFFER_SIZE + 1];
+                size = read(tmp.fd, temp_buffer, READ_BUFFER_SIZE);
+                if (size <= 0)
+                    break;
+                temp_buffer[size] = '\0';
+                hello += temp_buffer;
+                std::cout << hello << std::endl;
+            }
             if (hello == "END")
                 break;
-            send(new_socket, hello.c_str(), hello.length(), 0);
+            // std::getline(std::cin, hello);
+            // // std::cout << hello << std::endl;
+            // std::cout << "print message:" << hello << std::endl;
+            // printf("[%s]\n", hello.c_str());
+            // send(new_socket, hello.c_str(), hello.length(), 0);
         }
     }
  
