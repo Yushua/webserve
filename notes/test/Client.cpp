@@ -7,13 +7,12 @@
 #include <string>
 #include <iostream>
 
-#define PORT 4224
+#define PORT 4232
  
 int main(void)
 {
     int sock = 0, valread, client_fd;
     struct sockaddr_in serv_addr;
-    char buffer[1024] = { 0 };
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
         return -1;
@@ -38,11 +37,17 @@ int main(void)
         printf("\nConnection Failed \n");
         return -1;
     }
-    char* hello = "Hello from client";
-    send(sock, hello, strlen(hello), 0);
-    printf("Hello message sent\n");
-    valread = read(sock, buffer, 1024);
-    printf("%s\n", buffer);
+    char buffer[1024] = { 0 };
+    std::string hello;
+    while(1)
+    {
+        hello.clear();
+        std::getline(std::cin, hello);
+        if (hello == "END")
+            close(client_fd);
+        send(sock, hello.c_str(), hello.length(), 0);
+    }
     close(client_fd);
+    close(sock);
     return 0;
 }

@@ -21,7 +21,7 @@
 #include <iostream>
 
 
-#define PORT 4224
+#define PORT 4232
 
 //figure otu closing ports mistake with 4242
 int main(void)
@@ -48,10 +48,6 @@ int main(void)
     address.sin_port = htons(PORT);
     // Forcefully attaching socket to the port 8080
     printf("4\n");
-    // close(new_socket);
-    // // closing the listening socket
-    // shutdown(server_fd, SHUT_RDWR);
-    // exit(1);
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0)
     {
         perror("bind failed");
@@ -62,31 +58,30 @@ int main(void)
         perror("listen");
         exit(EXIT_FAILURE);
     }
-    printf("6\n");
+    printf("wait for client\n");
     if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0)
     {
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    return (0);
     printf("6\n");
     struct pollfd tmp;
 	tmp.fd = new_socket;
 	tmp.events = POLLIN;
 	tmp.revents = 0;
+    char buffer[1024] = { 0 };
+    std::string hello = "";
     while (1)
     {
-        // printf("status [%i]\n",tmp.revents);
         poll(&tmp, 1, 1);
+        std::cout << tmp.revents << std::endl;
         if (tmp.revents != 0)
         {
-            char buffer[1024] = { 0 };
-            valread = read(new_socket, buffer, 1024);
-            
-            std::string hello;
+            hello.clear();
+            std::getline(std::cin, hello);
+            std::cout << hello << std::endl;
             if (hello == "END")
                 break;
-            std::getline(std::cin, hello);
             send(new_socket, hello.c_str(), hello.length(), 0);
         }
     }
