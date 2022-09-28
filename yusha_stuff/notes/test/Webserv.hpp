@@ -6,7 +6,7 @@
 class Webserv 
 {
     private:
-        struct pollfd tmp;//make it more
+        struct pollfd *tmp;//make it more
         int server_fd, new_socket, valread;
         struct sockaddr_in address;
         int opt = 1;
@@ -16,6 +16,7 @@ class Webserv
         ~Webserv();
         int run();
         void impliment_socket();
+        void message_recieve(int index);
 };
 
 #endif

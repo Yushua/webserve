@@ -49,7 +49,9 @@ Webserv::Webserv(int port)
 }
 
 Webserv::~Webserv()
-{}
+{
+    delete [] tmp;
+}
 
 std::string page1 = "HTTP/1.1 200 OK\n\n\
 <!DOCTYPE html><html><body>\n\
@@ -65,38 +67,43 @@ void Webserv::impliment_socket(void)
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    tmp.fd = new_socket;
-	tmp.events = POLLIN;
-	tmp.revents = 0;
+    tmp = new struct pollfd[MAX_CLIENT];
+
+    tmp[0].fd = new_socket;
+	tmp[0].events = POLLIN;
+	tmp[0].revents = 0;
     fcntl(new_socket, F_SETFL, O_NONBLOCK);
 }
 
 int Webserv::run(void)
 {
-    char buffer[1024] = { 0 };
-    std::string hello = "";
-    std::cout << "start server" << std::endl;
+    int index = 0;
     while (1)
     {
-        poll(&tmp, 1, 1);
+        poll(tmp, MAX_CLIENT, 1);
         //maybe place which client joined here
-        if (tmp.revents == POLLIN)
-        {
-            hello.clear();
-            while(true)
-            {
-                char temp_buffer[READ_BUFFER_SIZE + 1];
-                int size;
-                size = read(tmp.fd, temp_buffer, READ_BUFFER_SIZE);//why wait, just give me an end of file?
-                if (size <= 0)
-                    break;
-                temp_buffer[size] = '\0';
-                hello += temp_buffer;
-            }
-            std::cout << hello << '\n';
-            if (hello == "END")
-                break;
-        }
-    }
+        message_recieve(index);
+    }   
     return 0;
+}
+
+void Webserv::message_recieve(int index)
+{
+    if (tmp[index].revents == POLLIN)
+    {
+        char buffer[1024] = { 0 };
+        std::string hello = "";
+        hello.clear();
+        while(true)
+        {
+            char temp_buffer[READ_BUFFER_SIZE + 1];
+            int size;
+            size = read(tmp[index].fd, temp_buffer, READ_BUFFER_SIZE);//why wait, just give me an end of file?
+            if (size <= 0)
+                break;
+            temp_buffer[size] = '\0';
+            hello += temp_buffer;
+        }
+        std::cout << index << ": " << hello << '\n';
+    }
 }
