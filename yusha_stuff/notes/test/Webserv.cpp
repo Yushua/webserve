@@ -15,10 +15,6 @@
 
 Webserv::Webserv(int port)
 {
-    int server_fd, new_socket, valread;
-    struct sockaddr_in address;
-    int opt = 1;
-    int addrlen = sizeof(address);
  
     // Creating socket file descriptor
     //listens will be the socket, the bound  specified in the config file
@@ -48,21 +44,32 @@ Webserv::Webserv(int port)
         exit(EXIT_FAILURE);
     }
     printf("wait for client\n");
+    //multiple sockets, to get multiple clients
+    // tmp = new(struct pollfd);
+}
+
+Webserv::~Webserv()
+{}
+
+std::string page1 = "HTTP/1.1 200 OK\n\n\
+<!DOCTYPE html><html><body>\n\
+<h1>Welcome!</h1>\n\
+<p>This is my server!</p>\n\
+<a href=\"lol\">Go somewhere far beyond!</a>\n\
+</body></html>";
+
+void Webserv::impliment_socket(void)
+{
     if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0)
     {
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    //multiple sockets, to get multiple clients
-    // tmp = new(struct pollfd);
-	tmp.fd = new_socket;
+    tmp.fd = new_socket;
 	tmp.events = POLLIN;
 	tmp.revents = 0;
     fcntl(new_socket, F_SETFL, O_NONBLOCK);
 }
-
-Webserv::~Webserv()
-{}
 
 int Webserv::run(void)
 {
@@ -86,7 +93,7 @@ int Webserv::run(void)
                 temp_buffer[size] = '\0';
                 hello += temp_buffer;
             }
-            std::cout << "message ==: " << hello << std::endl;
+            std::cout << hello << '\n';
             if (hello == "END")
                 break;
         }
