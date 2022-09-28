@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-#define PORT 4234
+#define PORT 4242
  
 int main(void)
 {
