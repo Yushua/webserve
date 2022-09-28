@@ -21,6 +21,9 @@ private:
 	map<string, string> headers;
 	string              body;
 	string				read_buffer;
+	bool                valid;
+
+	void check(); /* !!!TO BE IMPLEMENETD!!! */
 
 public:
 	message(const int fd);
@@ -34,7 +37,7 @@ public:
 	const string              &getBody() const;
 	const string              &getOriginal() const;
 
-	bool check() const; /* !!!TO BE IMPLEMENETD!!! */
+	const bool                &isValid() const;
 };
 
 ostream &operator<<(ostream &ostr, const message &msg);

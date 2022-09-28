@@ -1,5 +1,5 @@
-#ifndef WEVSERVE_HPP
-	#define WEVSERVE_HPP
+#ifndef WEBSERV_HPP
+	#define WEBSERV_HPP
 
 #include <netinet/in.h>
 #include <stdio.h>
@@ -16,6 +16,7 @@
 using namespace std;
 
 #include <error.hpp>
+#include <message.hpp>
 
 typedef int socket_t;
 
@@ -36,8 +37,8 @@ private:
 	struct pollfd *sockets;
 
 	void connect_new_socket();
-	void handle_request(int index);
-	void disconnect_socket(int index);
+	void handle_request(const int index);
+	void disconnect_socket(const int index);
 
 	void send(const int fd, const string msg);
 
@@ -46,6 +47,11 @@ public:
 	~webserv();
 
 	void run();
+
+	void cmd_GET(const int index, const message &msg);
+	void cmd_HEAD(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
+	void cmd_POST(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
+	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 };
 
 #endif

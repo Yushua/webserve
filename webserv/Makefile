@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/09/27 17:30:53 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/09/28 16:41:19 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ FLAGS     := -Wall -Wextra -Werror -std=c++98 -pedantic
 INC       := inc
 SRC       := src
 OBJ       := obj
+BIN       := bin
 
 SHELL     := bash
 ARGS      := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -43,7 +44,9 @@ all:
 	@$(MAKE) $(NAME) -j4
 
 $(NAME): $(OBJ_DIRS) $(OBJ_FILES)
-	@c++ -o $(NAME) $(FLAGS) $(OBJ_FILES) $(DEBUG)
+	@mkdir -p $(BIN) $(BIN)/root
+	@cp -R root $(BIN)/root
+	@c++ -o $(BIN)/$(NAME) $(FLAGS) $(OBJ_FILES) $(DEBUG)
 	@printf "[$(CYAN)webserv$(RESET)] $(GREEN)Done!$(RESET)\n"
 
 $(OBJ_DIRS):
@@ -55,19 +58,19 @@ $(OBJ)/%.o: $(SRC)/%.cpp
 
 # -~={ Clean up }=~- #
 clean:
-	@rm -rf $(OBJ)
-	@printf "[$(CYAN)webserv$(RESET)] $(RED)removed .o files$(RESET)\n"
+	@rm -rf $(OBJ)/*
+	@printf "[$(CYAN)webserv$(RESET)] $(RED)clear obj folder$(RESET)\n"
 
 fclean: clean
-	@rm -f $(NAME)
-	@printf "[$(CYAN)webserv$(RESET)] $(RED)removed $(NAME)$(RESET)\n" $<
+	@rm -rf $(BIN)/*
+	@printf "[$(CYAN)webserv$(RESET)] $(RED)cleared bin folder$(RESET)\n" $<
 
 re: fclean all
 
 # -~={ Debug }=~- #
 run: all
 	@echo
-	@./$(NAME) $(ARGS)
+	@$(BIN)/$(NAME) $(ARGS)
 
 $(ARGS):
 	@exit

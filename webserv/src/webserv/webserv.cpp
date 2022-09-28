@@ -32,8 +32,8 @@ webserv::webserv(int port)
 	new_socket_count = 0; /* Used to update the variable above */
 
 	/* Array of all sockets for poll */
-	sockets	= (struct pollfd *)malloc(SOCKET_COUNT_MAX * sizeof(struct pollfd));
-	
+	sockets = new struct pollfd[SOCKET_COUNT_MAX];
+
 	/* Adding the main socket to the array */
 	/* This socket will always be on possition 0 */
 	sockets[0].fd = welcome_socket;
@@ -41,4 +41,7 @@ webserv::webserv(int port)
 	sockets[0].revents = 0;
 	fcntl(welcome_socket, F_SETFL, O_NONBLOCK);
 }
-webserv::~webserv(){}
+
+webserv::~webserv() {
+	delete [] sockets;
+}

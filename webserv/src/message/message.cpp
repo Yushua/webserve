@@ -20,3 +20,6 @@ const string &message::getBody() const
 	{ return body; }
 const string &message::getOriginal() const
 	{ return read_buffer; }
+
+const bool &message::isValid() const
+	{ return valid; }

@@ -24,7 +24,7 @@ void webserv::connect_new_socket()
 	}
 }
 
-void webserv::disconnect_socket(int index)
+void webserv::disconnect_socket(const int index)
 {
 	cout << RED << "  -~={ Diconnected " << index << " }=~-\n" << RESET;
 	if (new_socket_count != index)
