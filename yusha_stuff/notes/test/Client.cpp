@@ -6,8 +6,7 @@
 
 #include <string>
 #include <iostream>
-
-#define PORT 4242
+#include "header.hpp"
  
 int main(void)
 {

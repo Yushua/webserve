@@ -9,23 +9,11 @@
  * 
  */
 
-#include <netinet/in.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <poll.h>
-
-#include <string>
-#include <iostream>
-
-
-#define PORT 4234
-#define READ_BUFFER_SIZE 4242
+#include "Webserv.hpp"
 
 //figure otu closing ports mistake with 4242
-int main(void)
+
+Webserv::Webserv(int port)
 {
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
@@ -49,7 +37,6 @@ int main(void)
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(PORT);
     // Forcefully attaching socket to the port 8080
-    printf("4\n");
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0)
     {
         perror("bind failed");
@@ -66,13 +53,21 @@ int main(void)
         perror("accept");
         exit(EXIT_FAILURE);
     }
-    struct pollfd tmp;
+    //multiple sockets, to get multiple clients
+    // tmp = new(struct pollfd);
 	tmp.fd = new_socket;
 	tmp.events = POLLIN;
 	tmp.revents = 0;
+    fcntl(new_socket, F_SETFL, O_NONBLOCK);
+}
+
+Webserv::~Webserv()
+{}
+
+int Webserv::run(void)
+{
     char buffer[1024] = { 0 };
     std::string hello = "";
-    int size = 1;
     std::cout << "start server" << std::endl;
     while (1)
     {
@@ -81,31 +76,20 @@ int main(void)
         if (tmp.revents == POLLIN)
         {
             hello.clear();
-            // size = read(tmp.fd, tmpString, READ_BUFFER_SIZE);
             while(true)
             {
-                printf("startsize = %i\n", size);
                 char temp_buffer[READ_BUFFER_SIZE + 1];
-                size = read(tmp.fd, temp_buffer, READ_BUFFER_SIZE);
+                int size;
+                size = read(tmp.fd, temp_buffer, READ_BUFFER_SIZE);//why wait, just give me an end of file?
                 if (size <= 0)
                     break;
                 temp_buffer[size] = '\0';
                 hello += temp_buffer;
-                std::cout << hello << " "  << size << std::endl;
             }
+            std::cout << "message ==: " << hello << std::endl;
             if (hello == "END")
                 break;
-            // std::getline(std::cin, hello);
-            // // std::cout << hello << std::endl;
-            // std::cout << "print message:" << hello << std::endl;
-            // printf("[%s]\n", hello.c_str());
-            // send(new_socket, hello.c_str(), hello.length(), 0);
         }
     }
- 
-    // closing the connected socket
-    close(new_socket);
-    // closing the listening socket
-    shutdown(server_fd, SHUT_RDWR);
     return 0;
 }
