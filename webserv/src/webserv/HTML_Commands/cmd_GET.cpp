@@ -17,8 +17,6 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	if (requested_file == "root/")
 		 requested_file = "root/index.html";
 
-	this->header_get_content_type(requested_file);
-
 	ifstream file;
 	file.open(requested_file.c_str());
 	stringstream buffer;
@@ -26,6 +24,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 
 	string ok = "HTTP/1.1 200 OK\n";
 	ok += this->header_get_content_type(requested_file);
+	ok += "Content-length: " + to_string((buffer.str().length())) + '\n';
 	ok += "\n" + buffer.str();
 	this->send(sockets[index].fd, ok);
 }

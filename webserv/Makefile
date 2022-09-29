@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/09/29 16:12:35 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/09/29 17:52:32 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ $(OBJ)/%.o: $(SRC)/%.cpp
 # -~={ Clean up }=~- #
 clean:
 	@rm -rf $(OBJ)/*
-	@printf "[$(CYAN)webserv$(RESET)] $(RED)clear obj folder$(RESET)\n"
+	@printf "[$(CYAN)webserv$(RESET)] $(RED)cleared obj folder$(RESET)\n"
 
 fclean: clean
 	@rm -rf $(BIN)/*
