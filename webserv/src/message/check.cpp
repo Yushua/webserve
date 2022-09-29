@@ -13,3 +13,19 @@ void message::check()
 	std::cout << " " << std::endl;
 	valid = true;
 }
+
+/*
+
+General Header
+
+Request Header
+
+Response Header
+
+Entity Header
+
+
+GET PUT DELETE POST HEAD
+
+
+*/
