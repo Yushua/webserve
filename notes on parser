@@ -1,0 +1,59 @@
+Accept text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding gzip, deflate, br
+Accept-Language nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7
+Connection keep-alive
+Host 127.0.0.1:4240
+Sec-Fetch-Dest document
+Sec-Fetch-Mode navigate
+Sec-Fetch-Site none
+Sec-Fetch-User ?1
+Upgrade-Insecure-Requests 1
+User-Agent Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36
+sec-ch-ua " Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"
+sec-ch-ua-mobile ?0
+sec-ch-ua-platform "macOS"
+ 
+Accept image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Accept-Encoding gzip, deflate, br
+Accept-Language nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7
+Connection keep-alive
+Host 127.0.0.1:4240
+Referer http://127.0.0.1:4240/lol.html
+Sec-Fetch-Dest image
+Sec-Fetch-Mode no-cors
+Sec-Fetch-Site same-origin
+User-Agent Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36
+sec-ch-ua " Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"
+sec-ch-ua-mobile ?0
+
+----------link------
+
+Accept text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding gzip, deflate, br
+Accept-Language nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7
+Connection keep-alive
+Host 127.0.0.1:4240
+Referer http://127.0.0.1:4240/lol.html
+Sec-Fetch-Dest document
+Sec-Fetch-Mode navigate
+Sec-Fetch-Site same-origin
+Sec-Fetch-User ?1
+Upgrade-Insecure-Requests 1
+User-Agent Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36
+sec-ch-ua " Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"
+sec-ch-ua-mobile ?0
+sec-ch-ua-platform "macOS"
+
+--------back-------
+
+Accept-Encoding gzip, deflate, br
+Accept-Language nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7
+Connection keep-alive
+Host 127.0.0.1:4240
+Referer http://127.0.0.1:4240/
+Sec-Fetch-Dest empty
+Sec-Fetch-Mode navigate
+Sec-Fetch-Site same-origin
+User-Agent Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/537.36
+
+------- download-------

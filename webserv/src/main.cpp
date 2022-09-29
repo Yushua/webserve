@@ -1,6 +1,6 @@
 #include <webserv.hpp>
 
 int main() {
-	webserv server(4243);
+	webserv server(4240);
 	server.run();
 }
