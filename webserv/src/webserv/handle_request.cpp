@@ -12,10 +12,12 @@ void webserv::handle_request(const int index)
 		this->disconnect_socket(index);
 		return;
 	}
-	
+
+#ifdef DEBUG
 	/* Print out request */
 	cout << CYAN << "  -~={ " << index << " sent this }=~-\n" << RESET;
 	cout << msg << '\n';
+#endif
 
 	const string &type = msg.getStartLine().at(0);
 	if (type == "HEAD")

@@ -42,6 +42,8 @@ private:
 
 	void send(const int fd, const string msg);
 
+	const string header_get_content_type(const string filename);
+
 public:
 	webserv(int port);
 	~webserv();
