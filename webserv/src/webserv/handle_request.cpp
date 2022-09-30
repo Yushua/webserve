@@ -11,6 +11,7 @@ void webserv::handle_request(const int index)
 #ifdef DEBUG
 		cout << RED << "  -~={ " << index << " incorrect input }=~-\n" << RESET;
 #endif
+		this->send_error(sockets[index].fd, 400);
 		this->disconnect_socket(index);
 		return;
 	}

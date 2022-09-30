@@ -41,6 +41,7 @@ private:
 	void disconnect_socket(const int index);
 
 	void send(const int fd, const string msg);
+	void send_error(const int fd, const int error_code);
 
 	const string header_get_content_type(const string filename);
 

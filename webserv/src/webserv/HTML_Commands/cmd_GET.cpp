@@ -5,20 +5,22 @@
 #include <sstream>
 
 void webserv::cmd_GET(const int index, const message &msg) {
-	
-	/* BAD CODE, please fix */
 
-	const vector<string> startLine = msg.getStartLine();
-	const map<string, string> headers = msg.getHeaders();
-	const string body = msg.getBody();
+	/* ??????? Maybe try differentiating between files and dirs ??????? */
 
-	string root = "root";
-	string requested_file = root + msg.getStartLine()[1];
-	if (requested_file == "root/")
-		 requested_file = "root/index.html";
+	string requested_file = msg.getStartLine()[1];
+	if (requested_file == "/")
+		 requested_file = "/index.html";
 
-	ifstream file;
-	file.open(requested_file.c_str());
+	ifstream file("root" + requested_file);
+
+	if (!file.good()) {
+		this->send_error(sockets[index].fd, 404);
+		this->disconnect_socket(index);
+		return;
+	}
+
+	cout << file.good() << '\n';
 	stringstream buffer;
 	buffer << file.rdbuf();
 
