@@ -12,20 +12,20 @@ webserv::webserv(int port)
 		/* Make a new socket */
 		welcome_socket = socket(AF_INET, SOCK_STREAM, 0);
 		if (welcome_socket < 0)
-			error("socket");
+			ft_error("socket");
 		
 		/* Setting socket flags */
 		int opt = 1;
 		if (setsockopt(welcome_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-			error("setsockopt");
+			ft_error("setsockopt");
 		
 		/* Attach address (and port) to main socket */
 		if (::bind(welcome_socket, (struct sockaddr *)&address, sizeof(address)))
-			error("bind");
+			ft_error("bind");
 		
 		/* Make socket listen for new connections */
 		if (listen(welcome_socket, 3))
-			error("listen");
+			ft_error("listen");
 	}
 
 	socket_count = 0; /* Number of conected sockets */

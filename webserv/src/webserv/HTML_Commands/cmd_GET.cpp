@@ -24,7 +24,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 
 	string ok = "HTTP/1.1 200 OK\n";
 	ok += this->header_get_content_type(requested_file);
-	ok += "Content-length: " + to_string((buffer.str().length())) + '\n';
+	ok += "Content-length: " + ft_to_string((buffer.str().length())) + '\n';
 	ok += "\n" + buffer.str();
 	this->send(sockets[index].fd, ok);
 }
