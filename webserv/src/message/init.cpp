@@ -43,7 +43,7 @@ void message::init() {
 		for (; read_buffer[index]; ++index) {
 			if (gettingHeader && read_buffer[index] == ' ') {
 				gettingHeader = false;
-				head = read_buffer.substr(start, index - start - 1);
+				head = read_buffer.substr(start, index - start);
 				start = ++index;
 			}
 			else if (read_buffer[index] == '\n') {

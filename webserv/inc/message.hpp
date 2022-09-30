@@ -17,7 +17,9 @@ private:
 	message();
 	void init();
 
+	//the first line of the message from the client
 	vector<string>      startLine;
+	//the body of the client
 	map<string, string> headers;
 	string              body;
 	string				read_buffer;
@@ -26,6 +28,8 @@ private:
 
 	void check(); /* !!!TO BE IMPLEMENETD!!! */
 	void unchunk(); /* !!!TO BE IMPLEMENETD!!! */
+	bool unHost(string string); /* !!!TO BE IMPLEMENETD!!! */
+	bool unRefer(string string, std::string host); /* !!!TO BE IMPLEMENETD!!! */
 
 public:
 	message(const int fd);
