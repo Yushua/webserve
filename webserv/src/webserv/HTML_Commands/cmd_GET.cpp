@@ -1,7 +1,6 @@
 #include <webserv.hpp>
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
 #include <sstream>
 
 void webserv::cmd_GET(const int index, const message &msg) {
@@ -34,7 +33,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 		
 		/* Generate headers */
 		ok += this->header_get_content_type(requested_file);
-		ok += "Content-length: " + ft_to_string((buffer.str().length())) + '\n';
+		ok += "Content-length: " + ft_to_string(buffer.str().length()) + '\n';
 		
 		/* Add body */
 		ok += "\n" + buffer.str();
