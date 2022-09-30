@@ -44,5 +44,5 @@ void webserv::handle_request(const int index)
 		this->cmd_POST(index, msg);
 	if (type == "DELETE")
 		this->cmd_DELETE(index, msg);
-	this->disconnect_socket(index);
+	//this->disconnect_socket(index);
 }

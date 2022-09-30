@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/09/29 17:52:32 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/09/30 14:39:58 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,8 +72,12 @@ run: all
 	@echo
 	@$(BIN)/$(NAME) $(ARGS)
 
+rerun: re run
+
 debug:
 	$(MAKE) re DEBUG="-D DEBUG"
+
+debugrun: debug run
 
 $(ARGS):
 	@exit
