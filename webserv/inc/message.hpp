@@ -22,8 +22,10 @@ private:
 	string              body;
 	string				read_buffer;
 	bool                valid;
+	bool				complete;
 
 	void check(); /* !!!TO BE IMPLEMENETD!!! */
+	void unchunk(); /* !!!TO BE IMPLEMENETD!!! */
 
 public:
 	message(const int fd);
@@ -38,6 +40,7 @@ public:
 	const string              &getOriginal() const;
 
 	const bool                &isValid() const;
+	const bool                &isComplete() const;
 };
 
 ostream &operator<<(ostream &ostr, const message &msg);
