@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/09/30 14:39:58 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/09/30 16:29:00 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ all:
 
 $(NAME): $(OBJ_DIRS) $(OBJ_FILES)
 	@mkdir -p $(BIN) $(BIN)/root
-	@cp -R root $(BIN)/root
+	@cp -R root $(BIN)
 	@c++ -o $(BIN)/$(NAME) $(FLAGS) $(OBJ_FILES) $(DEBUG)
 	@printf "[$(CYAN)webserv$(RESET)] $(GREEN)Done!$(RESET)\n"
 
