@@ -7,6 +7,8 @@
 
 void webserv::send(const int fd, const string msg) {
 
+	/* Send message in parts */
+
 	long length_left = msg.length();
 	const char *str_ptr = msg.c_str();
 
