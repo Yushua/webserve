@@ -22,7 +22,6 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	}
 
 	/* Read file */
-	cout << file.good() << '\n';
 	stringstream buffer;
 	buffer << file.rdbuf();
 

@@ -37,7 +37,7 @@ void message::check()
 		}
 		// std::cout << itr->first << " " << itr->second << std::endl;
 	}
-	std::cout << " " << std::endl;
+	// std::cout << " " << std::endl;
 
 	// if error == 400
 	// 	valid = false;
