@@ -28,18 +28,18 @@ void message::check()
 		else if (itr->first == "Host:")
 		{
 			if (this->unHost(itr->second))
-				Host = itr->first;
+				Host = itr->second;
 			else
 				valid = false;
 		}
 		else if (itr->first == "Referer:")
 		{
-			if (this->unRefer(itr->second, Host))
+			if (this->unReferer(itr->second, Host))
 				valid = true;
 			else
 				valid = false;
 		}
-		// std::cout << itr->first << " " << itr->second << std::endl;
+		std::cout << itr->first << " " << itr->second << std::endl;
 	}
 	// std::cout << " " << std::endl;
 
@@ -72,7 +72,7 @@ bool message::unHost(string string)
 	int ip = 4;
 	int i = 0;
 	std::string tmp = string.substr(0, string.find(":"));
-	std::string check = "";
+	// std::string check = "";
 	while(ip != 0){
 		i = tmp.find(".");
 		if(i == 0 && checkNumber(tmp) != -1)
@@ -82,25 +82,35 @@ bool message::unHost(string string)
 		}
 		if(i == 0 && checkNumber(tmp) == -1)
 			return false;
-		check = tmp.substr(0, i);
-		if(checkNumber(tmp) == -1)
+		// check = tmp.substr(0, i);
+		if(checkNumber(tmp.substr(0, i)) == -1)
 			return false;
 		tmp.erase(0, i+1);
 		// std::cout << check << std::endl;
 		ip--;
 	} 
-	check = string.substr(string.find(":") + 1, string.length());
+	// check = string.substr(string.find(":") + 1, string.length());
 	// std::cout << "port ==: " <<  check << std::endl;
-	if(checkNumber(check) == -1)
+	if(checkNumber(string.substr(string.find(":") + 1, string.length())) == -1)
 		return false;
 	return true;
 }
 
-bool message::unRefer(string string, std::string host)
+bool message::unReferer(string string, std::string host)
 {
 	//http://127.0.0.1:4243/page2.html
-	if (string.find(host) == string::npos)
+	//make it smaller by directly putting everything in
+	std::string check;
+	std::cout << "string ==" << host << std::endl;
+	if(string.substr(0, 7) != "http://")
 		return false;
+	if (string.substr(7, host.length() - 1) == host)
+		return false;
+	check = string.substr(host.length() + 6,  string.length());
+	// std::cout << "check == " << check << std::endl;
+	if (check == "/")
+		return true;
+	//check path
 	string = " ";
 	host = " ";
 	return true;

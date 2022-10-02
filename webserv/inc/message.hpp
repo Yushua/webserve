@@ -29,7 +29,7 @@ private:
 	void check(); /* !!!TO BE IMPLEMENETD!!! */
 	void unchunk(); /* !!!TO BE IMPLEMENETD!!! */
 	bool unHost(string string); /* !!!TO BE IMPLEMENETD!!! */
-	bool unRefer(string string, std::string host); /* !!!TO BE IMPLEMENETD!!! */
+	bool unReferer(string string, std::string host); /* !!!TO BE IMPLEMENETD!!! */
 
 public:
 	message(const int fd);
