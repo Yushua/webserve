@@ -99,8 +99,8 @@ bool message::unHost(string string)
 bool message::unRefer(string string, std::string host)
 {
 	//http://127.0.0.1:4243/page2.html
-	// if (string.find(host) == -1)
-	// 	return false;
+	if (string.find(host) == string::npos)
+		return false;
 	string = " ";
 	host = " ";
 	return true;
