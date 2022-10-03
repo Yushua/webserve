@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <fcntl.h>
 
-static int checkNumber(std::string string, char *input)
+static int checkNumber(std::string string, const char *input)
 {
 	return string.find_first_not_of(input) == string::npos;
 }
@@ -48,7 +48,7 @@ void message::check()
 		// std::cout << itr->first << " " << itr->second << std::endl;
 	}
 	if (chunked != true && _end == true)
-		//write error
+		std::cout << "chunked was announced but not used" << std::endl;
 	if (chunked == true && _end == true)
 		this->unchunk();
 	// std::cout << " " << std::endl;
@@ -75,22 +75,39 @@ void message::unchunk()
 	if (status == false)
 		std::cout << "there is chunk start, but in the body" << std::endl;
 	else{
+		long int _size = 0;
 		for (; itr != end; ++itr){
-			if (!checkNumber(itr->first, "0x0\r\n") || !checkNumber(itr->first, "0\r\n")){
+			if (checkNumber(itr->first, "0x\r\n123456789ABCDEF") == -1 || checkNumber(itr->first, "0\r\n123456789ABCDEF") == -1){
 				status = false;
+			}
+			else if (itr->first.size() <= 2){
+				std::cout << "input is too small" << std::endl;
+				break;
 			}
 			else if (status == false)
 				std::cout << "input after end of file" << std::endl;
 			else if (chunkedStatus == false){
-
+				if (checkNumber(itr->first, "0123456789ABCDEFx\r\n") == -1)
+					std::cout << "bits is not a number" << std::endl;
+				else if (itr->first.substr(0, 2) == "0x")
+					std::cout << "its a hexacode" << std::endl;
+				else if (checkNumber(itr->first, "0123456789\r\n")){
+					std::cout << "normal" << std::endl;
+				}
+				else
+					std::cout << "number not suitable" << std::endl;
 			}
 			else if (chunkedStatus == true){
-				
+				if (_size == 0)
+					std::cout << "construct of chunk is wrong. letters before size" << std::endl;
+				std::string tmp = itr->first;
+				tmp.erase(tmp.size() - 2);
+				//append the string here
 			}
 		}
 
 	}
-	if (!checkNumber(itr->first, "0x0\r\n") || !checkNumber(itr->first, "0\r\n"))
+	// if (!checkNumber(itr->first, "0x0\r\n") || !checkNumber(itr->first, "0\r\n"))
 }
 
 bool message::unHost(string string)
