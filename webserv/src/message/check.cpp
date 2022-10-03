@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <ctype.h>
+#include <fcntl.h>
 
 void message::check()
 {
@@ -110,7 +111,10 @@ bool message::unReferer(string string, std::string host)
 	// std::cout << "check == " << check << std::endl;
 	if (check == "/")
 		return true;
-	//check path
+	// std::string root = "./root./" + check;
+	// if (open(root.c_str(), O_DIRECTORY) == -1)
+	// 	std::cout << "path is incorrect" << std::endl;
+	//check path is false, else have an error page
 	string = " ";
 	host = " ";
 	return true;
