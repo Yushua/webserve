@@ -27,7 +27,7 @@ void message::check()
 	//why three times?
 	bool _end = false;
 	for (; itr != end; ++itr){	
-		if (itr->first == "Transfer-Encoding:" && itr->second.find("chunked"))
+		if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked"))
 			chunked = true;
 		else if (itr->first == "Host:"){
 			if (this->unHost(itr->second))
