@@ -3,6 +3,7 @@
 message::message(){
 	this->complete = true;
 	this->valid = false;
+	this->chunked = false;
 }
 message::message(const message &other)
 	{ *this = other; }
@@ -13,6 +14,7 @@ message &message::operator=(const message &other) {
 	read_buffer = other.read_buffer;
 	valid = other.valid;
 	complete = other.complete;
+	chunked = other.chunked;
 	return *this;
 }
 message::~message(){}
@@ -34,4 +36,5 @@ const bool &message::isValid() const
 
 const bool &message::isComplete() const
 	{ return complete; }
-
+const bool &message::isChunked() const
+	{ return chunked; }

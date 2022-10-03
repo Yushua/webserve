@@ -25,6 +25,7 @@ private:
 	string				read_buffer;
 	bool                valid;
 	bool				complete;
+	bool				chunked;
 
 	void check(); /* !!!TO BE IMPLEMENETD!!! */
 	void unchunk(); /* !!!TO BE IMPLEMENETD!!! */
@@ -45,6 +46,7 @@ public:
 
 	const bool                &isValid() const;
 	const bool                &isComplete() const;
+	const bool                &isChunked() const;
 };
 
 ostream &operator<<(ostream &ostr, const message &msg);
