@@ -1,17 +1,10 @@
 #include <message.hpp>
+#include <ft_lib.hpp>
 #include <unistd.h>
 #include <iostream>
 
 message::message(const int fd) {
-	while (true) {
-		char temp_buffer[READ_BUFFER_SIZE + 1];
-		int ret;
-		ret = read(fd, temp_buffer, READ_BUFFER_SIZE);
-		if (ret <= 0)
-			break;
-		temp_buffer[ret] = '\0';
-		read_buffer += temp_buffer;
-	}
+	read_buffer = ft_fd_to_str(fd);
 	this->init();
 }
 
