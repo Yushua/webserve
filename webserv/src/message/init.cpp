@@ -21,10 +21,11 @@ message::message(const string &msg) {
 }
 
 void message::init() {
-	int index;
+	size_t len = read_buffer.length();
+	size_t index;
 	{/* Get StartLine */
 		int start = 0;
-		for (index = 0; read_buffer[index]; ++index) {
+		for (index = 0; index < len; ++index) {
 			if (read_buffer[index] == ' ') {
 				startLine.push_back(read_buffer.substr(start, index - start));
 				start = ++index;
@@ -40,7 +41,7 @@ void message::init() {
 		bool gettingHeader = true;
 		int start = ++index;
 		string head, value;
-		for (; read_buffer[index]; ++index) {
+		for (; index < len; ++index) {
 			if (gettingHeader && read_buffer[index] == ' ') {
 				gettingHeader = false;
 				head = read_buffer.substr(start, index - start);

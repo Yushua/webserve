@@ -5,7 +5,7 @@ using namespace std;
 
 static char static_buffer[20];
 
-const string ft_to_string(unsigned long n) {
+const string ft_to_string(size_t n) {
 	static_buffer[19] = '\0';
 	char *buffer_ptr = static_buffer + 18;
 	

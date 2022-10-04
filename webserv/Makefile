@@ -6,12 +6,12 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/09/30 16:29:00 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/10/04 14:50:12 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME      := webserv
-FLAGS     := -Wall -Wextra -Werror -std=c++98 -pedantic
+FLAGS     := -Wall -Wextra -Werror -std=c++98 -pedantic -fsanitize=address
 INC       := inc
 SRC       := src
 OBJ       := obj
