@@ -154,10 +154,11 @@ bool message::unReferer(string string, std::string host)
 	// std::cout << "check == " << check << std::endl;
 	if (check == "/")
 		return true;
-	// std::string root = "./root./" + check;
-	// if (open(root.c_str(), O_DIRECTORY) == -1)
-	// 	std::cout << "path is incorrect" << std::endl;
-	//check path is false, else have an error page
+	std::string root = "./root./" + check;
+	int _fd = open(root.c_str(), O_DIRECTORY);
+	if (fd == -1)
+		std::cout << "path is incorrect" << std::endl;
+	close(_fd);
 	string = " ";
 	host = " ";
 	return true;
