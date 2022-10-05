@@ -7,7 +7,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 
 	/* ??????? Maybe try differentiating between files and dirs ??????? */
 
-	string requested_file = msg.getStartLine()[1];
+	string requested_file = msg.getPath();
 	if (requested_file == "/")
 		 requested_file = "/index.html";
 	requested_file = "root" + requested_file;
@@ -29,7 +29,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	/* Checking if it's a python script */
 	string extension = ft_get_extension(requested_file);
 	if (extension == "py") {
-		cgi_get(sockets[index].fd, requested_file);
+		cgi_get(sockets[index].fd, msg, requested_file);
 		return;
 	}
 

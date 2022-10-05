@@ -30,6 +30,30 @@ void message::init() {
 		}
 	}
 
+	{/* Get path and arguments */
+		string &url = startLine.at(1);
+		size_t len = url.length();
+		size_t index = 0;
+		bool hadArgs = false;
+		for (; index < len; ++index) {
+			if (url[index] == '?') {
+				hadArgs = true;
+				break;
+			}
+		}
+		path = url.substr(0, index);
+		if (hadArgs) {/* Get Headers */
+			int start = ++index;
+			string name, value;
+			for (; index < len; ++index) {
+				if (url[index] == '&') {
+					arguments.push_back(url.substr(start, index - start));
+					start = ++index;
+				}
+			}
+		}
+	}
+
 	{/* Get Headers */
 		bool gettingHeader = true;
 		int start = ++index;
@@ -56,6 +80,16 @@ void message::init() {
 	/* Get Body */
 	body = read_buffer.substr(index, read_buffer.length() - index);
 
+	cout << path << '\n';
+
+	vector<string>::iterator itr = arguments.begin();
+	vector<string>::iterator end = arguments.end();
+	for (; itr != end; ++itr) {
+		cout << *itr << "\n";
+	}
+	
+
 	/* Check Message Validity */
 	this->check();
+	valid = true;
 }

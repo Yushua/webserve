@@ -46,7 +46,7 @@ private:
 
 	const string header_get_content_type(const string filename);
 
-	void cgi_get(const int fd, const string &requested_file);
+	void cgi_get(const int fd, const message &msg, const string &requested_file);
 
 public:
 	webserv(int port);

@@ -1,7 +1,6 @@
 #include <webserv.hpp>
 
-void webserv::cgi_get(const int fd, const string &requested_file) {
-
+void webserv::cgi_get(const int fd, const message &msg, const string &requested_file) {
 	int child1 = fork();
 	if (child1 != 0)
 		return;
@@ -20,13 +19,23 @@ void webserv::cgi_get(const int fd, const string &requested_file) {
 		string response = "HTTP/1.1 200 OK\n";
 		response += "Content-length: " + ft_to_string(body.length()) + "\n";
 		response += script_out;
-		cout << '{' << response << "}\n";
 		this->send(fd, response);
 		exit(0);
 	}
 	else {
+		const vector<string> &args = msg.getArguments();
+
 		const char *argv[3] = {"/Users/rdrazsky/.brew/bin/python3", requested_file.c_str(), NULL};
-		const char *envp[1] = {NULL};
+		const char **envp = (const char **)new char *[args.size() + 1];
+		
+		size_t index = 0;
+		size_t len = args.size();
+		for (; index < len; ++index) {
+			envp[index] = args[index].c_str();
+		}
+		envp[index] = NULL;
+		
+		
 		close(fds[0]);
 		dup2(fds[1], 1);
 		cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
