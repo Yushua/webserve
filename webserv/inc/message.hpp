@@ -19,13 +19,15 @@ private:
 
 	//the first line of the message from the client
 	vector<string>      startLine;
+	string              path;
+	vector<string>      arguments;
 	//the body of the client
 	map<string, string> headers;
 	string              body;
-	string				read_buffer;
+	string              read_buffer;
 	bool                valid;
-	bool				complete;
-	bool				chunked;
+	bool                complete;
+	bool                chunked;
 
 	void check(); /* !!!TO BE IMPLEMENETD!!! */
 	void unchunk(); /* !!!TO BE IMPLEMENETD!!! */
@@ -40,6 +42,8 @@ public:
 	~message();
 
 	const vector<string>      &getStartLine() const;
+	const string              &getPath() const;
+	const vector<string>      &getArguments() const;
 	const map<string, string> &getHeaders() const;
 	const string              &getBody() const;
 	const string              &getOriginal() const;

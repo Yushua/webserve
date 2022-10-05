@@ -1,14 +1,7 @@
 #include <webserv.hpp>
 
 const string webserv::header_get_content_type(const string filename) {
-	string extension = "";
-
-	for (int i = filename.length() - 1; i > 0; --i) {
-		if (filename[i] == '.') {
-			extension = filename.substr(i + 1, filename.length() - i);
-			break;
-		}
-	}
+	string extension = ft_get_extension(filename);
 
 	if (extension == "html")
 		return "Content-type: text/html\n";

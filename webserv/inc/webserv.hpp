@@ -12,6 +12,7 @@
 #include <fcntl.h>
 
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -45,6 +46,8 @@ private:
 
 	const string header_get_content_type(const string filename);
 
+	void cgi_get(const int fd, const message &msg, const string &requested_file);
+
 public:
 	webserv(int port);
 	~webserv();
@@ -52,9 +55,10 @@ public:
 	void run();
 
 	void cmd_GET(const int index, const message &msg);
-	void cmd_HEAD(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
+	void cmd_HEAD(const int index, const message &msg);
 	void cmd_POST(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 };
+
 
 #endif

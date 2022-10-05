@@ -7,7 +7,7 @@ void webserv::cmd_HEAD(const int index, const message &msg) {
 
 	/* ??????? Maybe see if you don't have to read the file ??????? */
 
-	string requested_file = msg.getStartLine()[1];
+	string requested_file = msg.getPath();
 	if (requested_file == "/")
 		 requested_file = "/index.html";
 

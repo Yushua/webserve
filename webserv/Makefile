@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/10/04 14:50:12 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/10/05 18:14:55 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,9 +75,11 @@ run: all
 rerun: re run
 
 debug:
-	$(MAKE) re DEBUG="-D DEBUG"
+	$(MAKE) DEBUG="-D DEBUG"
 
 debugrun: debug run
+
+debugrerun: debug re run
 
 $(ARGS):
 	@exit
