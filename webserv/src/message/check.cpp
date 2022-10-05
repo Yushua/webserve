@@ -13,6 +13,53 @@
 
 void message::check()
 {
+<<<<<<< HEAD
+	// vector<string>::iterator itr_v = startLine.begin();
+	// vector<string>::iterator end_v = startLine.end();
+	// for (; itr_v < end_v; itr_v++)
+	// {
+	// 	std::cout << *itr_v << " " << std::endl;
+	// }
+	/*
+	error check
+		if (!file.good()) {
+		this->send_error(sockets[index].fd, 404);
+		this->disconnect_socket(index);
+		return;
+	*/
+
+	map<string, string>::iterator itr = headers.begin();
+	map<string, string>::iterator end = headers.end();
+	// std::vector<std::string> store;//dont' forget to delete it
+	std::string Host;
+	bool _end = false;
+	for (; itr != end; ++itr){	
+		if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked"))
+			chunked = true;
+		else if (itr->first == "Host:"){
+			if (this->unHost(itr->second))
+				Host = itr->second;
+			else
+				valid = false;
+		}
+		else if (itr->first == "Referer:"){
+			if (this->unReferer(itr->second, Host))
+				valid = true;
+			else
+				valid = false;
+		}
+		else if (checkNumber(itr->first, "x0123456789ABCDEF\r\n") || checkNumber(itr->second, "x0123456789ABCDEF\r\n")){
+			_end = true;
+			break;
+		}
+		// std::cout << itr->first << " " << itr->second << std::endl;
+	}
+	if (chunked != true && _end == true)
+		std::cout << "chunked was announced but not used" << std::endl;
+	if (chunked == true && _end == true)
+		this->unchunk();
+	// std::cout << " " << std::endl;
+=======
 	// // vector<string>::iterator itr_v = startLine.begin();
 	// // vector<string>::iterator end_v = startLine.end();
 	// // for (; itr_v < end_v; itr_v++)
@@ -52,6 +99,7 @@ void message::check()
 	// if (chunked == true && _end == true)
 	// 	this->unchunk();
 	// // std::cout << " " << std::endl;
+>>>>>>> 45fd62141712e2ce845add1dd8f8bb9bae074b84
 
 	// // if error == 400
 	// // 	valid = false;
@@ -140,6 +188,31 @@ void message::check()
 // 	return true;
 // }
 
+<<<<<<< HEAD
+bool message::unReferer(string string, std::string host)
+{
+	//http://127.0.0.1:4243/page2.html
+	//make it smaller by directly putting everything in
+	std::string check;
+	std::cout << "string ==" << host << std::endl;
+	if(string.substr(0, 7) != "http://")
+		return false;
+	if (string.substr(7, host.length() - 1) == host)
+		return false;
+	check = string.substr(host.length() + 6,  string.length());
+	// std::cout << "check == " << check << std::endl;
+	if (check == "/")
+		return true;
+	std::string root = "./root./" + check;
+	int _fd = open(root.c_str(), O_DIRECTORY);
+	if (fd == -1)
+		std::cout << "path is incorrect" << std::endl;
+	close(_fd);
+	string = " ";
+	host = " ";
+	return true;
+}
+=======
 // bool message::unReferer(string string, std::string host)
 // {
 // 	//http://127.0.0.1:4243/page2.html
@@ -179,3 +252,4 @@ GET PUT DELETE POST HEAD
 
 
 */
+>>>>>>> 45fd62141712e2ce845add1dd8f8bb9bae074b84

@@ -1,11 +1,32 @@
 #include <webserv.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 void webserv::cmd_POST(const int index, const message &msg) {
+	std::string sendtothisfile = msg.getStartLine()[1];
+	msg.getBody();
+	//https://www.geeksforgeeks.org/file-handling-c-classes/
+	ifstream file("root" + sendtothisfile);
 	(void)index;
 	(void)msg;
 }
 
 /*
+POST /echo/post/json HTTP/1.1
+Authorization: Bearer mt0dgHmLJMVQhvjpNXDyA83vA_Pxh33Y
+Accept: application/json
+Content-Type: application/json
+Content-Length: 85 /do in check
+Host: reqbin.com
+
+{
+   "Id": 12345,
+   "Customer": "John Smith",
+   "Quantity": 1,
+   "Price": 10.00
+}
+
 
 The POST method sends data to a server for processing
 Send data to the server for processing.  message bdy
