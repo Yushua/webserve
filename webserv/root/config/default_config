@@ -1,0 +1,55 @@
+start_server:
+listen: 8888 7777
+    root: ./root;
+    client_1: 1
+        allowed_ethod: DELETE POST
+    clinet_2: 1
+        allowed_ethod: DELETE POST
+
+end_server:
+
+user	www;
+
+events {
+    worker_connections          1024;
+}
+
+http {
+	include                     /etc/nginx/mime.types;
+    default_type                application/octet-stream;
+    sendfile                    on;
+    access_log                  /var/log/nginx/access.log;
+    keepalive_timeout           3000;
+
+	server {
+		listen                  80;
+	    listen 					[::]:80;
+
+		root                    /www;
+
+	    index                   index.html index.htm;
+        server_name             www;
+
+		location / {
+		try_files		        $uri $uri/ =404;
+	    }
+		return 301 https://192.168.99.200;
+	}
+	server {
+
+	    listen                  443 ssl;
+		listen 					[::]:443 ssl;
+		
+		ssl_certificate			/ect/ssl/certs/localhost.cert;
+    	ssl_certificate_key		/ect/ssl/certs/localhost.key;
+
+		root                    /www;
+
+	    index                   index.html index.htm;
+        server_name             www;
+
+		location / {
+		try_files		        $uri $uri/ =404;
+	    }
+	}
+}
