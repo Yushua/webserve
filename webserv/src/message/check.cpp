@@ -19,12 +19,18 @@ void message::check()
 	// {
 	// 	std::cout << *itr_v << " " << std::endl;
 	// }
-	
+	/*
+	error check
+		if (!file.good()) {
+		this->send_error(sockets[index].fd, 404);
+		this->disconnect_socket(index);
+		return;
+	*/
+
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
 	// std::vector<std::string> store;//dont' forget to delete it
 	std::string Host;
-	//why three times?
 	bool _end = false;
 	for (; itr != end; ++itr){	
 		if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked"))
@@ -163,19 +169,3 @@ bool message::unReferer(string string, std::string host)
 	host = " ";
 	return true;
 }
-
-/*
-
-General Header
-
-Request Header
-
-Response Header
-
-Entity Header
-
-
-GET PUT DELETE POST HEAD
-
-
-*/

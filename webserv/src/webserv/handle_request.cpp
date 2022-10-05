@@ -37,12 +37,12 @@ void webserv::handle_request(const int index)
 #endif
 
 	const string &type = msg.getStartLine().at(0);
-	if (type == "HEAD")
-		this->cmd_HEAD(index, msg);
-	else if (type == "GET")
+	if (type == "GET")
 		this->cmd_GET(index, msg);
 	else if (type == "POST")
 		this->cmd_POST(index, msg);
+	// else if (type == "HEAD")
+	// 	this->cmd_HEAD(index, msg);
 	if (type == "DELETE")
 		this->cmd_DELETE(index, msg);
 	//this->disconnect_socket(index);
