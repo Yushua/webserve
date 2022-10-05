@@ -51,6 +51,7 @@ void message::init() {
 					start = ++index;
 				}
 			}
+			arguments.push_back(url.substr(start, index - start));
 		}
 	}
 
@@ -79,15 +80,6 @@ void message::init() {
 
 	/* Get Body */
 	body = read_buffer.substr(index, read_buffer.length() - index);
-
-	cout << path << '\n';
-
-	vector<string>::iterator itr = arguments.begin();
-	vector<string>::iterator end = arguments.end();
-	for (; itr != end; ++itr) {
-		cout << *itr << "\n";
-	}
-	
 
 	/* Check Message Validity */
 	this->check();
