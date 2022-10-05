@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html>
-	<body>
-		<h1>Page 2</h1>
-		<p>Ok, this is a little much to do by hand...</p>
-		<a href="/">Go back</a>
-		<img src="pictures/puppy.jpg" alt="puppy" height="300px" width="500px" />
-		<a href="pictures/puppy.jpg" download>Download this Picture!</a>
-	</body>
+<body>
+
+<h1>Page 2</h1>
+<p>Ok, this is a little much to do by hand...</p>
+<a href="/">Go back</a>
+<a href="cgi-bin/hello_world.py">Run script!</a>
+
+<FORM METHOD=GET
+	ACTION="cgi-bin/hello_world.py">
+
+Please help us to improve the World Wide Web by filling in 
+the following questionaire:
+
+   <P>Your organization? <INPUT NAME="org" TYPE=text SIZE="48">
+
+   <P>Commercial? <INPUT NAME="commerce" TYPE=checkbox>
+
+           How many users? <INPUT NAME="users" TYPE=int>
+
+   <P>Which browsers do you use?
+
+   <OL>
+    <LI>Cello <INPUT NAME="browsers" TYPE=checkbox VALUE="cello">
+    <LI>Lynx <INPUT NAME="browsers" TYPE=checkbox VALUE="lynx">
+    <LI>X Mosaic <INPUT NAME="browsers" TYPE=checkbox VALUE="mosaic">
+    <LI>Others <INPUT NAME="others" SIZE=40>
+   </OL>
+
+A contact point for your site: <INPUT NAME="contact" SIZE="42">
+
+<P>Many thanks on behalf of the WWW central support team.
+
+    <P><INPUT TYPE=submit> <INPUT TYPE=reset>
+
+</FORM>
+
+<img src="pictures/puppy.jpg" alt="puppy" height="300px" width="500px" />
+<a href="pictures/puppy.jpg" download>Download this Picture!</a>
+
+</body>
 </html>

@@ -3,18 +3,16 @@
 
 #include <string>
 
-/* ft_error.cpp */
+/* error */
 int ft_error(const char *str);
 int ft_error(std::string *str);
 int ft_error(std::string &str);
 
-/* ft_to_string.cpp */
+/* string and path */
 const std::string ft_to_string(const size_t n);
-
-/* ft_substr.cpp */
 const std::string ft_substr(const std::string &str, size_t start, size_t len);
-
-/* ft_fd_to_str.cpp */
 const std::string ft_fd_to_str(const int fd);
+const std::string ft_get_extension(const std::string &path);
+const std::string ft_skip_heders(const std::string &str);
 
 #endif
