@@ -1,6 +1,6 @@
 #include <webserv.hpp>
 
-void webserv::cgi_get(const int fd, const message &msg, const string &requested_file) {
+void webserv::cgi_get(const int index, const message &msg, const string &requested_file) {
 	int child1 = fork();
 	if (child1 != 0)
 		return;
@@ -19,7 +19,7 @@ void webserv::cgi_get(const int fd, const message &msg, const string &requested_
 		string response = "HTTP/1.1 200 OK\n";
 		response += "Content-length: " + ft_to_string(body.length()) + "\n";
 		response += script_out;
-		this->send(fd, response);
+		this->send(index, response);
 		exit(0);
 	}
 	else {

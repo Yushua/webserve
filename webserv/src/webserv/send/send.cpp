@@ -5,7 +5,7 @@
 
 #define SEND_PACKAGE_SIZE 1024
 
-void webserv::send(const int fd, const string msg) {
+void webserv::send(const int index, const string msg) {
 
 	/* Send message in parts */
 
@@ -15,7 +15,7 @@ void webserv::send(const int fd, const string msg) {
 	long jump = 0;
 	while (length_left > 0) {
 		jump = std::min<long>(length_left, SEND_PACKAGE_SIZE);
-		::send(fd, str_ptr, jump, 0);
+		::send(sockets[index].fd, str_ptr, jump, 0);
 		length_left -= SEND_PACKAGE_SIZE;
 		str_ptr += jump;
 	}

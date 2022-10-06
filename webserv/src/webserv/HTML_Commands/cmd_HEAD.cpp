@@ -16,7 +16,7 @@ void webserv::cmd_HEAD(const int index, const message &msg) {
 
 	/* Check if path exists */
 	if (!file.good()) {
-		this->send_error(sockets[index].fd, 404);
+		this->send_error(index, 404);
 		this->disconnect_socket(index);
 		return;
 	}
@@ -36,5 +36,5 @@ void webserv::cmd_HEAD(const int index, const message &msg) {
 	}
 
 	/* Send response */
-	this->send(sockets[index].fd, ok);
+	this->send(index, ok);
 }

@@ -2,14 +2,15 @@
 #include <colors.hpp>
 #include <iostream>
 
-void webserv::connect_new_socket()
+void webserv::connect_new_socket(const int index)
 {
 	/* Don't connect new socket when array is full */
 	if (new_socket_count >= SOCKET_COUNT_MAX)
 		return;
 
 	/* Connect to new socket */
-	socket_t new_socket = accept(welcome_socket, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+	struct SocketInfo &sock_info = sockets_info[index];
+	socket_t new_socket = accept(sockets[index].fd, (struct sockaddr *)&sock_info.address, (socklen_t*)&sock_info.addrlen);
 	
 	if (new_socket < 0)
 		perror("accept");
@@ -20,6 +21,7 @@ void webserv::connect_new_socket()
 		sockets[new_socket_count].fd = new_socket;
 		sockets[new_socket_count].events = POLLIN;
 		sockets[new_socket_count].revents = 0;
+		sockets_info[new_socket_count].listen = false;
 #ifdef DEBUG
 		cout << GREEN << "  -~={ Connected " << new_socket_count << " }=~-\n" << RESET;
 #endif
@@ -38,5 +40,6 @@ void webserv::disconnect_socket(const int index)
 	/* This is the fastest way to remove an item from an array, without leaving a gap */
 	close(sockets[index].fd);
 	sockets[index].fd = sockets[new_socket_count].fd;
+	sockets_info[index] = sockets_info[new_socket_count];
 	new_socket_count--;
 }

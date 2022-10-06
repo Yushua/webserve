@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/10/05 18:14:55 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/10/06 15:59:06 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,7 +79,7 @@ debug:
 
 debugrun: debug run
 
-debugrerun: debug re run
+debugrerun: fclean debug run
 
 $(ARGS):
 	@exit

@@ -83,5 +83,4 @@ void message::init() {
 
 	/* Check Message Validity */
 	this->check();
-	valid = true;
 }

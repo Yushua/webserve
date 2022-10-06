@@ -14,13 +14,9 @@ void webserv::run()
 			case -1: perror("poll");exit(1); /* !!!ERROR!!! */
 		}
 
-		/* Check for new connections */
-		if (sockets[0].revents == POLLIN)
-			this->connect_new_socket();
-
 		/* Handle connections */
 		string read_buffer;
-		for (int index = 1; index <= socket_count; index++) {
+		for (int index = 0; index <= socket_count; index++) {
 			switch (sockets[index].revents) {
 
 				/* Nothing to do */
@@ -29,11 +25,16 @@ void webserv::run()
 				
 				/* There's something to read */
 				case POLLIN:
-					this->handle_request(index); continue;
+					if (sockets_info[index].listen)
+						this->connect_new_socket(index); /* Handle new connection */
+					else
+						this->handle_request(index); /* Handle new request */
+					continue;
 				
 				/* Error; disconnect! */
 				default:
-					this->disconnect_socket(index); continue;
+					this->disconnect_socket(index);
+					continue;
 			}
 		}
 	}
