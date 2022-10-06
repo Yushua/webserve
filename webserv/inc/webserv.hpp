@@ -50,13 +50,16 @@ private:
 
 	const string header_get_content_type(const string filename);
 
-	void cgi_get(const int index, const message &msg, const string &requested_file);
+	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
+
+	map<string, string> cgi_options;
 
 public:
 	webserv();
 	~webserv();
 
-	void listen_to_port(int port);
+	void config_listen_to_port(int port);
+	void config_add_cgi_option(string extension, string interpreter_path);
 
 	void run();
 

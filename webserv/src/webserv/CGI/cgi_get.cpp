@@ -1,17 +1,16 @@
 #include <webserv.hpp>
 
-void webserv::cgi_get(const int index, const message &msg, const string &requested_file) {
-	// int child1 = fork();
-	// if (child1 != 0)
-	// 	return;
-	
+void webserv::cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter) {
 	int fds[2];
 	pipe(fds);
 
-	int child2 = fork();
-	if (child2 != 0) {
+	int child = fork();
+	if (child == -1)
+		ft_error("fork");
+
+	if (child != 0) {
 		int ret;
-		waitpid(child2, &ret, 0);
+		waitpid(child, &ret, 0);
 
 		close(fds[1]);
 		string script_out = ft_fd_to_str(fds[0]);
@@ -26,7 +25,7 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 	else {
 		const vector<string> &args = msg.getArguments();
 
-		const char *argv[3] = {"/Users/rdrazsky/.brew/bin/python3", requested_file.c_str(), NULL};
+		const char *argv[3] = {interpreter != "" ? interpreter.c_str() : requested_file.c_str(), requested_file.c_str(), NULL};
 		const char **envp = (const char **)new char *[args.size() + 1];
 		
 		size_t i = 0;

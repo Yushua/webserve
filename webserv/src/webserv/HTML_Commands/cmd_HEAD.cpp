@@ -25,6 +25,7 @@ void webserv::cmd_HEAD(const int index, const message &msg) {
 	/* Read file */
 	stringstream buffer;
 	buffer << file.rdbuf();
+	file.close();
 
 	string ok;
 	{/* Generate response */	

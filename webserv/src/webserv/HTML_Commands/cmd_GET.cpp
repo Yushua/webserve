@@ -25,11 +25,13 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	/* Read file */
 	stringstream buffer;
 	buffer << file.rdbuf();
+	file.close();
 
 	/* Checking if it's a python script */
 	string extension = ft_get_extension(requested_file);
-	if (extension == "py") {
-		cgi_get(index, msg, requested_file);
+	map<string, string>::iterator key = cgi_options.find(extension);
+	if (key != cgi_options.end()) {
+		cgi_get(index, msg, requested_file, key->second);
 		return;
 	}
 

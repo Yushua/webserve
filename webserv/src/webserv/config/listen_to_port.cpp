@@ -1,7 +1,7 @@
 #include <webserv.hpp>
 #include <colors.hpp>
 
-void webserv::listen_to_port(int port) {
+void webserv::config_listen_to_port(int port) {
 	try {
 		/* code */
 		socket_t new_welcome_socket;
@@ -50,7 +50,7 @@ void webserv::listen_to_port(int port) {
 		sockets_info[new_socket_count].addrlen = addrlen;
 		fcntl(new_welcome_socket, F_SETFL, O_NONBLOCK);
 #ifdef DEBUG
-		std::cerr << GREEN << "  -~={ " << new_socket_count << " is listening to port " << port << " }=~-\n" << RESET;	
+		std::cout << GREEN << "  -~={ " << new_socket_count << " is listening to port " << port << " }=~-\n" << RESET;	
 #endif
 		++new_socket_count;
 	}
