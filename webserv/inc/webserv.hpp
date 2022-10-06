@@ -24,7 +24,7 @@ typedef int socket_t;
 #define TIMEOUT 3*60*1000
 #define READ_BUFFER_SIZE 1024
 
-#define SOCKET_COUNT_MAX 10
+#define SOCKET_COUNT_MAX 250
 
 struct SocketInfo {
 	bool listen;

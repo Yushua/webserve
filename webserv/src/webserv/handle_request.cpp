@@ -27,13 +27,14 @@ void webserv::handle_request(const int index)
 			++delimiter_position;
 		cout << body.substr(0, delimiter_position) << '\n';
 	}
-
-	{/* Print out headers */
-		map<string, string>::const_iterator itr = msg.getHeaders().cbegin();
-		map<string, string>::const_iterator end = msg.getHeaders().cend();
-		for (; itr != end; ++itr)
-			cout << itr->first << ": " << itr->second << '\n';
-	}
+	#ifndef NOHEADER
+		{/* Print out headers */
+			map<string, string>::const_iterator itr = msg.getHeaders().cbegin();
+			map<string, string>::const_iterator end = msg.getHeaders().cend();
+			for (; itr != end; ++itr)
+				cout << itr->first << ": " << itr->second << '\n';
+		}
+	#endif
 #endif
 
 	const string &type = msg.getStartLine().at(0);
