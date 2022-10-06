@@ -23,7 +23,7 @@ void webserv::connect_new_socket(const int index)
 		sockets[new_socket_count].revents = 0;
 		sockets_info[new_socket_count].listen = false;
 #ifdef DEBUG
-		cout << GREEN << "  -~={ Connected " << new_socket_count << " }=~-\n" << RESET;
+		cout << GREEN << "  -~={ " << new_socket_count << " connected }=~-\n" << RESET;
 #endif
 	}
 }
@@ -31,9 +31,9 @@ void webserv::connect_new_socket(const int index)
 void webserv::disconnect_socket(const int index)
 {
 #ifdef DEBUG
-	cout << RED << "  -~={ Diconnected " << index << " }=~-\n" << RESET;
+	cout << RED << "  -~={ " << index << " diconnected }=~-\n" << RESET;
 	if (new_socket_count != index)
-		cout << YELLOW << "  -~={ Moved " << new_socket_count << " to " << index << " }=~-\n" << RESET;
+		cout << YELLOW << "  -~={ " << new_socket_count << " moved to " << index << " }=~-\n" << RESET;
 #endif
 
 	/* Replace disconnecting socket with the last item in the array */

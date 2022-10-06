@@ -18,7 +18,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	/* Check if path exists */
 	if (!file.good()) {
 		this->send_error(index, 404);
-		this->disconnect_socket(index);
+		//this->disconnect_socket(index);
 		return;
 	}
 
@@ -29,7 +29,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	/* Checking if it's a python script */
 	string extension = ft_get_extension(requested_file);
 	if (extension == "py") {
-		cgi_get(sockets[index].fd, msg, requested_file);
+		cgi_get(index, msg, requested_file);
 		return;
 	}
 

@@ -49,6 +49,9 @@ void webserv::listen_to_port(int port) {
 		sockets_info[new_socket_count].address = address;
 		sockets_info[new_socket_count].addrlen = addrlen;
 		fcntl(new_welcome_socket, F_SETFL, O_NONBLOCK);
+#ifdef DEBUG
+		std::cerr << GREEN << "  -~={ " << new_socket_count << " is listening to port " << port << " }=~-\n" << RESET;	
+#endif
 		++new_socket_count;
 	}
 	catch(const char *error) {

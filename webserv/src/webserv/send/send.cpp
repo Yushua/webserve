@@ -22,26 +22,18 @@ void webserv::send(const int index, const string msg) {
 
 #ifdef DEBUG
 	string stripped_msg = "";
-	#ifndef NOHEADER
-		/* Print response without body */
-		int nl = 0;
-		for (size_t i = 0; i < msg.length(); i++) {
-			if (msg[i] == '\n')
-				nl++;
-			else
-				nl = 0;
-			if (nl == 2) {
-				stripped_msg = msg.substr(0, i - 1);
-				break;
-			}
+	/* Print response without body */
+	int nl = 0;
+	for (size_t i = 0; i < msg.length(); i++) {
+		if (msg[i] == '\n')
+			nl++;
+		else
+			nl = 0;
+		if (nl == 2) {
+			stripped_msg = msg.substr(0, i - 1);
+			break;
 		}
-	#else
-		/* Print response with only start line */
-		int i = 0;
-		while (msg[i] != '\n')
-			++i;
-		stripped_msg = msg.substr(0, i);
-	#endif
-	cout << MAGENTA << "  -~={ Responded with }=~- \n" << RESET << stripped_msg << '\n';
+	}
+	cout << MAGENTA << "  -~={ " << index << " was sent this }=~- \n" << RESET << stripped_msg << '\n';
 #endif
 }
