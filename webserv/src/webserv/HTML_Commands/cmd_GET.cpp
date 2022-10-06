@@ -27,7 +27,7 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	buffer << file.rdbuf();
 	file.close();
 
-	/* Checking if it's a python script */
+	/* Checking if it's a cgi request */
 	string extension = ft_get_extension(requested_file);
 	map<string, string>::iterator key = cgi_options.find(extension);
 	if (key != cgi_options.end()) {
