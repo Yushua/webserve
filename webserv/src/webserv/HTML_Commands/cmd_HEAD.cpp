@@ -10,14 +10,15 @@ void webserv::cmd_HEAD(const int index, const message &msg) {
 	string requested_file = msg.getPath();
 	if (requested_file == "/")
 		 requested_file = "/index.html";
+	requested_file = "root" + requested_file;
 
-	/* Try openign file in root */
-	ifstream file("root" + requested_file);
+	/* Open file in root */
+	ifstream file(requested_file);
 
 	/* Check if path exists */
 	if (!file.good()) {
 		this->send_error(index, 404);
-		this->disconnect_socket(index);
+		//this->disconnect_socket(index);
 		return;
 	}
 
