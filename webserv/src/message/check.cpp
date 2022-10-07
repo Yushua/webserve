@@ -45,8 +45,12 @@ void message::postCheck()
 
 	string _body = body;
 	for (; itr != end; ++itr){
-		if (itr->first == "Content-Length:"){
-			this->valid = true;
+		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
+			double lenght = atoi(itr->second.c_str());
+			if (lenght != getBody().length())
+				this->valid = false;
+			else
+				this->valid = true;
 		}
 		else if (itr->first == "Host:"){
 			this->unHost(itr->second);
