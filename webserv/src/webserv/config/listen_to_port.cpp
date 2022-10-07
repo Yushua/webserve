@@ -1,7 +1,7 @@
 #include <webserv.hpp>
 #include <colors.hpp>
 
-void webserv::config_listen_to_port(int port) {
+void webserv::config_listen_to_port(const int port) {
 	try {
 		/* code */
 		socket_t new_welcome_socket;

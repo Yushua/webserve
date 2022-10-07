@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <stdbool.h>
 #include <poll.h>
@@ -70,9 +71,9 @@ public:
 	webserv();
 	~webserv();
 
-	void config_listen_to_port(int port);
-	void config_add_cgi_option(string extension, string interpreter_path);
-	void config_add_error_page(int error, string page_path); /* !!!TO BE IMPLEMENETD!!! */
+	void config_listen_to_port(const int port);
+	void config_add_cgi_option(const string extension, const string interpreter_path);
+	void config_add_error_page(const int error, const string page_path);
 
 	void run();
 

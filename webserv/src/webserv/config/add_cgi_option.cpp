@@ -2,7 +2,7 @@
 #include <colors.hpp>
 #include <fstream>
 
-void webserv::config_add_cgi_option(string extension, string interpreter_path) {
+void webserv::config_add_cgi_option(const string extension, const string interpreter_path) {
 	(void)extension;
 	if (interpreter_path != "") {
 		ifstream file(interpreter_path);
