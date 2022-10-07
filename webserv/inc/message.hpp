@@ -26,13 +26,19 @@ private:
 	string              body;
 	string              read_buffer;
 	bool                valid;
-	bool                complete;
-	bool                chunked;
 
-	void check(); /* !!!TO BE IMPLEMENETD!!! */
-	void unchunk(); /* !!!TO BE IMPLEMENETD!!! */
-	bool unHost(string string); /* !!!TO BE IMPLEMENETD!!! */
-	bool unReferer(string string, std::string host); /* !!!TO BE IMPLEMENETD!!! */
+	void check();
+	void unchunk();
+
+	std::string 		Host;
+	bool getCheck();
+	bool unHost(string string);
+	bool unReferer(string string);
+	
+	bool getPost();
+	int 				contLenght;
+
+	int checkNumber(std::string string, const char *input);
 
 public:
 	message(const int fd);
@@ -51,6 +57,7 @@ public:
 	const bool                &isValid() const;
 	const bool                &isComplete() const;
 	const bool                &isChunked() const;
+	const int				  &getContLenght() const;
 };
 
 ostream &operator<<(ostream &ostr, const message &msg);

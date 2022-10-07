@@ -1,9 +1,8 @@
 #include <message.hpp>
 
 message::message(){
-	this->complete = true;
 	this->valid = false;
-	this->chunked = false;
+	this->contLenght = 0;
 }
 message::message(const message &other)
 	{ *this = other; }
@@ -13,8 +12,7 @@ message &message::operator=(const message &other) {
 	body        = other.body;
 	read_buffer = other.read_buffer;
 	valid = other.valid;
-	complete = other.complete;
-	chunked = other.chunked;
+	contLenght = other.contLenght;
 	return *this;
 }
 message::~message(){}
@@ -36,10 +34,11 @@ const string &message::getBody() const
 const string &message::getOriginal() const
 	{ return read_buffer; }
 
+const int &message::getContLenght() const
+	{ return contLenght; }
+
 const bool &message::isValid() const
 	{ return valid; }
 
-const bool &message::isComplete() const
-	{ return complete; }
-const bool &message::isChunked() const
-	{ return chunked; }
+// const bool &message::isChunked() const
+// 	{ return chunked; }
