@@ -6,13 +6,13 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 10:27:32 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/07 13:33:07 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/07 16:04:38 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <message.hpp>
 
-bool message::unHost(string string)
+void message::unHost(string string)
 {
 	//127.0.0.1:4243
 	// std::string tmp = string.substr(0, string.find(":"));
@@ -24,7 +24,7 @@ bool message::unHost(string string)
 		i = string.find(".");
 		if(checkNumber(string, "0123456789") != -1){
 			// std::cout << check << std::endl;
-			return false;
+			this->valid = false;
 		}
 		string.erase(0, i+1);
 		ip++;
@@ -33,12 +33,12 @@ bool message::unHost(string string)
 		i = string.find(":");
 		if(checkNumber(string, "0123456789") != -1){
 			// std::cout << check << std::endl;
-			return false;
+			this->valid = false;
 		}
 		ip++;
 	}
 	if (ip != 4)
-		return false;
+		this->valid = false;
     this->Host = string;
-	return true;
+	this->valid = true;
 }

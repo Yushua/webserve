@@ -1,6 +1,6 @@
 #include <webserv.hpp>
 
-int main(int argc, char **argv) {
+int main() {
 	webserv server;
 	server.config_listen_to_port(4242);
 	server.config_listen_to_port(4243);

@@ -31,11 +31,11 @@ private:
 	void unchunk();
 
 	std::string 		Host;
-	bool getCheck();
-	bool unHost(string string);
-	bool unReferer(string string);
+	void getCheck();
+	void unHost(string string);
+	void unReferer(string string);
 	
-	bool getPost();
+	void postCheck();
 	int 				contLenght;
 
 	int checkNumber(std::string string, const char *input);
