@@ -82,5 +82,6 @@ void message::init() {
 	body = read_buffer.substr(index, read_buffer.length() - index);
 
 	/* Check Message Validity */
-	this->check();
+	//this->check();
+	valid = true;
 }

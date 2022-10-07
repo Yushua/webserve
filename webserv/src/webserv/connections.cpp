@@ -9,7 +9,7 @@ void webserv::connect_new_socket(const int index)
 		return;
 
 	/* Connect to new socket */
-	struct SocketInfo &sock_info = sockets_info[index];
+	struct SocketInfo_s &sock_info = sockets_info[index];
 	socket_t new_socket = accept(sockets[index].fd, (struct sockaddr *)&sock_info.address, (socklen_t*)&sock_info.addrlen);
 	
 	if (new_socket < 0)

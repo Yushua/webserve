@@ -26,10 +26,17 @@ typedef int socket_t;
 
 #define SOCKET_COUNT_MAX 250
 
-struct SocketInfo {
+struct SocketInfo_s {
 	bool listen;
 	struct sockaddr_in address;
 	int addrlen;
+};
+
+struct Config_s {
+	string redirect_path;
+	map<string, bool> allowed_methods;
+	size_t client_body_size;
+	string dir_behavior;
 };
 
 class webserv {
@@ -39,7 +46,7 @@ private:
 	int new_socket_count; /* Used to update the variable above */
 
 	struct pollfd *sockets;
-	struct SocketInfo *sockets_info;
+	struct SocketInfo_s *sockets_info;
 
 	void connect_new_socket(const int index);
 	void handle_request(const int index);
@@ -52,7 +59,12 @@ private:
 
 	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
 
-	map<string, string> cgi_options;
+	/* Global config stuff */
+		map<string, string> cgi_options;
+		map<int, string> error_pages;
+	/* Local config stuff */
+		struct Config_s default_config;
+		map<string, Config_s> configs;
 
 public:
 	webserv();
@@ -60,6 +72,7 @@ public:
 
 	void config_listen_to_port(int port);
 	void config_add_cgi_option(string extension, string interpreter_path);
+	void config_add_error_page(int error, string page_path); /* !!!TO BE IMPLEMENETD!!! */
 
 	void run();
 

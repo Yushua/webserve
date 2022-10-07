@@ -6,7 +6,7 @@ webserv::webserv() {
 
 	/* Array of all sockets for poll */
 	sockets = new struct pollfd[SOCKET_COUNT_MAX];
-	sockets_info = new struct SocketInfo[SOCKET_COUNT_MAX];
+	sockets_info = new struct SocketInfo_s[SOCKET_COUNT_MAX];
 }
 
 webserv::~webserv() {
