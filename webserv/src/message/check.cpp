@@ -55,6 +55,9 @@ void message::checkPost()
 		else if (itr->first == "Host:"){
 			this->unHost(itr->second);
 		}
+		// else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked"){
+		// 	this->unHost(itr->second);
+		// }
 	}
 }
 
@@ -71,6 +74,7 @@ void message::checkDelete()
 
 void message::check()
 {
+	//get the
 	vector<std::string>::iterator itr_v = startLine.begin();
 	vector<std::string>::iterator end_v = startLine.end();
 	for (; itr_v < end_v; itr_v++)
@@ -82,10 +86,10 @@ void message::check()
 		else if (*itr_v == "POST")
 			checkDelete();
 	}
-	map<string, string>::iterator itr = headers.begin();
-	map<string, string>::iterator end = headers.end();
-	std::string Host;
-	for (; itr != end; ++itr){	
-		std::cout << itr->first << " " << itr->second << std::endl;
-	}
+	// map<string, string>::iterator itr = headers.begin();
+	// map<string, string>::iterator end = headers.end();
+	// std::string Host;
+	// for (; itr != end; ++itr){	
+	// 	std::cout << itr->first << " " << itr->second << std::endl;
+	// }
 }
