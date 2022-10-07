@@ -17,6 +17,8 @@ private:
 	message();
 	void init();
 
+	bool isFileDirec();
+
 	//the first line of the message from the client
 	vector<string>      startLine;
 	string              path;
