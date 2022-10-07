@@ -17,7 +17,7 @@ private:
 	message();
 	void init();
 
-	bool isFileDirec();
+	bool isFileDirec;
 
 	//the first line of the message from the client
 	vector<string>      startLine;
@@ -28,9 +28,11 @@ private:
 	string              body;
 	string              read_buffer;
 	bool                valid;
+	bool				chunkS;
+	bool				chunkE;
 
 	void check();
-	void unchunk();
+	void unChunk(std::string string);
 
 	std::string 		Host;
 	void checkGet();

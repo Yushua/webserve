@@ -6,6 +6,7 @@ message::message(){
 }
 message::message(const message &other)
 	{ *this = other; }
+
 message &message::operator=(const message &other) {
 	startLine   = other.startLine;
 	headers     = other.headers;
@@ -22,6 +23,7 @@ const vector<string> &message::getStartLine() const
 
 const string &message::getPath() const
 	{ return path; }
+
 const vector<string> &message::getArguments() const
 	{ return arguments; }
 
@@ -39,6 +41,3 @@ void message::setContLenght(double _contLenght)
 
 const bool &message::isValid() const
 	{ return valid; }
-
-// const bool &message::isChunked() const
-// 	{ return chunked; }

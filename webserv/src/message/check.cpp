@@ -55,9 +55,13 @@ void message::checkPost()
 		else if (itr->first == "Host:"){
 			this->unHost(itr->second);
 		}
-		// else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked"){
-		// 	this->unHost(itr->second);
-		// }
+		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
+			this->unChunk(itr->second);
+			if (chunkE == true && chunkS == true)
+				this->valid = true;
+			else if (chunkS == true && chunkE == false)
+				this->valid = false;
+		}
 	}
 }
 
@@ -86,10 +90,4 @@ void message::check()
 		else if (*itr_v == "POST")
 			checkDelete();
 	}
-	// map<string, string>::iterator itr = headers.begin();
-	// map<string, string>::iterator end = headers.end();
-	// std::string Host;
-	// for (; itr != end; ++itr){	
-	// 	std::cout << itr->first << " " << itr->second << std::endl;
-	// }
 }
