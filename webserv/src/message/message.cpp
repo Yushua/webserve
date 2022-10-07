@@ -34,8 +34,8 @@ const string &message::getBody() const
 const string &message::getOriginal() const
 	{ return read_buffer; }
 
-const int &message::getContLenght() const
-	{ return contLenght; }
+void message::setContLenght(double _contLenght)
+	{ this->contLenght = _contLenght;}
 
 const bool &message::isValid() const
 	{ return valid; }

@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <fcntl.h>
 
-void message::getCheck()
+void message::checkGet()
 {
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
@@ -20,7 +20,7 @@ void message::getCheck()
 	}
 }
 
-void message::postCheck()
+void message::checkPost()
 {
 	/*
 	POST /echo/post/json HTTP/1.1
@@ -46,13 +46,24 @@ void message::postCheck()
 	string _body = body;
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
-			double lenght = atoi(itr->second.c_str());
-			if (lenght != getBody().length())
+			setContLenght(atoi(itr->second.c_str()));
+			if (this->contLenght != getBody().length())
 				this->valid = false;
 			else
 				this->valid = true;
 		}
 		else if (itr->first == "Host:"){
+			this->unHost(itr->second);
+		}
+	}
+}
+
+void message::checkDelete()
+{
+	map<string, string>::iterator itr = headers.begin();
+	map<string, string>::iterator end = headers.end();
+	for (; itr != end; ++itr){
+		if (itr->first == "Host:"){
 			this->unHost(itr->second);
 		}
 	}
@@ -65,9 +76,11 @@ void message::check()
 	for (; itr_v < end_v; itr_v++)
 	{
 		if (*itr_v == "GET")
-			getCheck();
+			checkGet();
 		else if (*itr_v == "POST")
-			postCheck();
+			checkPost();
+		else if (*itr_v == "POST")
+			checkDelete();
 	}
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
