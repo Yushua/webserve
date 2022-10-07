@@ -31,13 +31,13 @@ private:
 	void unchunk();
 
 	std::string 		Host;
-	bool getCheck();
-	bool unHost(string string);
-	bool unReferer(string string);
+	void checkGet();
+	void unHost(string string);
+	void unReferer(string string);
 	
-	bool getPost();
-	int 				contLenght;
-
+	void checkPost();
+	double				contLenght;
+	void checkDelete();
 	int checkNumber(std::string string, const char *input);
 
 public:
@@ -57,7 +57,7 @@ public:
 	const bool                &isValid() const;
 	const bool                &isComplete() const;
 	const bool                &isChunked() const;
-	const int				  &getContLenght() const;
+	void				  setContLenght(double _contLenght);
 };
 
 ostream &operator<<(ostream &ostr, const message &msg);
