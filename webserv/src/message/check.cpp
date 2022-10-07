@@ -40,6 +40,7 @@ bool message::getPost()
 
 	do i need to check if /echo/post/json is also valid?
 	*/
+
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
 
@@ -60,17 +61,17 @@ bool message::getPost()
 
 void message::check()
 {
-	// vector<std::string>::iterator itr_v = startLine.begin();
-	// vector<std::string>::iterator end_v = startLine.end();
-	// for (; itr_v < end_v; itr_v++)
-	// {
-	// 	if (itr_v.find() == "GET")
-	// 		valid = getCheck()
-	// }
-	// map<string, string>::iterator itr = headers.begin();
-	// map<string, string>::iterator end = headers.end();
-	// std::string Host;
-	// for (; itr != end; ++itr){	
-	// 	std::cout << itr->first << " " << itr->second << std::endl;
-	// }
+	vector<std::string>::iterator itr_v = startLine.begin();
+	vector<std::string>::iterator end_v = startLine.end();
+	for (; itr_v < end_v; itr_v++)
+	{
+		if (itr_v.find() == "GET")
+			valid = getCheck();
+	}
+	map<string, string>::iterator itr = headers.begin();
+	map<string, string>::iterator end = headers.end();
+	std::string Host;
+	for (; itr != end; ++itr){	
+		std::cout << itr->first << " " << itr->second << std::endl;
+	}
 }
