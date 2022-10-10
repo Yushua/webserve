@@ -57,10 +57,12 @@ void message::checkPost()
 		}
 		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
 			this->unChunk(itr->second);
-			if (chunkE == true && chunkS == true)
-				this->valid = true;
-			else if (chunkS == true && chunkE == false)
-				this->valid = false;
+			//wjile still waiitng for other chunks
+			//hving recieved last chunk
+			// if (chunkE == true && chunkS == true)
+			// 	this->valid = true;
+			// else if (chunkS == true && chunkE == false)
+			// 	this->valid = false;
 		}
 	}
 }
@@ -83,11 +85,11 @@ void message::check()
 	vector<std::string>::iterator end_v = startLine.end();
 	for (; itr_v < end_v; itr_v++)
 	{
-		if (*itr_v == "GET")
+		if (*itr_v == "GET" || *itr_v == "HEAD")
 			checkGet();
 		else if (*itr_v == "POST")
 			checkPost();
-		else if (*itr_v == "POST")
+		else if (*itr_v == "DELETE")
 			checkDelete();
 	}
 }

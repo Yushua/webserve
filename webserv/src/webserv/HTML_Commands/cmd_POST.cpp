@@ -6,6 +6,8 @@
 void webserv::cmd_POST(const int index, const message &msg) {
 	std::string sendtothisfile = msg.getPath();
 	msg.getBody();
+	//if file is not there, so created, and succssfull 201
+	//else if created nothing new 200
 	//https://www.geeksforgeeks.org/file-handling-c-classes/
 	ofstream file;
 	file.open(sendtothisfile, ios::out);
