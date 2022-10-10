@@ -17,6 +17,7 @@
 
 using namespace std;
 
+#include <cstdlib>
 #include <ft_lib.hpp>
 #include <message.hpp>
 
@@ -71,9 +72,11 @@ public:
 	webserv();
 	~webserv();
 
-	void config_listen_to_port(const int port);
+	void config_listen_to_port(const unsigned port);
+	void config_listen_to_port(const string port);
 	void config_add_cgi_option(const string extension, const string interpreter_path);
-	void config_add_error_page(const int error, const string page_path);
+	void config_add_error_page(const unsigned error, const string page_path);
+	void config_add_error_page(const string error, const string page_path);
 
 	void run();
 

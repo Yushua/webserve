@@ -1,7 +1,12 @@
 #include <webserv.hpp>
 #include <colors.hpp>
 
-void webserv::config_listen_to_port(const int port) {
+void webserv::config_listen_to_port(const unsigned int port) {
+	if (port < 0 || port > 65535) {
+		std::cerr << RED << "  -~={ Can't listen to port " << port << ", because it's not valid }=~-\n" << RESET;
+		return;
+	}
+	
 	try {
 		/* code */
 		socket_t new_welcome_socket;
@@ -57,4 +62,8 @@ void webserv::config_listen_to_port(const int port) {
 	catch(const char *error) {
 		std::cerr << RED << "  -~={ Can't listen to port " << port << ", because of a " << error << " error }=~-\n" << RESET;
 	}
+}
+
+void webserv::config_listen_to_port(const string port) {
+	config_listen_to_port(atoi(port.c_str()));
 }
