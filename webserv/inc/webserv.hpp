@@ -34,10 +34,10 @@ struct SocketInfo_s {
 };
 
 struct Config_s {
-	string redirect_path;
-	map<string, bool> allowed_methods;
-	size_t client_body_size;
-	string dir_behavior;
+	string redirect_path; //
+	map<string, bool> allowed_methods; // method:
+	size_t client_body_size; // client_body_size:
+	string dir_behavior; // dir_behavior:
 };
 
 class webserv {
