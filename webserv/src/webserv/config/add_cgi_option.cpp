@@ -3,14 +3,16 @@
 #include <fstream>
 
 void webserv::config_add_cgi_option(const string extension, const string interpreter_path) {
-	(void)extension;
 	if (interpreter_path != "") {
-		ifstream file(interpreter_path);
-		if (!file.good()) {
-			std::cerr << RED << "  -~={ cgi: no file at " << interpreter_path << " }=~-\n" << RESET;
+		struct stat file_info;	
+		if (stat(interpreter_path.c_str(), &file_info) == -1) {
+			std::cerr << RED << "  -~={ cgi: " << interpreter_path << " doesn't exist }=~-\n" << RESET;
 			return;
 		}
-		file.close();
+		if (!S_ISREG(file_info.st_mode)) {
+			std::cerr << RED << "  -~={ cgi: " << interpreter_path << " is not a file }=~-\n" << RESET;
+			return;
+		}
 	}
 	cgi_options.insert(pair<string, string>(extension, interpreter_path));
 #ifdef DEBUG
