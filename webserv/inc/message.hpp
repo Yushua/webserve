@@ -37,7 +37,7 @@ private:
 	struct Config_s     config;
 
 	void check();
-	void unChunk(std::string string);
+	void unChunk();
 
 	std::string 		Host;
 	void checkGet();

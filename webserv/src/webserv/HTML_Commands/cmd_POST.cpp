@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 
+//make sure when uploading, that you do it in a temporarely folder
 void webserv::cmd_POST(const int index, const message &msg) {
 	std::string sendtothisfile = msg.getPath();
 	msg.getBody();
