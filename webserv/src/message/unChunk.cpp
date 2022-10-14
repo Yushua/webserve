@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 20:17:59 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/07 21:00:53 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/14 16:49:50 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,15 @@ void message::unChunk(std::string _string)
         Transfer-Encoding: deflate
         Transfer-Encoding: gzip
 
+{
+    
+}
     */
     this->chunkS = true;
     static std::string chunk;
     if (!_string.find(" chunk")){
         this->chunkE = true;
     }
-    map<string, string>::iterator itr = headers.begin();
-	map<string, string>::iterator end = headers.end();
     bool status = false;
     status = true;
 }
