@@ -36,7 +36,7 @@ struct SocketInfo_s {
 
 struct Config_s {
 	string redirect_path; //
-	map<string, bool> allowed_methods; // method:
+	vector<string> allowed_methods; // method:
 	size_t client_body_size; // client_body_size:
 	string dir_behavior; // dir_behavior:
 };
@@ -60,6 +60,8 @@ private:
 	const string header_get_content_type(const string filename);
 
 	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
+
+public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 
 	/* Global config stuff */
 		map<string, string> cgi_options;
