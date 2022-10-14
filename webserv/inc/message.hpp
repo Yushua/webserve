@@ -28,11 +28,9 @@ private:
 	string              body;
 	string              read_buffer;
 	bool                valid;
-	bool				chunkS;
-	bool				chunkE;
 
 	void check();
-	void unChunk(std::string string);
+	void unChunk();
 
 	std::string 		Host;
 	void checkGet();
@@ -61,7 +59,7 @@ public:
 	const bool                &isValid() const;
 	const bool                &isComplete() const;
 	const bool                &isChunked() const;
-	void				  setContLenght(double _contLenght);
+	void						setContLenght(double _contLenght);
 };
 
 ostream &operator<<(ostream &ostr, const message &msg);

@@ -56,13 +56,7 @@ void message::checkPost()
 			this->unHost(itr->second);
 		}
 		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-			this->unChunk(itr->second);
-			//wjile still waiitng for other chunks
-			//hving recieved last chunk
-			// if (chunkE == true && chunkS == true)
-			// 	this->valid = true;
-			// else if (chunkS == true && chunkE == false)
-			// 	this->valid = false;
+			this->unChunk();
 		}
 	}
 }
