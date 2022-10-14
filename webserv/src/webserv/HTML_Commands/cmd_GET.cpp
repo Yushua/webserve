@@ -5,12 +5,24 @@
 
 void webserv::cmd_GET(const int index, const message &msg) {
 
-	/* ??????? Maybe try differentiating between files and dirs ??????? */
+	if (msg.getStatResult() == -1)
+		this->send_error(index, 404);
 
-	string requested_file = msg.getPath();
-	if (requested_file == "/")
-		 requested_file = "/index.html";
-	requested_file = "root" + requested_file;
+	string requested_file;
+	if (S_ISDIR(msg.getStatResult())) {
+		const string &dir_behavior = msg.getConfig().dir_behavior;
+		if (dir_behavior == "list") {
+			this->send_error(index, 403); /* !!!IMPLEMENT INDEXING!!! */
+			return;
+		}
+		else if (dir_behavior == "error") {
+			this->send_error(index, 403);
+			return;
+		}
+		requested_file = dir_behavior;
+	}
+	else
+		requested_file = msg.getPath();
 
 	/* Open file in root */
 	ifstream file(requested_file);
@@ -18,7 +30,6 @@ void webserv::cmd_GET(const int index, const message &msg) {
 	/* Check if path exists */
 	if (!file.good()) {
 		this->send_error(index, 404);
-		//this->disconnect_socket(index);
 		return;
 	}
 

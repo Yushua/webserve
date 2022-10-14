@@ -41,3 +41,9 @@ void message::setContLenght(double _contLenght)
 
 const bool &message::isValid() const
 	{ return valid; }
+
+const Config_s &message::getConfig() const
+	{ return config; }
+
+const int &message::getStatResult() const
+	{ return stat_result; }

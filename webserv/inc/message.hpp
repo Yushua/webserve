@@ -8,6 +8,9 @@
 
 using namespace std;
 
+#include <config_struct.hpp>
+class webserv;
+
 #ifndef READ_BUFFER_SIZE
 	#define READ_BUFFER_SIZE 1024
 #endif
@@ -30,6 +33,8 @@ private:
 	bool                valid;
 	bool				chunkS;
 	bool				chunkE;
+	int                 stat_result;
+	struct Config_s     config;
 
 	void check();
 	void unChunk(std::string string);
@@ -62,6 +67,10 @@ public:
 	const bool                &isComplete() const;
 	const bool                &isChunked() const;
 	void				  setContLenght(double _contLenght);
+
+	const Config_s &getConfig() const;
+	const int &getStatResult() const;
+	void redirect(webserv &server);
 };
 
 ostream &operator<<(ostream &ostr, const message &msg);

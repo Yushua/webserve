@@ -2,6 +2,7 @@
 	#define FT_LIB_HPP
 
 #include <string>
+#include <cstdlib>
 
 /* error */
 int ft_error(const char *str);

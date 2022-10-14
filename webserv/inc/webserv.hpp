@@ -34,12 +34,7 @@ struct SocketInfo_s {
 	int addrlen;
 };
 
-struct Config_s {
-	string redirect_path; //
-	vector<string> allowed_methods; // method:
-	size_t client_body_size; // client_body_size:
-	string dir_behavior; // dir_behavior:
-};
+#include <config_struct.hpp>
 
 class webserv {
 private:
@@ -68,7 +63,7 @@ public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 		map<int, string> error_pages;
 	/* Local config stuff */
 		struct Config_s default_config;
-		map<string, Config_s> configs;
+		map<string, struct Config_s> configs;
 
 public:
 	webserv();
@@ -77,8 +72,13 @@ public:
 	void config_listen_to_port(const unsigned port);
 	void config_listen_to_port(const string port);
 	void config_add_cgi_option(const string extension, const string interpreter_path);
-	void config_add_error_page(const unsigned error, const string page_path);
+	void config_add_error_page(const unsigned int error, const string page_path);
 	void config_add_error_page(const string error, const string page_path);
+
+	void config_new_redirect(string redirect_from, string redirect_to);
+	void config_set_body_size(string redirect_from, const string &str);
+	void config_add_method(string redirect_from, const string &method);
+	void config_set_dir_behavior(string redirect_from, const string &behavior);
 
 	void run();
 

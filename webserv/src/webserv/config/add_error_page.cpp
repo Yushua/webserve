@@ -1,14 +1,22 @@
 #include <webserv.hpp>
 #include <colors.hpp>
 
-void webserv::config_add_error_page(const unsigned error, const string page_path) {
+void webserv::config_add_error_page(const unsigned int error, const string page_path) {
+	
+	map<int, string>::iterator found = error_pages.find(error);
+	if (found != error_pages.end()) {
+		std::cerr << RED << "  -~={ error_page #" << error << " already exists }=~-\n" << RESET;
+		return;
+	}
+	
 	if (error < 400 || error >= 600) {
 		std::cerr << RED << "  -~={ error_page: " << error << " is invalid }=~-\n" << RESET;
+		return;
 	}
 	
 	struct stat file_info;
 	if (stat(page_path.c_str(), &file_info) == -1) {
-		std::cerr << RED << "  -~={ error_page: " << page_path << " doesn't exist }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ error_page: path " << page_path << " doesn't exist }=~-\n" << RESET;
 		return;
 	}
 	if (!S_ISREG(file_info.st_mode)) {

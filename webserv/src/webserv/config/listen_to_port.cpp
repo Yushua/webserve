@@ -3,7 +3,7 @@
 
 void webserv::config_listen_to_port(const unsigned int port) {
 	if (port < 0 || port > 65535) {
-		std::cerr << RED << "  -~={ Can't listen to port " << port << ", because it's not valid }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ Invalid port number " << port << " }=~-\n" << RESET;
 		return;
 	}
 	
@@ -65,5 +65,9 @@ void webserv::config_listen_to_port(const unsigned int port) {
 }
 
 void webserv::config_listen_to_port(const string port) {
+	if (port == "" || port.find_first_not_of("0123456789") != string::npos) {
+		std::cerr << RED << "  -~={ Invalid port number " << port << " }=~-\n" << RESET;
+		return;
+	}
 	config_listen_to_port(atoi(port.c_str()));
 }
