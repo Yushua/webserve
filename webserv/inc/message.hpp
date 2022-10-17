@@ -1,6 +1,8 @@
 #ifndef MESSAGE_HPP
 	#define MESSAGE_HPP
 
+#include <sys/stat.h>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -33,7 +35,8 @@ private:
 	bool                valid;
 	bool				chunkS;
 	bool				chunkE;
-	int                 stat_result;
+	struct stat         stat_result;
+	bool                stat_state;
 	struct Config_s     config;
 
 	void check();
@@ -69,7 +72,8 @@ public:
 	void				  setContLenght(double _contLenght);
 
 	const Config_s &getConfig() const;
-	const int &getStatResult() const;
+	const struct stat &getStat() const;
+	const bool &getStatState() const;
 	void redirect(webserv &server);
 };
 

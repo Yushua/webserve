@@ -13,7 +13,7 @@ void webserv::cmd_POST(const int index, const message &msg) {
 	ofstream file;
 	file.open(sendtothisfile, ios::out);
 	if (!file.good()) {
-		this->send_error(sockets[index].fd, 404);
+		this->send_new_error(sockets[index].fd, 404);
 		this->disconnect_socket(index);
 		return;
 	}

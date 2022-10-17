@@ -6,12 +6,18 @@
 void webserv::handle_request(const int index)
 {
 	message msg(sockets[index].fd);
+
+	/* Disconection message */
+	if (msg.getOriginal().length() == 0) {
+		this->disconnect_socket(index);
+		return;
+	}
 	
 	if (!msg.isValid()) {
 #ifdef DEBUG
 		cout << RED << "  -~={ " << index << " incorrect input }=~-\n" << RESET;
 #endif
-		this->send_error(index, 400);
+		this->send_new_error(index, 400);
 		return;
 	}
 
@@ -47,7 +53,7 @@ void webserv::handle_request(const int index)
 		msg.getConfig().allowed_methods.end(),
 		type);
 	if (found == msg.getConfig().allowed_methods.end()) {
-		this->send_error(index, 403);
+		this->send_new_error(index, 403);
 		return;
 	}
 
@@ -57,7 +63,6 @@ void webserv::handle_request(const int index)
 		this->cmd_POST(index, msg);
 	// else if (type == "HEAD")
 	// 	this->cmd_HEAD(index, msg);
-	if (type == "DELETE")
+	else if (type == "DELETE")
 		this->cmd_DELETE(index, msg);
-	//this->disconnect_socket(index);
 }

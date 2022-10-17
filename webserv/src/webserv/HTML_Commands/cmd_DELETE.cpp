@@ -17,6 +17,6 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 		result = remove(msg.getPath().c_str());
 	}
 	else{
-		this->send_error(index, 404);
+		this->send_new_error(index, 404);
 	}
 }

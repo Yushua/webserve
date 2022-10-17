@@ -32,6 +32,8 @@ struct SocketInfo_s {
 	bool listen;
 	struct sockaddr_in address;
 	int addrlen;
+	bool recieving_from_server;
+	int send_fd;
 };
 
 #include <config_struct.hpp>
@@ -49,8 +51,11 @@ private:
 	void handle_request(const int index);
 	void disconnect_socket(const int index);
 
-	void send(const int index, const string msg);
-	void send_error(const int index, const int error_code);
+	void send_new(const int index, const int fd);
+	void send_new_file(const int index, string headers, const string path);
+	void send_new_error(const int index, const int error_code);
+
+	void send_continue(const int index);
 
 	const string header_get_content_type(const string filename);
 

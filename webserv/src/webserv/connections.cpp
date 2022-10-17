@@ -19,9 +19,10 @@ void webserv::connect_new_socket(const int index)
 		new_socket_count++;
 		fcntl(new_socket, F_SETFL, O_NONBLOCK);
 		sockets[new_socket_count].fd = new_socket;
-		sockets[new_socket_count].events = POLLIN;
+		sockets[new_socket_count].events = POLLIN | POLLOUT;
 		sockets[new_socket_count].revents = 0;
 		sockets_info[new_socket_count].listen = false;
+		sockets_info[new_socket_count].recieving_from_server = false;
 #ifdef DEBUG
 		cout << GREEN << "  -~={ " << new_socket_count << " connected }=~-\n" << RESET;
 #endif

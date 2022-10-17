@@ -20,7 +20,9 @@ void message::redirect(webserv &server) {
 
 	struct stat file_info;	
 	if (stat(path.c_str(), &file_info) == -1)
-		stat_result = -1;
-	else
-		stat_result = file_info.st_mode;
+		stat_state = false;
+	else {
+		stat_state = true;
+		stat_result = file_info;
+	}
 }

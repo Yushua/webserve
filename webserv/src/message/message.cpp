@@ -45,5 +45,8 @@ const bool &message::isValid() const
 const Config_s &message::getConfig() const
 	{ return config; }
 
-const int &message::getStatResult() const
+const struct stat &message::getStat() const
 	{ return stat_result; }
+
+const bool &message::getStatState() const
+	{ return stat_state; }

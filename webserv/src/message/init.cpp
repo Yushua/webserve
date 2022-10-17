@@ -15,7 +15,10 @@ message::message(const string &msg) {
 
 void message::init() {
 	size_t len = read_buffer.length();
+	if (len == 0)
+		return ;
 	size_t index;
+
 	{/* Get StartLine */
 		int start = 0;
 		for (index = 0; index < len; ++index) {

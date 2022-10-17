@@ -19,7 +19,8 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 		string response = "HTTP/1.1 200 OK\n";
 		response += "Content-length: " + ft_to_string(body.length()) + "\n";
 		response += script_out;
-		this->send(index, response);
+		(void)index;
+		// this->send_new_file(index, response);
 		return;
 	}
 	else {
