@@ -22,24 +22,6 @@ void message::checkGet()
 
 void message::checkPost()
 {
-	/*
-	POST /echo/post/json HTTP/1.1
-	Authorization: Bearer mt0dgHmLJMVQhvjpNXDyA83vA_Pxh33Y
-	Accept: application/json
-	Content-Type: application/json
-	Content-Length: 85
-	Host: reqbin.com
-
-	{
-		"Id": 12345,
-		"Customer": "John Smith",
-		"Quantity": 1,
-		"Price": 10.00
-	}
-
-	do i need to check if /echo/post/json is also valid?
-	*/
-
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
 
@@ -47,17 +29,17 @@ void message::checkPost()
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
 			setContLenght(atoi(itr->second.c_str()));
-			if (this->contLenght != getBody().length())
-				this->valid = false;
-			else
-				this->valid = true;
+			// if (this->contLenght != getBody().length())
+			// 	this->valid = false;
+			// else
+			// 	this->valid = true;
 		}
 		else if (itr->first == "Host:"){
 			this->unHost(itr->second);
 		}
-		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-			this->unChunk();
-		}
+		// else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
+		// 	this->unChunk();
+		// }
 	}
 }
 
