@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <colors.hpp>
 
 void webserv::cmd_HEAD(const int index, const message &msg) {
 
