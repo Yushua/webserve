@@ -34,6 +34,7 @@ struct SocketInfo_s {
 	int addrlen;
 	bool recieving_from_server;
 	int send_fd;
+	bool send_is_cgi;
 };
 
 #include <config_struct.hpp>
@@ -51,7 +52,7 @@ private:
 	void handle_request(const int index);
 	void disconnect_socket(const int index);
 
-	void send_new(const int index, const int fd);
+	void send_new(const int index, string headers, const int fd);
 	void send_new_file(const int index, string headers, const string path);
 	void send_new_error(const int index, const int error_code);
 

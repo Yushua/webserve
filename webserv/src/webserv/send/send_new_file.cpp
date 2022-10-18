@@ -17,11 +17,5 @@ void webserv::send_new_file(const int index, string headers, const string path) 
 	headers += this->header_get_content_type(path);
 	headers += "Content-length: " + ft_to_string(file_info.st_size) + "\n\n";
 
-	::send(sockets[index].fd, headers.c_str(), headers.length(), 0);
-	this->send_new(index, fd);
-
-#ifdef DEBUG
-	cout << MAGENTA << "  -~={ " << index << " is recivign this }=~-\n" << RESET;
-	cout << headers;
-#endif
+	this->send_new(index, headers, fd);
 }
