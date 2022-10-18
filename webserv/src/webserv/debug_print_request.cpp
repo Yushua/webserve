@@ -1,7 +1,7 @@
 #include <webserv.hpp>
 #include <colors.hpp>
 
-void webserv::debug_message(const int index, message &msg) {
+void webserv::debug_print_request(const int index, message &msg) {
 
 	/* Print out request without body */
 	cout << CYAN << "  -~={ " << index << " sent this }=~-\n" << RESET;
