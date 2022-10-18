@@ -6,30 +6,33 @@
 
 void webserv::cmd_GET(const int index, const message &msg) {
 
+	/* File doesn't exist */
 	if (!msg.getStatState()) {
 		this->send_new_error(index, 404);
 		return;
 	}
 
 	string requested_file;
+
+	/* Get path and or handle directory */
 	if (S_ISDIR(msg.getStat().st_mode)) {
+		
 		const string &dir_behavior = msg.getConfig().dir_behavior;
+		
+		/* List dictionary */
 		if (dir_behavior == "list") {
 			this->send_new_error(index, 403); /* !!!IMPLEMENT INDEXING!!! */
 			return;
 		}
+		/* Permision denied */
 		else if (dir_behavior == "error") {
 			this->send_new_error(index, 403);
 			return;
 		}
+		
 		requested_file = dir_behavior;
-	}
-	else
+	} else
 		requested_file = msg.getPath();
-
-	int fd = open(requested_file.c_str(), O_RDONLY);
-	if (fd < 0)
-		ft_error("GET");
 
 	/* Checking if it's a cgi request */
 	string extension = ft_get_extension(requested_file);
@@ -39,6 +42,6 @@ void webserv::cmd_GET(const int index, const message &msg) {
 		return;
 	}
 
-	/* Send response */
+	/* Send file */
 	this->send_new_file(index, "HTTP/1.1 200 OK\n", requested_file);
 }

@@ -71,6 +71,8 @@ public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 		struct Config_s default_config;
 		map<string, struct Config_s> configs;
 
+	static void debug_print_request(const int index, message &msg);
+
 public:
 	webserv();
 	~webserv();

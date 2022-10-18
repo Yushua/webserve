@@ -32,5 +32,3 @@ void webserv::config_add_error_page(const unsigned int error, const string page_
 void webserv::config_add_error_page(const string error, const string page_path) {
 	config_add_error_page(atoi(error.c_str()), page_path);
 }
-
-// https://linux.die.net/man/2/stat

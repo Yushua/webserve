@@ -14,7 +14,6 @@ void webserv::run()
 	}
 
 	/* Handle connections */
-	string read_buffer;
 	for (int index = 0; index <= socket_count; index++) {
 		short events = sockets[index].revents;
 		

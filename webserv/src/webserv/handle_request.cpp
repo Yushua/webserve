@@ -7,40 +7,21 @@ void webserv::handle_request(const int index)
 {
 	message msg(sockets[index].fd);
 
-	/* Disconection message */
+#ifdef DEBUG
+	debug_print_request(index, msg);
+#endif
+
+	/* Client Disconected */
 	if (msg.getOriginal().length() == 0) {
 		this->disconnect_socket(index);
 		return;
 	}
 	
+	/* Check for invalid request */
 	if (!msg.isValid()) {
-#ifdef DEBUG
-		cout << RED << "  -~={ " << index << " incorrect input }=~-\n" << RESET;
-#endif
 		this->send_new_error(index, 400);
 		return;
 	}
-
-#ifdef DEBUG
-	/* Print out request without body */
-	cout << CYAN << "  -~={ " << index << " sent this }=~-\n" << RESET;
-	
-	{/* Print out the first line */
-		const string &body = msg.getOriginal();
-		int delimiter_position = 0;
-		while (body[delimiter_position] != '\n')
-			++delimiter_position;
-		cout << body.substr(0, delimiter_position) << '\n';
-	}
-	#ifndef NOHEADER
-		{/* Print out headers */
-			map<string, string>::const_iterator itr = msg.getHeaders().cbegin();
-			map<string, string>::const_iterator end = msg.getHeaders().cend();
-			for (; itr != end; ++itr)
-				cout << itr->first << ": " << itr->second << '\n';
-		}
-	#endif
-#endif
 
 	msg.redirect(*this);
 
