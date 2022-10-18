@@ -1,21 +1,10 @@
 #include <message.hpp>
 
-message::message(){
-	this->valid = false;
-	this->contLenght = 0;
+message::message() {
+	headersComplete = true;
+	bodyComplete = true;
 }
-message::message(const message &other)
-	{ *this = other; }
 
-message &message::operator=(const message &other) {
-	startLine   = other.startLine;
-	headers     = other.headers;
-	body        = other.body;
-	read_buffer = other.read_buffer;
-	valid = other.valid;
-	contLenght = other.contLenght;
-	return *this;
-}
 message::~message(){}
 
 const vector<string> &message::getStartLine() const
@@ -36,9 +25,6 @@ const string &message::getBody() const
 const string &message::getOriginal() const
 	{ return read_buffer; }
 
-void message::setContLenght(double _contLenght)
-	{ this->contLenght = _contLenght;}
-
 const bool &message::isValid() const
 	{ return valid; }
 
@@ -50,3 +36,12 @@ const struct stat &message::getStat() const
 
 const bool &message::getStatState() const
 	{ return stat_state; }
+
+const bool &message::isHeaderComplete() const
+	{ return headersComplete; }
+
+const bool &message::isBodyComplete() const
+	{ return bodyComplete; }
+
+const size_t &message::getContentLength() const
+	{ return contentLenght; }

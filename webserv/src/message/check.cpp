@@ -28,7 +28,7 @@ void message::checkPost()
 	string _body = body;
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
-			setContLenght(atoi(itr->second.c_str()));
+			contentLenght = atoi(itr->second.c_str());
 			// if (this->contLenght != getBody().length())
 			// 	this->valid = false;
 			// else

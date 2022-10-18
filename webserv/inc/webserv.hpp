@@ -29,6 +29,7 @@ typedef int socket_t;
 #define SOCKET_COUNT_MAX 250
 
 struct SocketInfo_s {
+	message msg;
 	bool listen;
 	struct sockaddr_in address;
 	int addrlen;
@@ -47,6 +48,8 @@ private:
 
 	struct pollfd *sockets;
 	struct SocketInfo_s *sockets_info;
+
+	bool make_sure_messege_is_complete(const int index);
 
 	void connect_new_socket(const int index);
 	void handle_request(const int index);

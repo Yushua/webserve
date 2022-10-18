@@ -5,23 +5,10 @@
 
 void webserv::handle_request(const int index)
 {
-	message msg(sockets[index].fd);
+	message &msg = sockets_info[index].msg;
 
-#ifdef DEBUG
-	debug_print_request(index, msg);
-#endif
-
-	/* Client Disconected */
-	if (msg.getOriginal().length() == 0) {
-		this->disconnect_socket(index);
+	if (make_sure_messege_is_complete(index))
 		return;
-	}
-	
-	/* Check for invalid request */
-	if (!msg.isValid()) {
-		this->send_new_error(index, 400);
-		return;
-	}
 
 	msg.redirect(*this);
 

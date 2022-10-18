@@ -3,20 +3,33 @@
 #include <unistd.h>
 #include <iostream>
 
-message::message(const int fd) {
-	read_buffer = ft_fd_to_str(fd);
-	this->init();
-}
+void message::init(const int fd) {
+	this->fd = fd;
+	this->reset();
 
-message::message(const string &msg) {
-	read_buffer = msg;
-	this->init();
-}
+	/* !!! NEEDS BE REIMPLEMENTED !!! */
+	/* It's slow and error prone */
+	bool double_nl = false;
+	while (true) {
+		char temp_buffer;
+		int ret;
+		ret = read(fd, &temp_buffer, 1);
+		if (ret <= 0)
+			break;
+		read_buffer += temp_buffer;
+		if (temp_buffer == '\n' && double_nl) {
+			if (double_nl)
+				break;
+			double_nl = false;
+		}
+		else {
+			double_nl = false;
+		}
+	}
 
-void message::init() {
 	size_t len = read_buffer.length();
 	if (len == 0)
-		return ;
+		return;
 	size_t index;
 
 	{/* Get StartLine */
@@ -32,6 +45,9 @@ void message::init() {
 			}
 		}
 	}
+
+	if (startLine.size() < 2)
+		return;
 
 	{/* Get path and arguments */
 		string &url = startLine.at(1);
@@ -81,10 +97,10 @@ void message::init() {
 		}
 	}
 
-	/* Get Body */
-	body = read_buffer.substr(index, read_buffer.length() - index);
-
 	/* Check Message Validity */
 	this->check();
-	valid = true;
+
+	headersComplete = true;
+	if (contentLenght == 0)
+		bodyComplete = true;
 }

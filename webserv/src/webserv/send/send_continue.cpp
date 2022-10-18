@@ -3,16 +3,16 @@
 #include <iostream>
 #include <algorithm>
 
-#define SEND_PACKAGE_SIZE 1024
-
 void webserv::send_continue(const int index) {
 
 	SocketInfo_s &socket = sockets_info[index];
 
 	/* Send message in parts */
 
-	static char buffer[SEND_PACKAGE_SIZE];
-	int res = read(socket.send_fd, buffer, SEND_PACKAGE_SIZE);
+	// Not sure wich buffer is ideal, try experimenting!
+	// SO_SNDBUF PIPE_BUF
+	static char buffer[PIPE_BUF];
+	int res = read(socket.send_fd, buffer, PIPE_BUF);
 	
 	if (res == 0) {
 		close(socket.send_fd);

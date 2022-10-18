@@ -2,6 +2,7 @@
 	#define MESSAGE_HPP
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include <iostream>
 #include <string>
@@ -19,10 +20,10 @@ class webserv;
 
 class message {
 private:
-	message();
-	void init();
+	bool headersComplete;
+	bool bodyComplete;
 
-	bool isFileDirec;
+	int fd;
 
 	//the first line of the message from the client
 	vector<string>      startLine;
@@ -38,6 +39,7 @@ private:
 	struct stat         stat_result;
 	bool                stat_state;
 	struct Config_s     config;
+	size_t              contentLenght;
 
 	void check();
 	void unChunk();
@@ -48,15 +50,16 @@ private:
 	void unReferer(string string);
 	
 	void checkPost();
-	double				contLenght;
 	void checkDelete();
 	int checkNumber(std::string string, const char *input);
+	
+	void reset();
 
 public:
-	message(const int fd);
-	message(const string &msg);
-	message(const message &other);
-	message &operator=(const message &other);
+	void init(const int fd);
+	void loadBody();
+
+	message();
 	~message();
 
 	const vector<string>      &getStartLine() const;
@@ -65,11 +68,13 @@ public:
 	const map<string, string> &getHeaders() const;
 	const string              &getBody() const;
 	const string              &getOriginal() const;
+	const size_t              &getContentLength() const;
+
+	const bool &isHeaderComplete() const;
+	const bool &isBodyComplete() const;
 
 	const bool                &isValid() const;
-	const bool                &isComplete() const;
 	const bool                &isChunked() const;
-	void				  setContLenght(double _contLenght);
 
 	const Config_s &getConfig() const;
 	const struct stat &getStat() const;
