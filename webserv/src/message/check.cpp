@@ -27,7 +27,7 @@ void message::checkPost()
 
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
-			contentLength = atoi(itr->second.c_str());
+			this->contentLength = atoi(itr->second.c_str());
 			// if (this->contLenght != getBody().length())
 			// 	this->valid = false;
 			// else
@@ -60,7 +60,7 @@ void message::check()
 	vector<std::string>::iterator end_v = startLine.end();
 	for (; itr_v < end_v; itr_v++)
 	{
-		if (*itr_v == "GET" || *itr_v == "HEAD")
+		if (*itr_v == "GET")
 			checkGet();
 		else if (*itr_v == "POST")
 			checkPost();

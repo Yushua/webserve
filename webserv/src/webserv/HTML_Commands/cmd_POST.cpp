@@ -5,6 +5,25 @@
 
 //make sure when uploading, that you do it in a temporarely folder
 void webserv::cmd_POST(const int index, const message &msg) {
+	// map<string, string>::iterator itr = headers.begin();
+	// map<string, string>::iterator end = headers.end();
+
+	// for (; itr != end; ++itr){
+	// 	if (itr->first == "Content-Length:" && msg.checkNumber(itr->second, "0123456789")){
+	// 		msg.getContentLength() = atoi(itr->second.c_str());
+	// 		// if (this->contLenght != getBody().length())
+	// 		// 	this->valid = false;
+	// 		// else
+	// 		// 	this->valid = true;
+	// 	}
+	// 	else if (itr->first == "Host:"){
+	// 		this->unHost(itr->second);
+	// 	}
+	// 	// else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
+	// 	// 	this->unChunk();
+	// 	// }
+	// }	
+
 	std::string sendtothisfile = msg.getPath();
 	msg.getBody();
 	//if file is not there, so created, and succssfull 201
