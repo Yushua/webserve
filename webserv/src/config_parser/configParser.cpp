@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/19 20:18:53 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/19 20:20:30 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void configParser(map<string, webserv*> &bigacontyantnas)
         if (line[0] != '\t' && line.size() > 0){
             //start new server
             std::string name = line;
-            std::cout << "===== name ======== " << line << std::endl;
             webservName = line;
             bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
         }
