@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/10/06 16:25:29 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/10/19 16:02:47 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,7 +70,7 @@ re: fclean all
 # -~={ Debug }=~- #
 run: all
 	@echo
-	@$(BIN)/$(NAME) $(ARGS)
+	@cd $(BIN); ./$(NAME) $(ARGS)
 
 rerun: re run
 

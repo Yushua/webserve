@@ -19,5 +19,10 @@
 <img src="pictures/puppy.jpg" alt="puppy" height="300px" width="500px" />
 <a href="pictures/puppy.jpg" download>Download this Picture!</a>
 
+<form action="cgi-bin/upload.py" method="post" enctype="multipart/form-data">
+	<input type="file" name="fileToUpload" id="fileToUpload">
+	<input type="submit">
+</form>
+
 </body>
 </html>

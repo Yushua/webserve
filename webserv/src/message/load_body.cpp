@@ -13,5 +13,5 @@ void message::loadBody() {
 	}
 	temp_buffer[ret] = '\0';
 	read_buffer += temp_buffer;
-	body += temp_buffer;
+	bodyLength = ret;
 }
