@@ -25,10 +25,9 @@ void message::checkPost()
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
 
-	string _body = body;
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
-			contentLenght = atoi(itr->second.c_str());
+			contentLength = atoi(itr->second.c_str());
 			// if (this->contLenght != getBody().length())
 			// 	this->valid = false;
 			// else

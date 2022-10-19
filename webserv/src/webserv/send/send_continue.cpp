@@ -17,7 +17,7 @@ void webserv::send_continue(const int index) {
 	if (res == 0) {
 		close(socket.send_fd);
 		socket.recieving_from_server = false;
-		if (socket.send_is_cgi)
+		if (socket.disconnect_after_send)
 			this->disconnect_socket(index);
 		return;
 	}

@@ -19,8 +19,8 @@ const vector<string> &message::getArguments() const
 const map<string, string> &message::getHeaders() const
 	{ return headers; }
 
-const string &message::getBody() const
-	{ return body; }
+const char *message::getBody() const
+	{ return read_buffer.c_str() + headersLength; }
 	
 const string &message::getOriginal() const
 	{ return read_buffer; }
@@ -44,4 +44,7 @@ const bool &message::isBodyComplete() const
 	{ return bodyComplete; }
 
 const size_t &message::getContentLength() const
-	{ return contentLenght; }
+	{ return contentLength; }
+
+const size_t &message::getBodyLength() const
+	{ return bodyLength; }

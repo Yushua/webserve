@@ -13,7 +13,7 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 	if (IS_NOT_CHILD) {
 		close(fds[1]);
 		this->send_new(index, "HTTP/1.1 200 OK\n", fds[0]);
-		sockets_info[index].send_is_cgi = true;
+		sockets_info[index].disconnect_after_send = true;
 		return;
 	}
 	else {

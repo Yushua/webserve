@@ -29,8 +29,6 @@ void webserv::handle_request(const int index)
 		this->cmd_GET(index, msg);
 	else if (type == "POST")
 		this->cmd_POST(index, msg);
-	// else if (type == "HEAD")
-	// 	this->cmd_HEAD(index, msg);
 	else if (type == "DELETE")
 		this->cmd_DELETE(index, msg);
 }

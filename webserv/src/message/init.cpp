@@ -100,7 +100,9 @@ void message::init(const int fd) {
 	/* Check Message Validity */
 	this->check();
 
+	headersLength = read_buffer.length();
+
 	headersComplete = true;
-	if (contentLenght == 0)
+	if (contentLength == 0)
 		bodyComplete = true;
 }

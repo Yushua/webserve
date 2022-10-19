@@ -35,7 +35,7 @@ struct SocketInfo_s {
 	int addrlen;
 	bool recieving_from_server;
 	int send_fd;
-	bool send_is_cgi;
+	bool disconnect_after_send;
 };
 
 #include <config_struct.hpp>

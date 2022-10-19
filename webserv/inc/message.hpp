@@ -31,7 +31,6 @@ private:
 	vector<string>      arguments;
 	//the body of the client
 	map<string, string> headers;
-	string              body;
 	string              read_buffer;
 	bool                valid;
 	bool				chunkS;
@@ -39,7 +38,9 @@ private:
 	struct stat         stat_result;
 	bool                stat_state;
 	struct Config_s     config;
-	size_t              contentLenght;
+	size_t              headersLength;
+	size_t              contentLength;
+	size_t              bodyLength;
 
 	void check();
 	void unChunk();
@@ -66,9 +67,10 @@ public:
 	const string              &getPath() const;
 	const vector<string>      &getArguments() const;
 	const map<string, string> &getHeaders() const;
-	const string              &getBody() const;
+	const char                *getBody() const;
 	const string              &getOriginal() const;
 	const size_t              &getContentLength() const;
+	const size_t              &getBodyLength() const;
 
 	const bool &isHeaderComplete() const;
 	const bool &isBodyComplete() const;

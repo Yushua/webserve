@@ -9,23 +9,16 @@ bool webserv::make_sure_messege_is_complete(const int index)
 		msg.init(sockets[index].fd);
 
 		/* Client Disconected */
-		if (msg.getOriginal().length() == 0) {
-			this->disconnect_socket(index);
-			return true;
-		}
+		if (!msg.isHeaderComplete())
+			{ this->disconnect_socket(index); return true; }
 
 		/* Check for invalid request */
-		if (!msg.isValid()) {
-			this->send_new_error(index, 400);
-			return true;
-		}
+		if (!msg.isValid()) 
+			{ this->send_new_error(index, 400); return true; }
 
-		/* !!! HANDLE PROPERLY !!! */
 		/* Body too large */
-		if (msg.getContentLength() > msg.getConfig().client_body_size) {
-			this->disconnect_socket(index);
-			return true;
-		}
+		if (msg.getContentLength() > msg.getConfig().client_body_size)
+			{ this->send_new_error(index, 413); return true; }
 
 		debug_print_request(index, msg);
 
@@ -36,21 +29,15 @@ bool webserv::make_sure_messege_is_complete(const int index)
 	if (!msg.isBodyComplete()) {
 		msg.loadBody();
 
-		/* !!! HANDLE PROPERLY !!! */
-		if (msg.getBody().length() > msg.getContentLength()) {
-			this->disconnect_socket(index);
-			return true;
-		}
+		if (msg.getBodyLength() > msg.getContentLength())
+			{ this->send_new_error(index, 413); return true; }
 
 		if (!msg.isBodyComplete())
 			return true;
 	}
 
-	/* !!! HANDLE PROPERLY !!! */
-	if (msg.getBody().length() < msg.getContentLength()) {
-		this->disconnect_socket(index);
-		return true;
-	}
+	if (msg.getBodyLength() < msg.getContentLength())
+		{ this->send_new_error(index, 413); return true; }
 
 	return false;
 }

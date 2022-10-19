@@ -6,10 +6,10 @@ void message::reset() {
 	path.clear();
 	arguments.clear();
 	headers.clear();
-	body.clear();
 	read_buffer.clear();
 	valid = false;
 	bodyComplete = false;
 	headersComplete = false;
-	contentLenght = 0;
+	contentLength = 0;
+	headersLength = 0;
 }
