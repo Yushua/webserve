@@ -49,6 +49,7 @@ private:
 	struct pollfd *sockets;
 	struct SocketInfo_s *sockets_info;
 
+	
 	bool make_sure_messege_is_complete(const int index);
 
 	void connect_new_socket(const int index);
@@ -98,5 +99,6 @@ public:
 	void cmd_POST(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 };
+void configParser(map<string, webserv*> &bigacontyantnas);
 
 #endif

@@ -6,89 +6,112 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/14 16:49:27 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/19 20:18:53 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <webserv.hpp>
-// #include <message.hpp>
+#include <webserv.hpp>
+#include <message.hpp>
 
-// //make own class
-// #include <iostream>
-// #include <fstream>
-// #include <string>
+//make own class
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
-// vector<std::string, std::string> configSplit(std::string string, char c)
-// {
-//     vector<std::string, std::string> vec;
-//     int lenght = string.lenght();
-//     for (int i = 0; i < lenght; i++)
-//     {
-//         if (string[i] == c)
-//             break;
-//     }
-//     vec[0] = string.substr(0, i);
-//     vec[1] = string.substr(i+1, lenght - 1 - i);
-//     return(vec);
-// }
+static vector<std::string> configSplit(std::string string, const char *c)
+{
+    vector<std::string> vec;
+    int length = string.length();
+    int i = 0;
+    while (i < length)
+    {
+        if (string[i] == c[0] && string[i+1] == c[1])
+            break;
+        i++;
+    }
+    vec.push_back(string.substr(0, i));
+    vec.push_back(string.substr(i+2, length - 1 - i));
+    return(vec);
+}
 
-// void configParser(map<string, webserv> &bigacontyantnas)
-// {
-//     std::ifstream infile("root/config/default.conf");
-//     std::string line;
-//     bool status = false;
-//     vector<std::string, std::string> vec;
-//     vector<std::string, std::string> _substring;
-//     while (std::getline(infile, line)){
-//         std::istringstream iss(line);
-//         if (line.find("\t")  != string::npos && line.size() > 0){
-//             //start new server
-//             std::string name = line;
-//         }
-//         else{
-//             line.replace("\t", "");
-//             _substring = configSplit(line, " ");
-//             if (_substring[0] == "cgi:"){
-//                 vec = configSplit(_substring[1], '=');
-//                 //check for path
-//             }
-//             else if (_substring[0] == "error_page:"){
-//                 vec = configSplit(_substring[1], '=');
-//                 //set error message
-//             }
-//             else if (_substring[0] == "listen:"){
-//                 vec = configSplit(_substring[1], '=');
-//                 //set port
-//             }
-//             else{
-//                 while (std::getline(infile, line))
-//                 {
-//                     if (line.find("\t\t")  != string::npos){
-//                         line.replace("\t", "");
-//                         vec = configSplit(line, ": ");
-//                         if (vec[0] == "method:"){
-//                             if (vec[1].find("GET") != string::npos){
-//                                 server.config_add_method(_substring[0], "GET");
-//                             }
-//                             else if (vec[1].find("HEAD") != string::npos){
-//                                 server.config_add_method(_substring[0], "HEAD");
-//                             }
-//                             else if (vec[1].find("POST") != string::npos){
-//                                 server.config_add_method(_substring[0], "POST");
-//                             }
-//                             else if (vec[1].find("DELETE") != string::npos){
-//                                 server.config_add_method(_substring[0], "DELETE");
-//                             }
-//                         }
-//                         else if (vec[0] == "dir_behavior:"){
-//                             server.config_set_dir_behavior(_substring[0], vec[1]);
-//                         }
-//                         else if (vec[0] == "client_body_size:"){
-//                             server.config_set_body_size(_substring[0], vec[1]);
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
+static vector<std::string> configSplit(std::string string, const char c)
+{
+    vector<std::string> vec;
+    int length = string.length();
+    int i = 0;
+    while (i < length)
+    {
+        if (string[i] == c)
+            break;
+        i++;
+    }
+    vec.push_back(string.substr(0, i));
+    if (static_cast<unsigned long>(i + 1) == string.length())
+        vec.push_back("");
+    else
+        vec.push_back(string.substr(i+1, length - 1 - i));
+    return(vec);
+}
+
+void configParser(map<string, webserv*> &bigacontyantnas)
+{
+    std::ifstream infile("root/config/default.conf");
+    std::string line;
+    bool status = false;
+    vector<std::string> vec;
+    vector<std::string> _substring;
+    std::cout << "start" << std::endl;
+    std::string webservName;
+    while (std::getline(infile, line)){
+        if (line[0] != '\t' && line.size() > 0){
+            //start new server
+            std::string name = line;
+            std::cout << "===== name ======== " << line << std::endl;
+            webservName = line;
+            bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
+        }
+        else if (status == true) {
+            if (line == "")
+                status = false;
+            else{
+                while (line[0] == '\t')
+                    line.replace(0, 1, "");
+                vec = configSplit(line, ": ");
+                if (vec[0] == "method"){
+                    std::string full = vec[1];
+                    std::string tmp;
+                    while (full.find(" ") != string::npos){
+                        tmp = full.substr(0, full.find(" "));
+                        full.erase(0, full.find(" ") + 1);
+                        bigacontyantnas.at(webservName)->config_add_method(_substring[0], tmp);
+                    }
+                    bigacontyantnas.at(webservName)->config_add_method(_substring[0], full);
+                }
+                else if (vec[0] == "client_body_size")
+                    bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);
+                else if (vec[0] == "dir_behavior")
+                    bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);
+            }
+        }
+        else if (line != "" && status == false){
+            line.replace(0, 1, "");
+            vec = configSplit(line, ": ");
+            if (vec[0] == "listen")
+                bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);
+            else if (vec[0] == "cgi"){
+                _substring = configSplit(vec[1], '=');
+                bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1]);
+            }
+            else if (vec[0] == "error_page"){
+                _substring = configSplit(vec[1], '=');
+                bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1]);
+            }
+            else{
+                status = true;
+                _substring = vec;
+                bigacontyantnas.at(webservName)->config_new_redirect(_substring[0], _substring[1]);
+            }
+        }
+    }
+}
