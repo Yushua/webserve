@@ -28,17 +28,10 @@ void message::checkPost()
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
 			this->contentLength = atoi(itr->second.c_str());
-			// if (this->contLenght != getBody().length())
-			// 	this->valid = false;
-			// else
-			// 	this->valid = true;
 		}
 		else if (itr->first == "Host:"){
 			this->unHost(itr->second);
 		}
-		// else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-		// 	this->unChunk();
-		// }
 	}
 }
 

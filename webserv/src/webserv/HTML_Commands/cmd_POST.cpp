@@ -9,8 +9,7 @@ void webserv::cmd_POST(const int index, const message &msg) {
 	// map<string, string>::iterator end = headers.end();
 
 	// for (; itr != end; ++itr){
-	// 	if (itr->first == "Content-Length:" && msg.checkNumber(itr->second, "0123456789")){
-	// 		msg.getContentLength() = atoi(itr->second.c_str());
+	// 	if (itr->first == "Content-Length:"){
 	// 		// if (this->contLenght != getBody().length())
 	// 		// 	this->valid = false;
 	// 		// else
