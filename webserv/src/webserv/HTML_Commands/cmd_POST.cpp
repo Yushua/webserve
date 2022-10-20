@@ -9,50 +9,44 @@
 
 //make sure when uploading, that you do it in a temporarely folder
 void webserv::cmd_POST(const int index, message &msg) {
-	// map<string, string> _header = msg.getHeaders();
-	// map<string, string>::iterator itr = _header.begin();
-	// map<string, string>::iterator end = _header.end();
+	map<string, string> _header = msg.getHeaders();
+	map<string, string>::iterator itr = _header.begin();
+	map<string, string>::iterator end = _header.end();
 
-	// for (; itr != end; ++itr){
-	// 	if (itr->first == "Content-Length:"){
-	// 		if (msg.getContentLength() != strlen(msg.getBody())){
-	// 			this->send_new_error(sockets[index].fd, 200);
-	// 			}
-	// 		else {
-	// 			this->send_new_error(sockets[index].fd, 404);
-	// 			this->disconnect_socket(index);
-	// 			return;
-	// 		}
-	// 	}
-	// 	else if (itr->first == "Host:")
-	// 	{
-	// 		std::string tmp = itr->second;
-	// 		msg.doUnHost(tmp);
-	// 		if (msg.isValid() == true)
-	// 			this->send_new_error(sockets[index].fd, 200);
-	// 		else {
-	// 			this->send_new_error(sockets[index].fd, 404);
-	// 			this->disconnect_socket(index);
-	// 			return;
-	// 		}
-	// 	}
-	// 	else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-	// 		msg.doUnChunk();
-	// 		if (msg.isValid() == true)
-	// 			this->send_new_error(sockets[index].fd, 200);
-	// 		else {
-	// 			this->send_new_error(sockets[index].fd, 404);
-	// 			this->disconnect_socket(index);
-	// 			return;
-	// 		}
-	// 	}
-	// }	
+	for (; itr != end; ++itr){
+		if (itr->first == "Content-Length:"){
+			if (msg.getContentLength() != strlen(msg.getBody())){
+				this->send_new_error(sockets[index].fd, 404);
+				this->disconnect_socket(index);
+				return;
+			}
+		}
+		else if (itr->first == "Host:")
+		{
+			std::string tmp = itr->second;
+			msg.doUnHost(tmp);
+			if (msg.isValid() == false){
+				this->send_new_error(sockets[index].fd, 404);
+				this->disconnect_socket(index);
+				return;
+			}
+		}
+		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
+			msg.doUnChunk();
+			if (msg.isValid() == false){
+				this->send_new_error(sockets[index].fd, 404);
+				this->disconnect_socket(index);
+				return;
+			}
+		}
+	}	
 	struct stat file_info;
 	/*
 	The request succeeded, and a new resource was created as a result.
 	This is typically the response sent after POST requests, or some PUT requests.
 	
-	what do they mean wiht new resource?*/
+	what do they mean wiht new resource?
+	*/
 	if (stat(msg.getPath().c_str(), &file_info) == -1)
 	{
 		this->send_new_error(sockets[index].fd, 404);
