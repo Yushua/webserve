@@ -28,6 +28,9 @@ const string &message::getOriginal() const
 const bool &message::isValid() const
 	{ return valid; }
 
+bool &message::changeValid(bool _valid)
+	{ return (valid = _valid); }
+
 const Config_s &message::getConfig() const
 	{ return config; }
 
@@ -48,3 +51,8 @@ const size_t &message::getContentLength() const
 
 const size_t &message::getBodyLength() const
 	{ return bodyLength; }
+
+void message::doUnChunk()
+	{ unChunk(); return ;}
+void message::doUnHost(std::string string)
+	{ unHost(string); return ;}

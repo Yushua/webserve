@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 20:17:59 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/14 17:46:46 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/20 15:29:05 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 // #include <sstream>
 // #include <cstdlib>
 
-// void message::unChunk()
-// {
+void message::unChunk()
+{
 //     /*
 //         Transfer-Encoding: chunked
 //     {
@@ -63,5 +63,4 @@
 //                 this->valid = false;
 //         }
 //     }
-// }
-
+}

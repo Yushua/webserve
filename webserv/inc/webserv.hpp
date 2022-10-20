@@ -96,7 +96,7 @@ public:
 
 	void cmd_GET(const int index, const message &msg);
 	void cmd_HEAD(const int index, const message &msg);
-	void cmd_POST(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
+	void cmd_POST(const int index, message &msg); /* !!!TO BE IMPLEMENETD!!! */
 	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 };
 void configParser(map<string, webserv*> &bigacontyantnas);

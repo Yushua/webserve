@@ -3,28 +3,64 @@
 #include <fstream>
 #include <sstream>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 //make sure when uploading, that you do it in a temporarely folder
-void webserv::cmd_POST(const int index, const message &msg) {
-	// map<string, string>::iterator itr = headers.begin();
-	// map<string, string>::iterator end = headers.end();
+void webserv::cmd_POST(const int index, message &msg) {
+	// map<string, string> _header = msg.getHeaders();
+	// map<string, string>::iterator itr = _header.begin();
+	// map<string, string>::iterator end = _header.end();
 
 	// for (; itr != end; ++itr){
 	// 	if (itr->first == "Content-Length:"){
-	// 		// if (this->contLenght != getBody().length())
-	// 		// 	this->valid = false;
-	// 		// else
-	// 		// 	this->valid = true;
+	// 		if (msg.getContentLength() != strlen(msg.getBody())){
+	// 			this->send_new_error(sockets[index].fd, 200);
+	// 			}
+	// 		else {
+	// 			this->send_new_error(sockets[index].fd, 404);
+	// 			this->disconnect_socket(index);
+	// 			return;
+	// 		}
 	// 	}
-	// 	else if (itr->first == "Host:"){
-	// 		this->unHost(itr->second);
+	// 	else if (itr->first == "Host:")
+	// 	{
+	// 		std::string tmp = itr->second;
+	// 		msg.doUnHost(tmp);
+	// 		if (msg.isValid() == true)
+	// 			this->send_new_error(sockets[index].fd, 200);
+	// 		else {
+	// 			this->send_new_error(sockets[index].fd, 404);
+	// 			this->disconnect_socket(index);
+	// 			return;
+	// 		}
 	// 	}
-	// 	// else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-	// 	// 	this->unChunk();
-	// 	// }
+	// 	else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
+	// 		msg.doUnChunk();
+	// 		if (msg.isValid() == true)
+	// 			this->send_new_error(sockets[index].fd, 200);
+	// 		else {
+	// 			this->send_new_error(sockets[index].fd, 404);
+	// 			this->disconnect_socket(index);
+	// 			return;
+	// 		}
+	// 	}
 	// }	
-
+	struct stat file_info;
+	/*
+	The request succeeded, and a new resource was created as a result.
+	This is typically the response sent after POST requests, or some PUT requests.
+	
+	what do they mean wiht new resource?*/
+	if (stat(msg.getPath().c_str(), &file_info) == -1)
+	{
+		this->send_new_error(sockets[index].fd, 404);
+		this->disconnect_socket(index);
+		return;
+	}
 	std::string sendtothisfile = msg.getPath();
-	msg.getBody();
+	// const char *_body = msg.getBody();
 	//if file is not there, so created, and succssfull 201
 	//else if created nothing new 200
 	//https://www.geeksforgeeks.org/file-handling-c-classes/
@@ -58,7 +94,7 @@ Host: reqbin.com
 The POST method sends data to a server for processing
 Send data to the server for processing.  message bdy
 
- For
+For
 example, consider when you are shopping online at Joe's Hardware and you click on the "submit
 purchase" button. Clicking on the button submits a POST request (discussed later) with your credit
 card information, and an action is performed on the server on your behalf. In this case, the action is
