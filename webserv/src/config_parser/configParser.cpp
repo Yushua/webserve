@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/20 17:37:12 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/20 17:48:10 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             line.replace(0, 1, "");
             vec = configSplit(line, ": ");
             if (vec[0] == "listen"){
-                // std::cout << "=====Listen=====" << std::endl;
+                std::cout << "\n" << std::endl;
                 bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);
             }
             else if (vec[0] == "cgi"){
@@ -119,4 +119,5 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             }
         }
     }
+    std::cout << "\n" << std::endl;
 }

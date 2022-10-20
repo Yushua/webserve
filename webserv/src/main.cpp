@@ -4,10 +4,11 @@ int main() {
 	//loop
 	map<std::string, webserv*> webservMap;
 	configParser(webservMap);//normal name
-	// int i = 0;
-	// while (true){
-	// 	webservMap.at[0].run();
-	// }
-// 	Webserve webserve;
-// 	webserve.run();
+	map<std::string, webserv*>::iterator it;
+
+	for (it = webservMap.begin(); it != webservMap.end(); it++)
+	{
+		std::cout << it->first << ':' << std::endl;
+		it->second[0].run();
+	}
 }
