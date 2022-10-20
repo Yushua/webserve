@@ -43,11 +43,9 @@ private:
 	size_t              bodyLength;
 
 	void check();
-	void unChunk();
 
 	std::string 		Host;
 	void checkGet();
-	void unHost(string string);
 	void unReferer(string string);
 	
 	void checkPost();
@@ -58,6 +56,16 @@ private:
 
 public:
 	void init(const int fd);
+	/**
+	 * @brief unchunk checks if the chunk is correct, changes the VALID Bool in Message
+	 * 
+	 */
+	void unChunk();
+	/**
+	 * @brief unhost checks if the Host is valid, changes the VALID bool in Message
+	 * 
+	 */
+	void unHost(string string);
 	void loadBody();
 
 	message();
@@ -76,7 +84,10 @@ public:
 	const bool &isBodyComplete() const;
 
 	const bool                &isValid() const;
+	bool					  &changeValid(bool _valid);
 	const bool                &isChunked() const;
+	void					  doUnChunk();
+	void				      doUnHost(std::string string);
 
 	const Config_s &getConfig() const;
 	const struct stat &getStat() const;

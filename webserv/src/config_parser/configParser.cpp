@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/19 20:20:30 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/20 14:32:16 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static vector<std::string> configSplit(std::string string, const char c)
             break;
         i++;
     }
-    vec.push_back(string.substr(0, i));
+    vec.push_back(string.substr(0, i + 1));
     if (static_cast<unsigned long>(i + 1) == string.length())
         vec.push_back("");
     else
@@ -77,7 +77,7 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                 while (line[0] == '\t')
                     line.replace(0, 1, "");
                 vec = configSplit(line, ": ");
-                if (vec[0] == "method"){
+                if (vec[0] == "method:"){
                     std::string full = vec[1];
                     std::string tmp;
                     while (full.find(" ") != string::npos){
@@ -87,9 +87,9 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                     }
                     bigacontyantnas.at(webservName)->config_add_method(_substring[0], full);
                 }
-                else if (vec[0] == "client_body_size")
+                else if (vec[0] == "client_body_size:")
                     bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);
-                else if (vec[0] == "dir_behavior")
+                else if (vec[0] == "dir_behavior:")
                     bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);
             }
         }
