@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/20 14:32:16 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/20 16:35:01 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             //start new server
             std::string name = line;
             webservName = line;
+            std::cout << "======NAME IS HERE=====" << std::endl;
             bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
         }
         else if (status == true) {
@@ -96,14 +97,18 @@ void configParser(map<string, webserv*> &bigacontyantnas)
         else if (line != "" && status == false){
             line.replace(0, 1, "");
             vec = configSplit(line, ": ");
-            if (vec[0] == "listen")
+            if (vec[0] == "listen"){
+                std::cout << "=====Listen=====" << std::endl;
                 bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);
+            }
             else if (vec[0] == "cgi"){
                 _substring = configSplit(vec[1], '=');
+                std::cout << "=====CGI=====" << std::endl;
                 bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1]);
             }
             else if (vec[0] == "error_page"){
                 _substring = configSplit(vec[1], '=');
+                std::cout << "=====errorn=====" << std::endl;
                 bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1]);
             }
             else{

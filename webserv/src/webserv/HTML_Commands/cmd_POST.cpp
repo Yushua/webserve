@@ -7,11 +7,12 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-//make sure when uploading, that you do it in a temporarely folder
 void webserv::cmd_POST(const int index, message &msg) {
 	map<string, string> _header = msg.getHeaders();
 	map<string, string>::iterator itr = _header.begin();
 	map<string, string>::iterator end = _header.end();
+
+	bool chunk = false;
 
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:"){
@@ -38,6 +39,8 @@ void webserv::cmd_POST(const int index, message &msg) {
 				this->disconnect_socket(index);
 				return;
 			}
+			//if true, put the chunk message in the file
+			chunk = true;
 		}
 	}	
 	struct stat file_info;
@@ -53,19 +56,18 @@ void webserv::cmd_POST(const int index, message &msg) {
 		this->disconnect_socket(index);
 		return;
 	}
-	std::string sendtothisfile = msg.getPath();
-	// const char *_body = msg.getBody();
-	//if file is not there, so created, and succssfull 201
-	//else if created nothing new 200
-	//https://www.geeksforgeeks.org/file-handling-c-classes/
 	ofstream file;
-	file.open(sendtothisfile, ios::out);
+	file.open(msg.getPath(), ios::out);
 	if (!file.good()) {
 		this->send_new_error(sockets[index].fd, 404);
 		this->disconnect_socket(index);
 		return;
 	}
-	file << sendtothisfile;
+	// if (chunk == true)[
+	// 	file << getChunk(msg.getBody());
+	// ]
+	// else
+	file << msg.getBody();
 	file.close();
 }
 
