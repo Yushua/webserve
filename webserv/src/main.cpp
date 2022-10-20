@@ -9,6 +9,6 @@ int main() {
 	for (it = webservMap.begin(); it != webservMap.end(); it++)
 	{
 		std::cout << it->first << ':' << std::endl;
-		it->second[0].run();
+		it->second->run();
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/20 17:48:10 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/20 19:40:45 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,18 +98,17 @@ void configParser(map<string, webserv*> &bigacontyantnas)
         else if (line != "" && status == false){
             line.replace(0, 1, "");
             vec = configSplit(line, ": ");
+            //if its no any of thes, then the path is started using status to true
             if (vec[0] == "listen"){
                 std::cout << "\n" << std::endl;
                 bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);
             }
             else if (vec[0] == "cgi"){
                 _substring = configSplit(vec[1], '=');
-                // std::cout << "=====CGI=====" << std::endl;
                 bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1]);
             }
             else if (vec[0] == "error_page"){
                 _substring = configSplit(vec[1], '=');
-                // std::cout << "=====errorn=====" << std::endl;
                 bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1]);
             }
             else{

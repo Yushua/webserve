@@ -44,6 +44,7 @@ void message::checkDelete()
 			this->unHost(itr->second);
 		}
 	}
+
 }
 
 void message::check()
