@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/21 11:44:55 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/21 15:26:28 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,38 +19,26 @@
 #include <string>
 #include <sstream>
 
-static vector<std::string> configSplit(std::string string, const char *c)
+static vector<std::string> configSplit(std::string string, const char *str)
 {
     vector<std::string> vec;
     int length = string.length();
+    int subl = strlen(str);
     int i = 0;
-    while (i < length)
+    bool value = true;
+    while (i < length && value == true)
     {
-        if (string[i] == c[0] && string[i+1] == c[1])
-            break;
+        for (int y = 0; str[y] && value == true; y++){
+            if (string[i] == str[y])
+                value = false;
+        }
         i++;
     }
-    vec.push_back(string.substr(0, i));
-    vec.push_back(string.substr(i+2, length - 1 - i));
-    return(vec);
-}
-
-static vector<std::string> configSplit(std::string string, const char c)
-{
-    vector<std::string> vec;
-    int length = string.length();
-    int i = 0;
-    while (i < length)
-    {
-        if (string[i] == c)
-            break;
-        i++;
-    }
-    vec.push_back(string.substr(0, i + 1));
+    vec.push_back(string.substr(0, i - 1));
     if (static_cast<unsigned long>(i + 1) == string.length())
         vec.push_back("");
     else
-        vec.push_back(string.substr(i+1, length - 1 - i));
+        vec.push_back(string.substr(i + subl - 1, length - subl - i + 1));
     return(vec);
 }
 
@@ -65,10 +53,8 @@ void configParser(map<string, webserv*> &bigacontyantnas)
     std::string webservName;
     while (std::getline(infile, line)){
         if (line[0] != '\t' && line.size() > 0){
-            //start new server
-            std::string name = line;
+            // std::string name = line;
             webservName = line;
-            // std::cout << "======NAME IS HERE=====" << std::endl;
             bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
             status = false;
             std::cout << "\n" << std::endl;
@@ -76,7 +62,6 @@ void configParser(map<string, webserv*> &bigacontyantnas)
         else if (status == true) {
             if (line == ""){
                 status = false;
-                std::cout << "\n" << std::endl;
             }
             else{
                 while (line[0] == '\t')
@@ -88,38 +73,32 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                     while (full.find(" ") != string::npos){
                         tmp = full.substr(0, full.find(" "));
                         full.erase(0, full.find(" ") + 1);
-                        // std::cout << "method: [" << _substring[0] << "][" << tmp << "]" << std::endl;
                         bigacontyantnas.at(webservName)->config_add_method(_substring[0], tmp);
                     }
                     bigacontyantnas.at(webservName)->config_add_method(_substring[0], full);
                 }
-                else if (vec[0] == "client_body_size"){//kk
-                    bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);
-                }
-                else if (vec[0] == "dir_behavior"){//kk
-                    bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);
-                }
+                else if (vec[0] == "client_body_size"){bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);}
+                else if (vec[0] == "dir_behavior"){bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);}
             }
         }
         else if (line != "" && status == false){
             line.replace(0, 1, "");
             vec = configSplit(line, ": ");
-            //if its no any of thes, then the path is started using status to true
-            if (vec[0] == "listen"){//kk
-                bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);
-            }
+            // std::cout << "[" << vec[0] << "][" << vec[1] << "]" << std::endl;
+            if (vec[0] == "listen")
+                {bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);}
             else if (vec[0] == "cgi"){
-                _substring = configSplit(vec[1], '=');//kk
+                _substring = configSplit(vec[1], "=");//kk
                 bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1]);
             }
             else if (vec[0] == "error_page"){//not checking if the error input is only a number
-                _substring = configSplit(vec[1], '=');
-                _substring[0] = _substring[0].substr(0, _substring[0].size()-1);
+                _substring = configSplit(vec[1], "=");
                 bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1]);
             }
             else{
                 status = true;
                 _substring = vec;
+                std::cout << "\n" << std::endl;
                 bigacontyantnas.at(webservName)->config_new_redirect(_substring[0], _substring[1]);
             }
         }
