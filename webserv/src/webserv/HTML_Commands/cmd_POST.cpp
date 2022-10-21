@@ -63,6 +63,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 		this->disconnect_socket(index);
 		return;
 	}
+	//need body to be split up
 	// if (chunk == true)[
 	// 	file << getChunk(msg.getBody());
 	// ]

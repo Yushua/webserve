@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/20 19:40:45 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/21 11:44:55 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,44 +71,50 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             // std::cout << "======NAME IS HERE=====" << std::endl;
             bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
             status = false;
+            std::cout << "\n" << std::endl;
         }
         else if (status == true) {
-            if (line == "")
+            if (line == ""){
                 status = false;
+                std::cout << "\n" << std::endl;
+            }
             else{
                 while (line[0] == '\t')
                     line.replace(0, 1, "");
                 vec = configSplit(line, ": ");
-                if (vec[0] == "method:"){
+                if (vec[0] == "method"){//maybe this is wrong?
                     std::string full = vec[1];
                     std::string tmp;
                     while (full.find(" ") != string::npos){
                         tmp = full.substr(0, full.find(" "));
                         full.erase(0, full.find(" ") + 1);
+                        // std::cout << "method: [" << _substring[0] << "][" << tmp << "]" << std::endl;
                         bigacontyantnas.at(webservName)->config_add_method(_substring[0], tmp);
                     }
                     bigacontyantnas.at(webservName)->config_add_method(_substring[0], full);
                 }
-                else if (vec[0] == "client_body_size:")
+                else if (vec[0] == "client_body_size"){//kk
                     bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);
-                else if (vec[0] == "dir_behavior:")
+                }
+                else if (vec[0] == "dir_behavior"){//kk
                     bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);
+                }
             }
         }
         else if (line != "" && status == false){
             line.replace(0, 1, "");
             vec = configSplit(line, ": ");
             //if its no any of thes, then the path is started using status to true
-            if (vec[0] == "listen"){
-                std::cout << "\n" << std::endl;
+            if (vec[0] == "listen"){//kk
                 bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);
             }
             else if (vec[0] == "cgi"){
-                _substring = configSplit(vec[1], '=');
+                _substring = configSplit(vec[1], '=');//kk
                 bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1]);
             }
-            else if (vec[0] == "error_page"){
+            else if (vec[0] == "error_page"){//not checking if the error input is only a number
                 _substring = configSplit(vec[1], '=');
+                _substring[0] = _substring[0].substr(0, _substring[0].size()-1);
                 bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1]);
             }
             else{

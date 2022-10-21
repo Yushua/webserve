@@ -49,7 +49,6 @@ void message::checkDelete()
 
 void message::check()
 {
-	//get the
 	vector<std::string>::iterator itr_v = startLine.begin();
 	vector<std::string>::iterator end_v = startLine.end();
 	for (; itr_v < end_v; itr_v++)
