@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/21 15:27:57 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/21 15:37:52 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,25 @@ static vector<std::string> configSplit(std::string string, const char *str)
     int subl = strlen(str);
     int i = 0;
     bool value = true;
+
+    /*
+    checks if the sequence,
+    when the string[i] equals the first character in the sequence
+    then it will go through, if somewhere it fails, then it stops.
+    only when all of them compare, does it elave the false bool
+    and leaves the while.
+    */
     while (i < length && value == true)
     {
-        for (int y = 0; str[y] && value == true; y++){
-            if (string[i] == str[y])
-                value = false;
-            else
-                value = true;
+        if (string[i] == str[0]){
+            for (int y = 0; str[y] && value == true; y++){
+                if (string[i] == str[y])
+                    value = false;
+                else{
+                    value = true;
+                    break;
+                }
+            }
         }
         i++;
     }
