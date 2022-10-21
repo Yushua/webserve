@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/21 15:26:28 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/21 15:27:57 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static vector<std::string> configSplit(std::string string, const char *str)
         for (int y = 0; str[y] && value == true; y++){
             if (string[i] == str[y])
                 value = false;
+            else
+                value = true;
         }
         i++;
     }
