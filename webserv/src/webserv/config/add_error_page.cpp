@@ -30,5 +30,9 @@ void webserv::config_add_error_page(const unsigned int error, const string page_
 }
 
 void webserv::config_add_error_page(const string error, const string page_path) {
+	if (error.find_first_not_of("0123456789") != string::npos) {
+		std::cerr << RED << "  -~={ Invalid error_page number " << error << " }=~-\n" << RESET;
+		return;
+	}
 	config_add_error_page(atoi(error.c_str()), page_path);
 }
