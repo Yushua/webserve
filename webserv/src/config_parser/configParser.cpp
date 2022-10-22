@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/21 15:37:52 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/22 18:36:39 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,15 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                     }
                     bigacontyantnas.at(webservName)->config_add_method(_substring[0], full);
                 }
-                else if (vec[0] == "client_body_size"){bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);}
-                else if (vec[0] == "dir_behavior"){bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);}
+                else if (vec[0] == "client_body_size")
+                    {bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);}
+                else if (vec[0] == "dir_behavior")
+                    {bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);}
             }
         }
         else if (line != "" && status == false){
             line.replace(0, 1, "");
             vec = configSplit(line, ": ");
-            // std::cout << "[" << vec[0] << "][" << vec[1] << "]" << std::endl;
             if (vec[0] == "listen")
                 {bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);}
             else if (vec[0] == "cgi"){
