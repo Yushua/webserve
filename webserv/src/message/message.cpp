@@ -52,7 +52,5 @@ const size_t &message::getContentLength() const
 const size_t &message::getBodyLength() const
 	{ return bodyLength; }
 
-void message::doUnChunk()
-	{ unChunk(); return ;}
 void message::doUnHost(std::string string)
 	{ unHost(string); return ;}

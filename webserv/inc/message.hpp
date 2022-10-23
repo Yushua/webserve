@@ -86,7 +86,6 @@ public:
 	const bool                &isValid() const;
 	bool					  &changeValid(bool _valid);
 	const bool                &isChunked() const;
-	void					  doUnChunk();
 	void				      doUnHost(std::string string);
 
 	const Config_s &getConfig() const;

@@ -7,16 +7,50 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+static bool unchunkCheck(std::string string)
+{
+	// std::string string = "4\r\nWiki\r\n6\r\npedia \r\n3\r\nin \r\n\r\nchunks.\r\n0\r\n\r\n";
+	bool chunkStatus = false;
+	std::string tmp;
+	int y = 0;
+	int i = 0;
+	int len = string.length();
+	int start = 0;
+	while (i < len){
+		start = i;
+		i = string.find("\r");
+		tmp = string.substr(start, i - start);
+		if (chunkStatus == false){
+			if (tmp.find_first_not_of("0123456789") == string::npos){
+				return false;
+			}
+			y = atoi(tmp.c_str());
+			if (y == 0)
+				return true;
+			chunkStatus = true;
+		}
+		else if (chunkStatus == true){
+			if (static_cast<unsigned long>(y) != tmp.length()){
+				return false;
+			}
+			chunkStatus = false;
+		}
+		i += 2;
+	}
+	return true;
+}
+
 void webserv::cmd_POST(const int index, message &msg) {
 	map<string, string> _header = msg.getHeaders();
 	map<string, string>::iterator itr = _header.begin();
 	map<string, string>::iterator end = _header.end();
 
 	bool chunk = false;
-
+	std::cout << "here I am ===========" << std::endl;
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:"){
 			if (msg.getContentLength() != strlen(msg.getBody())){
+				std::cout << "hey1" << std::endl;
 				this->send_new_error(sockets[index].fd, 404);
 				this->disconnect_socket(index);
 				return;
@@ -27,14 +61,15 @@ void webserv::cmd_POST(const int index, message &msg) {
 			std::string tmp = itr->second;
 			msg.doUnHost(tmp);
 			if (msg.isValid() == false){
+				std::cout << "hey2" << std::endl;
 				this->send_new_error(sockets[index].fd, 404);
 				this->disconnect_socket(index);
 				return;
 			}
 		}
 		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-			msg.doUnChunk();
-			if (msg.isValid() == false){
+			if (unchunkCheck(msg.getBody()) == false){
+				std::cout << "hey3" << std::endl;
 				this->send_new_error(sockets[index].fd, 404);
 				this->disconnect_socket(index);
 				return;
@@ -52,6 +87,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 	*/
 	if (stat(msg.getPath().c_str(), &file_info) == -1)
 	{
+		std::cout << "hey4" << std::endl;
 		this->send_new_error(sockets[index].fd, 404);
 		this->disconnect_socket(index);
 		return;
@@ -59,15 +95,34 @@ void webserv::cmd_POST(const int index, message &msg) {
 	ofstream file;
 	file.open(msg.getPath(), ios::out);
 	if (!file.good()) {
+		std::cout << "hey5" << std::endl;
 		this->send_new_error(sockets[index].fd, 404);
 		this->disconnect_socket(index);
 		return;
 	}
-	//need body to be split up
-	// if (chunk == true)[
-	// 	file << getChunk(msg.getBody());
-	// ]
-	// else
+	std::string string = msg.getBody();
+	if (chunk == true){
+		bool chunkStatus = false;
+		std::string tmp;
+		int i = 0;
+		int len = string.length();
+		int start = 0;
+		while (i < len){
+			start = i;
+			i = string.find("\r");
+			if (chunkStatus == false){
+				if (string.substr(start, i - start) == "0")
+					break;
+				chunkStatus = true;
+			}
+			else if (chunkStatus == true){
+				chunkStatus = false;
+				file << string.substr(start, i - start);
+			}
+			i += 2;
+		}	
+	}
+	else
 	file << msg.getBody();
 	file.close();
 }
