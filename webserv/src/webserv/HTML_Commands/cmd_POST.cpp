@@ -81,15 +81,12 @@ void webserv::cmd_POST(const int index, message &msg) {
 	
 	what do they mean wiht new resource?
 	*/
-	// if (msg.getPath() == "")
-	// {
-	// }
-	std::cout << "======empty=====" << std::endl;
 	std::cout << msg.getPath() << std::endl;
 	ofstream file;
-	if (stat(msg.getPath().c_str(), &file_info) == -1)
+	//if chunk == true, I need to check if this path is a chunk file. or a normal file
+	if (stat(msg.getPath().c_str(), &file_info) == -1)//neeed to check if this is a chunk file, meaning it exist because a chunk has been send there
 	{
-		//create
+		//when it does not exist, create
 		file.open("root/cgi-bin/file", fstream::in | fstream::out | fstream::trunc);
 		if (!file.good()) {
 			this->send_new_error(sockets[index].fd, 404);
@@ -97,7 +94,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 			return;
 		}
 	}
-	else{//if it does exist, corrupt file, can't override the file
+	else{//if it does exist, can't override the file
 		this->send_new_error(sockets[index].fd, 404);
 		this->disconnect_socket(index);
 		return;
@@ -133,18 +130,22 @@ void webserv::cmd_POST(const int index, message &msg) {
 }
 
 /*
-so how does uplaoding work?
+biggest problem now is, that, when a chunk gets in. FIRST gets in,  need to save this chunk and keep using it.
 
-if the file does not exist, make it, and then fill it in
-but if the file does exist, delete it ONCE, and then fill it in. or, jsut add to it?
-but how o i know, with chunks. if get multiple chunks, then, oeps, ikeep deleting the file.
-so with chunks, if it is there. I need to, for the first time, delete the file, and then keep adding to it.
-so for each fiel the chunk is set to, I need to also remember if it is the first time.
+we have to look into how many uploads we can do, i COULD make multiple ones, but that leads to a but of a problem due to the multiple servers.
+a global map<std::string name, int fd> would solve this. if we are going to use mulithreading then this
+is the place, to palce mutexes to protect the use of it. I don't want more than one server to touch it.
 
-scenario
+with a normal, NOT chunk message. its ok.
 
-imagine I send five chunks. this can all come from the same client. like imagine a chaotic mess of letters I need to send
-each letter is send IN THE RIGHT ORDER.
-so these five elters ahve all different adresses, i need to store this adress, and as soon as I get the first letter. I say "ok, start this file."
-this way I don't delte the file if another letter comes in.
+i first check if the first message is a chunk and make sure to store that in the global map
+then when it reaches the end, and I don't find chunk, I know I have to then remove it from that global map. if then after I get another chunk with that message
+it would just give the "access denied" error.
+
+problem with multiple servers is that they need to know that, one, that path can't be used. so when I check if its not there, I also make it
+two- i have a chunk file, I store the linl. ubut another file ALSO uses the same path and ALSO has that chunk. then two servers are sending chunks TO THE
+SAME FILE. i need to make sure that OTHER servers can't use the chunk, while still keep record of that this is a chunk file and that this server can send chunks to it
+a simple way is to check, that when a link is sued in a server for the first time. that it isn't used as a chunk, and it isn't open
+
+this way, even fi the file is a chunk file, the other servers can't open it, because when chunk, THE FIRST CHUNK, oly gets accepted if the file doesn't exist.
 */
