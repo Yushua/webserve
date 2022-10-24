@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/24 17:15:41 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/24 17:20:54 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,7 @@ void configParser(map<string, webserv*> &bigacontyantnas)
     /*
     -1: the start of the server creation
     0 : name created, now looking for whats next
-    1 : in the listen parser
-    2 : in the syntax parser*/
-    _reDirect.push_back("/:");
-    _reDirect.push_back("root");
+    */
     bool reDirect = false;
     while (std::getline(infile, line)){
         if (status == -1){
@@ -88,6 +85,8 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                 bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
                 status = 0;
                 std::cout << "name [" << webservName << "]\n";
+                _reDirect.push_back("/:");
+                _reDirect.push_back("root");
             }
         }
         else if (status == 0 && line.length() > 2 && line.find(": ")){
