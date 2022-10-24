@@ -2,9 +2,6 @@
 #include <ft_lib.hpp>
 #include <colors.hpp>
 
-#undef PIPE_BUF
-#define PIPE_BUF 20
-
 void message::loadHeaders() {
 	
 	this->state = loadingHeaders;
