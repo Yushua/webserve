@@ -1,8 +1,7 @@
 #include <message.hpp>
 
 message::message() {
-	headersComplete = true;
-	bodyComplete = true;
+	this->state = loadingHeaders;
 }
 
 message::~message(){}
@@ -19,8 +18,10 @@ const vector<string> &message::getArguments() const
 const map<string, string> &message::getHeaders() const
 	{ return headers; }
 
-const char *message::getBody() const
-	{ return read_buffer.c_str() + headersLength; }
+const string &message::getHeadersString() const
+	{ return headers_str; }
+const string &message::getBody() const
+	{ return body_str; }
 	
 const string &message::getOriginal() const
 	{ return read_buffer; }
@@ -40,17 +41,14 @@ const struct stat &message::getStat() const
 const bool &message::getStatState() const
 	{ return stat_state; }
 
-const bool &message::isHeaderComplete() const
-	{ return headersComplete; }
-
-const bool &message::isBodyComplete() const
-	{ return bodyComplete; }
-
 const size_t &message::getContentLength() const
 	{ return contentLength; }
 
-const size_t &message::getBodyLength() const
-	{ return bodyLength; }
-
 void message::doUnHost(std::string string)
 	{ unHost(string); return ;}
+
+const msgState &message::getState() const
+	{ return state; }
+
+void message::setState(msgState new_state)
+	{ this->state = new_state; }

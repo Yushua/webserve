@@ -18,7 +18,7 @@ void webserv::debug_print_request(const int index, message &msg) {
 		map<string, string>::const_iterator itr = msg.getHeaders().cbegin();
 		map<string, string>::const_iterator end = msg.getHeaders().cend();
 		for (; itr != end; ++itr)
-			cout << itr->first << ": " << itr->second << '\n';
+			cout << itr->first << " " << itr->second << '\n';
 	}
 # endif
 #else

@@ -2,45 +2,22 @@
 #include <ft_lib.hpp>
 #include <unistd.h>
 #include <iostream>
+#include <colors.hpp>
 
-void message::init(const int fd) {
-	this->fd = fd;
-	this->reset();
+void message::init() {
 
-	/* !!! NEEDS BE REIMPLEMENTED !!! */
-	/* It's slow and error prone */
-	bool double_nl = false;
-	while (true) {
-		char temp_buffer;
-		int ret;
-		ret = read(fd, &temp_buffer, 1);
-		if (ret <= 0)
-			break;
-		read_buffer += temp_buffer;
-		if (temp_buffer == '\n' && double_nl) {
-			if (double_nl)
-				break;
-			double_nl = false;
-		}
-		else {
-			double_nl = false;
-		}
-	}
-
-	size_t len = read_buffer.length();
-	if (len == 0)
-		return;
+	size_t len = headers_str.length();
 	size_t index;
 
 	{/* Get StartLine */
 		int start = 0;
 		for (index = 0; index < len; ++index) {
-			if (read_buffer[index] == ' ') {
-				startLine.push_back(read_buffer.substr(start, index - start));
+			if (headers_str[index] == ' ') {
+				startLine.push_back(headers_str.substr(start, index - start));
 				start = ++index;
 			}
-			else if (read_buffer[index] == '\n') {
-				startLine.push_back(read_buffer.substr(start, index - start));
+			else if (headers_str[index] == '\n') {
+				startLine.push_back(headers_str.substr(start, index - start));
 				break;
 			}
 		}
@@ -79,15 +56,15 @@ void message::init(const int fd) {
 		int start = ++index;
 		string head, value;
 		for (; index < len; ++index) {
-			if (gettingHeader && read_buffer[index] == ' ') {
+			if (gettingHeader && headers_str[index] == ' ') {
 				gettingHeader = false;
-				head = read_buffer.substr(start, index - start);
+				head = headers_str.substr(start, index - start);
 				start = ++index;
 			}
-			else if (read_buffer[index] == '\n') {
+			else if (headers_str[index] == '\n') {
 				if (!gettingHeader) {
 					gettingHeader = true;
-					value = read_buffer.substr(start, index - start);
+					value = headers_str.substr(start, index - start - 1);
 					headers.insert(pair<string, string>(head, value));
 					start = ++index;
 				}
@@ -100,9 +77,8 @@ void message::init(const int fd) {
 	/* Check Message Validity */
 	this->check();
 
-	headersLength = read_buffer.length();
-
-	headersComplete = true;
-	if (contentLength == 0)
-		bodyComplete = true;
+	if (contentLength > 0)
+		this->state = loadingBody;
+	else
+		this->state = ready;
 }

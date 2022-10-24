@@ -21,21 +21,21 @@ void webserv::run()
 		if (!events) continue;
 		
 		/* There's something to read */
-		if (events & POLLIN) {
+		if (events & POLLIN && sockets_info[index].msg.getState() != msgError) {
 			if (sockets_info[index].listen)
-					/* Handle new connection */
-					this->connect_new_socket(index);
-				else
-					/* Handle new request */
-					this->handle_request(index);
-				continue;
+				/* Handle new connection */
+				this->connect_new_socket(index);
+			else
+				/* Handle new request */
+				this->handle_request(index);
+			continue;
 		}
 
 		/* There's something to send */
 		if (sockets_info[index].recieving_from_server
 			&& events & POLLOUT) {
-			this->send_continue(index);
-			continue;
+				this->send_continue(index);
+				continue;
 		}
 	}
 }

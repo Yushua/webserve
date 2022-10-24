@@ -10,18 +10,21 @@ void webserv::handle_request(const int index)
 	if (make_sure_messege_is_complete(index))
 		return;
 
+	debug_print_request(index, msg);
+
 	msg.redirect(*this);
 
 	/* Get method name */
 	const string &type = msg.getStartLine().at(0);
-	
+
 	/* See if method is allowed */
 	vector<const string>::iterator found = find(
 		msg.getConfig().allowed_methods.begin(),
 		msg.getConfig().allowed_methods.end(),
 		type);
 	if (found == msg.getConfig().allowed_methods.end()) {
-		this->send_new_error(index, 403);
+		this->send_new_error_fatal(index, 403);
+		// this->disconnect_socket(index);
 		return;
 	}
 
@@ -31,4 +34,6 @@ void webserv::handle_request(const int index)
 		this->cmd_POST(index, msg);
 	else if (type == "DELETE")
 		this->cmd_DELETE(index, msg);
+	
+	msg.reset();
 }

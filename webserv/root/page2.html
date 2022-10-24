@@ -20,6 +20,14 @@
 <a href="pictures/puppy.jpg" download>Download this Picture!</a>
 
 <form action="cgi-bin/upload.py" method="post" enctype="multipart/form-data">
+	<p>Upload 1 file:</p>
+	<input type="file" name="fileToUpload" id="fileToUpload">
+	<input type="submit">
+</form>
+
+<form action="cgi-bin/upload.py" method="post" enctype="multipart/form-data">
+	<p>Upload 2 files:</p>
+	<input type="file" name="fileToUpload" id="fileToUpload">
 	<input type="file" name="fileToUpload" id="fileToUpload">
 	<input type="submit">
 </form>

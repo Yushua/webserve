@@ -2,6 +2,7 @@
 	#define MESSAGE_HPP
 
 #include <sys/stat.h>
+#include <sys/socket.h>
 #include <unistd.h>
 
 #include <iostream>
@@ -14,16 +15,21 @@ using namespace std;
 #include <config_struct.hpp>
 class webserv;
 
-#ifndef READ_BUFFER_SIZE
-	#define READ_BUFFER_SIZE 1024
-#endif
+enum msgState {
+	loadingHeaders,
+	loadingBody,
+	ready,
+	msgError
+};
 
 class message {
 private:
-	bool headersComplete;
-	bool bodyComplete;
+	msgState state;
 
 	int fd;
+
+	string headers_str;
+	string body_str;
 
 	//the first line of the message from the client
 	vector<string>      startLine;
@@ -52,10 +58,13 @@ private:
 	void checkDelete();
 	int checkNumber(std::string string, const char *input);
 	
-	void reset();
 
 public:
-	void init(const int fd);
+
+	void init();
+	void reset();
+	void reset(const int fd);
+	
 	/**
 	 * @brief unchunk checks if the chunk is correct, changes the VALID Bool in Message
 	 * 
@@ -66,7 +75,9 @@ public:
 	 * 
 	 */
 	void unHost(string string);
+
 	void loadBody();
+	void loadHeaders();
 
 	message();
 	~message();
@@ -75,13 +86,13 @@ public:
 	const string              &getPath() const;
 	const vector<string>      &getArguments() const;
 	const map<string, string> &getHeaders() const;
-	const char                *getBody() const;
+	const string              &getHeadersString() const;
+	const string              &getBody() const;
 	const string              &getOriginal() const;
 	const size_t              &getContentLength() const;
-	const size_t              &getBodyLength() const;
 
-	const bool &isHeaderComplete() const;
-	const bool &isBodyComplete() const;
+	const msgState &getState() const;
+	void            setState(msgState new_state);
 
 	const bool                &isValid() const;
 	bool					  &changeValid(bool _valid);
