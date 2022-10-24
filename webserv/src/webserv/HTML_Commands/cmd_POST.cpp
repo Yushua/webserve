@@ -48,7 +48,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 	map<string, string> _header = msg.getHeaders();
 	map<string, string>::iterator itr = _header.begin();
 	map<string, string>::iterator end = _header.end();
-
+	std::cout << "path ====="  << std::endl;
 	bool chunk = false;
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:"){

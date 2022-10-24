@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/24 20:18:14 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/24 20:52:47 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,14 @@ void configParser(map<string, webserv*> &bigacontyantnas)
     */
     bool reDirect = false;
     while (std::getline(infile, line)){
+        std::cout <<status << " hello\n";
         if (status == -1){
-            if (line == "" || line[0] == '\t' || line[0] == '\n' || line[0] == ' '){//if looking for name,  but there is only this
+            if (line.length() > 0 && (line == "" || line[0] == '\t' || line[0] == '\n' || line[0] == ' ')){//if looking for name,  but there is only this
                 i++;
             }
             else{//name found, because there is somethign to put in as a name
                 webservName = line;
+                std::cout << "hello]\n";
                 bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
                 status = 0;
                 std::cout << "name [" << webservName << "]\n";
@@ -141,7 +143,8 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             else if (line.find_first_not_of("\n\t ") != string::npos)
                 {continue;}
             else
-                {status = -1;}
+                {status = -1;}//check if the inut is wrong, that it is wrong
+            //if there is a tab vut with something behid it, then it needs to be checked, if wrong, give error
         }
         i++;
     }
