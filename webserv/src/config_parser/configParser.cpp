@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/24 17:20:54 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/24 20:18:14 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,24 +85,28 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                 bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
                 status = 0;
                 std::cout << "name [" << webservName << "]\n";
-                _reDirect.push_back("/:");
+                _reDirect.push_back("/");
                 _reDirect.push_back("root");
+                reDirect = false;
             }
         }
         else if (status == 0 && line.length() > 2 && line.find(": ")){
-            while (line[0] == '\t' ||line[0] == ' ' ){
+            while (line[0] == '\t' || line[0] == ' ' ){
                 line.replace(0, 1, "");
             }
             vec = configSplit(line, ": ");
             if(line[0] == '/'){//syntax
                 _reDirect = vec;
+                std::cout << "adding [" << _reDirect[0] << "]\n";
                 bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
                 reDirect = true;
             }
             //if there is no syntax, why the error
             else if ((vec[0] == "method" || vec[0] == "client_body_size" || vec[0] == "dir_behavior") && reDirect == false){
+                std::cout << "adding1 [" << _reDirect[0] << "]\n";
                 bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
             }
+            reDirect = true;
             if (vec[0] == "method"){
                 std::string full = vec[1];
                 std::string tmp;
