@@ -1,4 +1,5 @@
 #include <webserv.hpp>
+#include <colors.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -41,6 +42,9 @@ static bool unchunkCheck(std::string string)
 }
 
 void webserv::cmd_POST(const int index, message &msg) {
+	
+	// cout << YELLOW << msg.getHeadersString() << RESET;
+	
 	map<string, string> _header = msg.getHeaders();
 	map<string, string>::iterator itr = _header.begin();
 	map<string, string>::iterator end = _header.end();
@@ -48,7 +52,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 	bool chunk = false;
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:"){
-			if (msg.getContentLength() != strlen(msg.getBody())){
+			if (msg.getContentLength() != msg.getBody().length()){
 				this->send_new_error(sockets[index].fd, 404);
 				this->disconnect_socket(index);
 				return;

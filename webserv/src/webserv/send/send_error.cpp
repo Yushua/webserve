@@ -26,3 +26,11 @@ void webserv::send_new_error(const int index, const int error_code) {
 
 	sockets_info[index].disconnect_after_send = true;
 }
+
+void webserv::send_new_error_fatal(const int index, const int error_code) {
+
+	sockets_info[index].msg.setState(msgError);
+
+	send_new_error(index, error_code);
+
+}

@@ -15,7 +15,7 @@ void webserv::send_new_file(const int index, string headers, const string path) 
 	if (stat(path.c_str(), &file_info) == -1)
 		ft_error("send_new_file");
 	headers += this->header_get_content_type(path);
-	headers += "Content-length: " + ft_to_string(file_info.st_size) + "\n\n";
+	headers += "Content-Length: " + ft_to_string(file_info.st_size) + "\n\n";
 
 	this->send_new(index, headers, fd);
 }

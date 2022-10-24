@@ -23,6 +23,7 @@ void webserv::connect_new_socket(const int index)
 		sockets[new_socket_count].revents = 0;
 		sockets_info[new_socket_count].listen = false;
 		sockets_info[new_socket_count].recieving_from_server = false;
+		sockets_info[new_socket_count].msg.reset(new_socket);
 #ifdef DEBUG
 		cout << GREEN << "  -~={ " << new_socket_count << " connected }=~-\n" << RESET;
 #endif

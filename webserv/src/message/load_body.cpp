@@ -1,17 +1,23 @@
 #include <message.hpp>
 #include <ft_lib.hpp>
+#include <colors.hpp>
 
 void message::loadBody() {
-	char temp_buffer[READ_BUFFER_SIZE + 1];
+	
+	char buffer[PIPE_BUF + 1];
 	int ret;
-	ret = read(fd, temp_buffer, READ_BUFFER_SIZE);
+	
+	ret = read(fd, buffer, PIPE_BUF);
 	if (ret < 0)
 		ft_error("loadBody");
 	if (ret == 0) {
-		bodyComplete = true;
+		this->state = ready;
 		return;
 	}
-	temp_buffer[ret] = '\0';
-	read_buffer += temp_buffer;
-	bodyLength = ret;
+	buffer[ret] = '\0';
+
+	this->body_str += buffer;
+
+	if (ret < PIPE_BUF)
+		this->state = ready;
 }

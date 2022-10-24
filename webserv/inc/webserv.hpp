@@ -59,6 +59,7 @@ private:
 	void send_new(const int index, string headers, const int fd);
 	void send_new_file(const int index, string headers, const string path);
 	void send_new_error(const int index, const int error_code);
+	void send_new_error_fatal(const int index, const int error_code);
 
 	void send_continue(const int index);
 
