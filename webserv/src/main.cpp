@@ -6,12 +6,12 @@ int main() {
 	configParser(webservMap);//normal name
 	map<std::string, webserv*>::iterator it;
 
-	while (true){
-		for (it = webservMap.begin(); it != webservMap.end(); it++)
-		{
-			it->second->run();
-		}
-	}
+	// while (true){
+	// 	for (it = webservMap.begin(); it != webservMap.end(); it++)
+	// 	{
+	// 		it->second->run();
+	// 	}
+	// }
 }
 
 // int main()

@@ -73,18 +73,17 @@ void webserv::cmd_POST(const int index, message &msg) {
 			//if true, put the chunk message in the file
 			chunk = true;
 		}
-	}	
-	struct stat file_info;
+	}
 	/*
 	The request succeeded, and a new resource was created as a result.
 	This is typically the response sent after POST requests, or some PUT requests.
 	
 	what do they mean wiht new resource?
 	*/
-	std::cout << msg.getPath() << std::endl;
+	std::cout << "path ==" << msg.getPath() << std::endl;
 	ofstream file;
 	//if chunk == true, I need to check if this path is a chunk file. or a normal file
-	if (stat(msg.getPath().c_str(), &file_info) == -1)//neeed to check if this is a chunk file, meaning it exist because a chunk has been send there
+	if (msg.getStatState())//neeed to check if this is a chunk file, meaning it exist because a chunk has been send there
 	{
 		//when it does not exist, create
 		file.open("root/cgi-bin/file", fstream::in | fstream::out | fstream::trunc);

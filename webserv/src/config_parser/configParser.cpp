@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/22 18:36:39 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/24 17:15:41 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,67 +56,90 @@ static vector<std::string> configSplit(std::string string, const char *str)
     return(vec);
 }
 
+// static void throwError(std::string string, int i){
+//     std::cout << "-~={ line [" << i << "] in parser is wrong with input [" << string << "] }=~-\n";
+// }
+
 void configParser(map<string, webserv*> &bigacontyantnas)
 {
     std::ifstream infile("root/config/default.conf");
-    std::string line;
-    bool status = false;
-    vector<std::string> vec;
-    vector<std::string> _substring;
-    std::cout << "start" << std::endl;
+    std::string line;//stores the line I am checking frm the config file
+    vector<std::string> vec;//store the split line
+    vector<std::string> _substring;//store the split line before in case it is needed
+    vector<std::string> _reDirect;//store the split line before in case it is needed
     std::string webservName;
+    int status = -1;
+    int i = 0;
+    /*
+    -1: the start of the server creation
+    0 : name created, now looking for whats next
+    1 : in the listen parser
+    2 : in the syntax parser*/
+    _reDirect.push_back("/:");
+    _reDirect.push_back("root");
+    bool reDirect = false;
     while (std::getline(infile, line)){
-        if (line[0] != '\t' && line.size() > 0){
-            // std::string name = line;
-            webservName = line;
-            bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
-            status = false;
-            std::cout << "\n" << std::endl;
-        }
-        else if (status == true) {
-            if (line == ""){
-                status = false;
+        if (status == -1){
+            if (line == "" || line[0] == '\t' || line[0] == '\n' || line[0] == ' '){//if looking for name,  but there is only this
+                i++;
             }
-            else{
-                while (line[0] == '\t')
-                    line.replace(0, 1, "");
-                vec = configSplit(line, ": ");
-                if (vec[0] == "method"){//maybe this is wrong?
-                    std::string full = vec[1];
-                    std::string tmp;
+            else{//name found, because there is somethign to put in as a name
+                webservName = line;
+                bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
+                status = 0;
+                std::cout << "name [" << webservName << "]\n";
+            }
+        }
+        else if (status == 0 && line.length() > 2 && line.find(": ")){
+            while (line[0] == '\t' ||line[0] == ' ' ){
+                line.replace(0, 1, "");
+            }
+            vec = configSplit(line, ": ");
+            if(line[0] == '/'){//syntax
+                _reDirect = vec;
+                bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
+                reDirect = true;
+            }
+            //if there is no syntax, why the error
+            else if ((vec[0] == "method" || vec[0] == "client_body_size" || vec[0] == "dir_behavior") && reDirect == false){
+                bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
+            }
+            if (vec[0] == "method"){
+                std::string full = vec[1];
+                std::string tmp;
+                //check if nothing is in there
+                if (full.length() > 0){
                     while (full.find(" ") != string::npos){
                         tmp = full.substr(0, full.find(" "));
                         full.erase(0, full.find(" ") + 1);
-                        bigacontyantnas.at(webservName)->config_add_method(_substring[0], tmp);
+                        bigacontyantnas.at(webservName)->config_add_method(_reDirect[0], tmp);
                     }
-                    bigacontyantnas.at(webservName)->config_add_method(_substring[0], full);
+                    bigacontyantnas.at(webservName)->config_add_method(_reDirect[0], full);
                 }
-                else if (vec[0] == "client_body_size")
-                    {bigacontyantnas.at(webservName)->config_set_body_size(_substring[0], vec[1]);}
-                else if (vec[0] == "dir_behavior")
-                    {bigacontyantnas.at(webservName)->config_set_dir_behavior(_substring[0], vec[1]);}
             }
-        }
-        else if (line != "" && status == false){
-            line.replace(0, 1, "");
-            vec = configSplit(line, ": ");
-            if (vec[0] == "listen")
-                {bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);}
+            else if (vec[0] == "client_body_size"){
+                bigacontyantnas.at(webservName)->config_set_body_size(_reDirect[0], vec[1]);
+            }
+            else if (vec[0] == "dir_behavior"){
+                bigacontyantnas.at(webservName)->config_set_dir_behavior(_reDirect[0], vec[1]);
+            }
+            else if (vec[0] == "client_body_size"){
+                bigacontyantnas.at(webservName)->config_set_body_size(_reDirect[0], vec[1]);
+            }
+            else if (vec[0] == "listen"){bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);}
             else if (vec[0] == "cgi"){
                 _substring = configSplit(vec[1], "=");//kk
                 bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1]);
             }
-            else if (vec[0] == "error_page"){//not checking if the error input is only a number
+            else if (vec[0] == "error_page"){
                 _substring = configSplit(vec[1], "=");
                 bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1]);
             }
-            else{
-                status = true;
-                _substring = vec;
-                std::cout << "\n" << std::endl;
-                bigacontyantnas.at(webservName)->config_new_redirect(_substring[0], _substring[1]);
-            }
+            else if (line.find_first_not_of("\n\t ") != string::npos)
+                {continue;}
+            else
+                {status = -1;}
         }
+        i++;
     }
-    std::cout << "\n" << std::endl;
 }
