@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/25 17:00:01 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/25 17:02:11 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             else{
                 // std::cerr << YELLOW << "[" << line << RESET << "]" << std::endl;
                 std::cerr << RED << "  -~={ Invalid syntax on line: " << i << " }=~-\n" << RESET;
+                exit(1);
             }
         }
         i++;
