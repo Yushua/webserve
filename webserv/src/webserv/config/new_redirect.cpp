@@ -3,16 +3,16 @@
 #include <string>
 #include <iostream>
 
-void webserv::config_new_redirect(string path, string redirect_path) {
+void webserv::config_new_redirect(string path, string redirect_path, int line) {
 	
 	struct stat file_info;
 	if (stat(redirect_path.c_str(), &file_info) == -1) {
-		std::cerr << RED << "  -~={ Redirect: path " << redirect_path << " doesn't exist }=~-\n" << RESET;
-		return;
+		std::cerr << RED << "  -~={ line " << line << ": Redirect: path " << redirect_path << " doesn't exist }=~-\n" << RESET;
+		exit(1);
 	}
 	if (!S_ISDIR(file_info.st_mode)) {
-		std::cerr << RED << "  -~={ error_page: " << redirect_path << " is not a directory }=~-\n" << RESET;
-		return;
+		std::cerr << RED << "  -~={ line " << line << ": error_page: " << redirect_path << " is not a directory }=~-\n" << RESET;
+		exit(1);
 	}
 
 	if (path == "/") {
@@ -24,8 +24,8 @@ void webserv::config_new_redirect(string path, string redirect_path) {
 	else {
 		map<string, struct Config_s>::iterator found = configs.find(path); 
 		if (found != configs.end()) {
-			std::cerr << RED << "  -~={ Redirect already present: " << path << " }=~-\n" << RESET;
-			return;
+			std::cerr << RED << "  -~={ line " << line << ": Redirect already present: " << path << " }=~-\n" << RESET;
+			exit(1);
 		}
 
 		struct Config_s conf;

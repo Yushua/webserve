@@ -1,10 +1,10 @@
 #include <webserv.hpp>
 #include <colors.hpp>
 
-void webserv::config_listen_to_port(const unsigned int port) {
+void webserv::config_listen_to_port(const unsigned int port, int line) {
 	if (port < 0 || port > 65535) {
-		std::cerr << RED << "  -~={ Invalid port number " << port << " }=~-\n" << RESET;
-		return;
+		std::cerr << RED << "  -~={ line " << line << ": Invalid port number " << port << " }=~-\n" << RESET;
+		exit(1);
 	}
 	
 	try {
@@ -60,14 +60,15 @@ void webserv::config_listen_to_port(const unsigned int port) {
 		++new_socket_count;
 	}
 	catch(const char *error) {
-		std::cerr << RED << "  -~={ Can't listen to port " << port << ", because of a " << error << " error }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ line " << line << ": Can't listen to port " << port << ", because of a " << error << " error }=~-\n" << RESET;
+		exit(1);
 	}
 }
 
-void webserv::config_listen_to_port(const string port) {
+void webserv::config_listen_to_port(const string port, int line) {
 	if (port == "" || port.find_first_not_of("0123456789") != string::npos) {
-		std::cerr << RED << "  -~={ Invalid port number " << port << " }=~-\n" << RESET;
-		return;
+		std::cerr << RED << "  -~={ line " << line << ": Invalid port number " << port << " }=~-\n" << RESET;
+		exit(1);
 	}
-	config_listen_to_port(atoi(port.c_str()));
+	config_listen_to_port(atoi(port.c_str()), line);
 }

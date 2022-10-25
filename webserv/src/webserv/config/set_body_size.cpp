@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-void webserv::config_set_body_size(string path, const string &size) {
+void webserv::config_set_body_size(string path, const string &size, int line) {
 	
 	Config_s *config = &default_config;
 	if (path != "/") {
@@ -11,8 +11,8 @@ void webserv::config_set_body_size(string path, const string &size) {
 		if (found != configs.end())
 			config = &(found->second);
 		else {
-			std::cerr << RED << "  -~={ No redirect from: " << path << " }=~-\n" << RESET;
-			return;
+			std::cerr << RED << "  -~={ line " << line << ": No redirect from: " << path << " }=~-\n" << RESET;
+			exit(1);
 		}
 	}
 #ifdef DEBUG
@@ -21,8 +21,8 @@ void webserv::config_set_body_size(string path, const string &size) {
 #endif
 
 	if (size == "") {
-		std::cerr << RED << "  -~={ Invalid file size format: " << size << " }=~-\n" << RESET;
-		return;
+		std::cerr << RED << "  -~={ line " << line << ": Invalid file size format: " << size << " }=~-\n" << RESET;
+		exit(1);
 	}
 
 	string actual_value;

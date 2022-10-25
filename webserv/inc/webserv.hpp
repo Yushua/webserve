@@ -82,16 +82,16 @@ public:
 	webserv();
 	~webserv();
 
-	void config_listen_to_port(const unsigned port);
-	void config_listen_to_port(const string port);
-	void config_add_cgi_option(const string extension, const string interpreter_path);
-	void config_add_error_page(const unsigned int error, const string page_path);
-	void config_add_error_page(const string error, const string page_path);
+	void config_listen_to_port(const unsigned port, int line);
+	void config_listen_to_port(const string port, int line);
+	void config_add_cgi_option(const string extension, const string interpreter_path, int line);
+	void config_add_error_page(const unsigned int error, const string page_path, int line);
+	void config_add_error_page(const string error, const string page_path, int line);
 
-	void config_new_redirect(string redirect_from, string redirect_to);
-	void config_set_body_size(string redirect_from, const string &str);
-	void config_add_method(string redirect_from, const string &method);
-	void config_set_dir_behavior(string redirect_from, const string &behavior);
+	void config_new_redirect(string redirect_from, string redirect_to, int line);
+	void config_set_body_size(string redirect_from, const string &str, int line);
+	void config_add_method(string redirect_from, const string &method, int line);
+	void config_set_dir_behavior(string redirect_from, const string &behavior, int line);
 
 	void run();
 

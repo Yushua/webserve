@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/25 14:47:12 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/25 15:31:52 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void configParser(map<string, webserv*> &bigacontyantnas)
     vector<std::string> _substring;//store the split line before in case it is needed
     vector<std::string> _reDirect;//store the split line before in case it is needed
     std::string webservName;
-    int i = 0;
+    int i = 1;
     int status = 0;
     /*
     -1: the start of the server creation
@@ -77,20 +77,22 @@ void configParser(map<string, webserv*> &bigacontyantnas)
     */
     bool reDirect = false;
     while (std::getline(infile, line)){
-        std::cout << "line==" << line << std::endl;
+        // std::cout << "line==" << line << std::endl;
         if (line.find_first_not_of("\n\t ") == string::npos)
             {continue;}
         else if ((status == 0 || status == 1) && line.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-123456789") == string::npos){
+            _reDirect.clear();
             _reDirect.push_back("/");
             _reDirect.push_back("root");
             webservName = line;
             bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
             status = 1;
-            std::cout << "servername==[" << line << "]" << std::endl;
+            std::cout << "\nservername==[" << line << "]" << std::endl;
             reDirect = false;
         }
         else if (line.find(": ")== string::npos || line.length() < 2){
             std::cerr << RED << "  -~={ Invalid syntax on line: " << i << " }=~-\n" << RESET;
+            exit(1);
         }
         else if (status == 1){
             while (line[0] == '\t' || line[0] == ' ' ){
@@ -100,45 +102,46 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             if(line[0] == '/'){//syntax
                 _reDirect = vec;
                 // std::cout << "adding normal syntax[" << _reDirect[0] << "]\n";
-                bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
+                bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1], i);
                 reDirect = true;
             }
             //if there is no syntax, why the error
             else if ((vec[0] == "method" || vec[0] == "client_body_size" || vec[0] == "dir_behavior") && reDirect == false){
                 // std::cout << "adding default syntax [" << _reDirect[0] << "]\n";
-                bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
+                // std::cout << "name of server " << webservName << std::endl;
+                bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1], i);
                 reDirect = true;
             }
             else if (vec[0] == "method"){
                 std::string full = vec[1];
                 std::string tmp;
                 //check if nothing is in there
+                // std::cout << "name of server " << webservName << std::endl;
                 if (full.length() > 0){
                     while (full.find(" ") != string::npos){
                         tmp = full.substr(0, full.find(" "));
                         full.erase(0, full.find(" ") + 1);
-                        bigacontyantnas.at(webservName)->config_add_method(_reDirect[0], tmp);
+                        bigacontyantnas.at(webservName)->config_add_method(_reDirect[0], tmp, i);
                     }
-                    bigacontyantnas.at(webservName)->config_add_method(_reDirect[0], full);
+                    bigacontyantnas.at(webservName)->config_add_method(_reDirect[0], full, i);
                 }
             }
             else if (vec[0] == "client_body_size"){
-                bigacontyantnas.at(webservName)->config_set_body_size(_reDirect[0], vec[1]);
+                bigacontyantnas.at(webservName)->config_set_body_size(_reDirect[0], vec[1], i);
             }
             else if (vec[0] == "dir_behavior"){
-                bigacontyantnas.at(webservName)->config_set_dir_behavior(_reDirect[0], vec[1]);
+                bigacontyantnas.at(webservName)->config_set_dir_behavior(_reDirect[0], vec[1], i);
             }
-            else if (vec[0] == "client_body_size"){
-                bigacontyantnas.at(webservName)->config_set_body_size(_reDirect[0], vec[1]);
+            else if (vec[0] == "listen"){
+                bigacontyantnas.at(webservName)->config_listen_to_port(vec[1], i);
             }
-            else if (vec[0] == "listen"){bigacontyantnas.at(webservName)->config_listen_to_port(vec[1]);}
             else if (vec[0] == "cgi"){
                 _substring = configSplit(vec[1], "=");//kk
-                bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1]);
+                bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1], i);
             }
             else if (vec[0] == "error_page"){
                 _substring = configSplit(vec[1], "=");
-                bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1]);
+                bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1], i);
             }
             else{
                 std::cerr << RED << "  -~={ Invalid syntax on line: " << i << " }=~-\n" << RESET;

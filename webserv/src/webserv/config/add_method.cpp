@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-void webserv::config_add_method(string path, const string &method) {
+void webserv::config_add_method(string path, const string &method, int line) {
 	
 	Config_s *config = &default_config;
 	if (path != "/") {
@@ -11,8 +11,8 @@ void webserv::config_add_method(string path, const string &method) {
 		if (found != configs.end())
 			config = &(found->second);
 		else {
-			std::cerr << RED << "  -~={ No redirect from: " << path << " }=~-\n" << RESET;
-			return;
+			std::cerr << RED << "  -~={ line " << line << ": No redirect from: " << path << " }=~-\n" << RESET;
+			exit(1);
 		}
 	}
 #ifdef DEBUG
