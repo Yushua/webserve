@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/25 15:31:52 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/25 15:41:59 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                 bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1], i);
                 reDirect = true;
             }
-            else if (vec[0] == "method"){
+            //check if everythign is there
+            if (vec[0] == "method"){
                 std::string full = vec[1];
                 std::string tmp;
                 //check if nothing is in there
@@ -130,6 +131,8 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                 bigacontyantnas.at(webservName)->config_set_body_size(_reDirect[0], vec[1], i);
             }
             else if (vec[0] == "dir_behavior"){
+                std::cout << line << "]\n";
+                std::cout << "dir_behavior [" << _reDirect[0] << "][" << vec[1] << "]\n";
                 bigacontyantnas.at(webservName)->config_set_dir_behavior(_reDirect[0], vec[1], i);
             }
             else if (vec[0] == "listen"){
