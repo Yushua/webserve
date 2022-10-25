@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/24 20:52:47 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/25 11:54:22 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,22 @@ void configParser(map<string, webserv*> &bigacontyantnas)
     */
     bool reDirect = false;
     while (std::getline(infile, line)){
-        std::cout <<status << " hello\n";
         if (status == -1){
             if (line.length() > 0 && (line == "" || line[0] == '\t' || line[0] == '\n' || line[0] == ' ')){//if looking for name,  but there is only this
                 i++;
             }
             else{//name found, because there is somethign to put in as a name
                 webservName = line;
-                std::cout << "hello]\n";
                 bigacontyantnas.insert(std::pair<string, webserv*>(webservName, new webserv()));
                 status = 0;
-                std::cout << "name [" << webservName << "]\n";
+                // std::cout << "name [" << webservName << "]\n";
                 _reDirect.push_back("/");
                 _reDirect.push_back("root");
                 reDirect = false;
             }
+        }
+        else if (line.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")){
+            status = -1;
         }
         else if (status == 0 && line.length() > 2 && line.find(": ")){
             while (line[0] == '\t' || line[0] == ' ' ){
@@ -99,13 +100,13 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             vec = configSplit(line, ": ");
             if(line[0] == '/'){//syntax
                 _reDirect = vec;
-                std::cout << "adding [" << _reDirect[0] << "]\n";
+                // std::cout << "adding [" << _reDirect[0] << "]\n";
                 bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
                 reDirect = true;
             }
             //if there is no syntax, why the error
             else if ((vec[0] == "method" || vec[0] == "client_body_size" || vec[0] == "dir_behavior") && reDirect == false){
-                std::cout << "adding1 [" << _reDirect[0] << "]\n";
+                // std::cout << "adding1 [" << _reDirect[0] << "]\n";
                 bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1]);
             }
             reDirect = true;
@@ -142,9 +143,9 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             }
             else if (line.find_first_not_of("\n\t ") != string::npos)
                 {continue;}
-            else
-                {status = -1;}//check if the inut is wrong, that it is wrong
-            //if there is a tab vut with something behid it, then it needs to be checked, if wrong, give error
+            else{
+                std::cout << "ERROR ERROR\n";
+            }
         }
         i++;
     }
