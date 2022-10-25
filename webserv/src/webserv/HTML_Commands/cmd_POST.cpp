@@ -46,10 +46,22 @@ void webserv::cmd_POST(const int index, message &msg) {
 	// cout << YELLOW << msg.getHeadersString() << RESET;
 	
 	map<string, string> _header = msg.getHeaders();
+	// map<string, string>::iterator found = _header.find("Content-Length:");
+	// if (found != msg.getHeaders().end()) {
+
+	// }
+	// else {
+
+	// }
+
+
+	// map<string, string> _header = msg.getHeaders();
 	map<string, string>::iterator itr = _header.begin();
 	map<string, string>::iterator end = _header.end();
 	std::cout << "path ====="  << std::endl;
 	bool chunk = false;
+		//if its cgi, first check if the file is there
+	bool isCGI = false;
 	for (; itr != end; ++itr){
 		if (itr->first == "Content-Length:"){
 			if (msg.getContentLength() != msg.getBody().length()){
@@ -77,27 +89,32 @@ void webserv::cmd_POST(const int index, message &msg) {
 			//if true, put the chunk message in the file
 			chunk = true;
 		}
+		else if ((itr->first == "Content-Type:")){
+			//use chunks
+			//
+			std::cout << "message == " << itr->second << std::endl;
+			isCGI = false;
+		}
 	}
-	/*
-	The request succeeded, and a new resource was created as a result.
-	This is typically the response sent after POST requests, or some PUT requests.
-	
-	what do they mean wiht new resource?
-	*/
+	//in cgi-post if ------WebKitFormBoundarybUqfuAsphOOPArLE is not on the first line, error
+	//"--" + string
+	//"--" + string + "--" == end
 	std::cout << "path ==" << msg.getPath() << std::endl;
 	ofstream file;
 	//if chunk == true, I need to check if this path is a chunk file. or a normal file
-	if (msg.getStatState())//neeed to check if this is a chunk file, meaning it exist because a chunk has been send there
+	if (msg.getStatState())//need to check if this is a chunk file, meaning it exist because a chunk has been send there
 	{
-		//when it does not exist, create
-		file.open("root/cgi-bin/file", fstream::in | fstream::out | fstream::trunc);
-		if (!file.good()) {
+		//if its folder
+		if (S_ISDIR(msg.getStat().st_mode)){
 			this->send_new_error(sockets[index].fd, 404);
 			this->disconnect_socket(index);
 			return;
+		//when it does not exist, create
+		// file.open("root/cgi-bin/file", fstream::in | fstream::out | fstream::trunc);
+		// if (!file.good()) {
 		}
 	}
-	else{//if it does exist, can't override the file
+	else{//if stat fails
 		this->send_new_error(sockets[index].fd, 404);
 		this->disconnect_socket(index);
 		return;

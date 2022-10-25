@@ -36,6 +36,7 @@ struct SocketInfo_s {
 	bool recieving_from_server;
 	int send_fd;
 	bool disconnect_after_send;
+	//place content lenght that i will subtract
 };
 
 #include <config_struct.hpp>
@@ -66,6 +67,7 @@ private:
 	const string header_get_content_type(const string filename);
 
 	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
+	void cgi_post();
 
 public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 

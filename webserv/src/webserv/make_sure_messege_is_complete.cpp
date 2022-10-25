@@ -69,10 +69,5 @@ bool webserv::make_sure_messege_is_complete(const int index)
 			/* All good to go! */
 			return CONTINUE;
 
-
-		/* What??? How??? */
-		default:
-			cerr << RED << " <{[ Learn to C++ ma dude! ]}>\n" << RESET;
-			exit(1);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/25 17:02:11 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/25 19:41:31 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,14 @@ void configParser(map<string, webserv*> &bigacontyantnas)
     vector<std::string> _substring;//store the split line before in case it is needed
     vector<std::string> _reDirect;//store the split line before in case it is needed
     std::string webservName;
-    int i = 1;
     int status = 0;
     /*
     -1: the start of the server creation
     0 : name created, now looking for whats next
     */
     bool reDirect = false;
-    while (std::getline(infile, line)){
+    for (int i = 1; std::getline(infile, line); i++){
+        std::cout << line << i << std::endl;
         if (line.find_first_not_of("\n\t ") == string::npos)
             {continue;}
         else if ((status == 0 || status == 1) && line.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-123456789") == string::npos){
@@ -90,7 +90,7 @@ void configParser(map<string, webserv*> &bigacontyantnas)
             reDirect = false;
         }
         else if (line.find(": ") == string::npos || line.length() < 2){
-            std::cerr << RED << "  -~={ Invalid syntax on line: " << i << " }=~-\n" << RESET;
+            std::cerr << RED << "  -~={ 1 Invalid syntax on line: " << i << " }=~-\n" << RESET;
             exit(1);
         }
         else if (status == 1){
@@ -150,6 +150,5 @@ void configParser(map<string, webserv*> &bigacontyantnas)
                 exit(1);
             }
         }
-        i++;
     }
 }
