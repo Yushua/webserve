@@ -63,6 +63,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 		//if its cgi, first check if the file is there
 	bool isCGI = false;
 	for (; itr != end; ++itr){
+		std::cout << "first [" << itr->first << "][" << itr->second << std::endl;
 		if (itr->first == "Content-Length:"){
 			if (msg.getContentLength() != msg.getBody().length()){
 				this->send_new_error(sockets[index].fd, 404);
