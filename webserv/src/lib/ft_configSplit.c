@@ -1,8 +1,9 @@
+
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 
-vector<std::string> configSplit(std::string string, const char *str)
+std::vector<std::string> configSplit(std::string string, const char *str)
 {
     vector<std::string> vec;
     int length = string.length();

@@ -67,7 +67,7 @@ private:
 	const string header_get_content_type(const string filename);
 
 	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
-	void cgi_post();
+	void cgi_post(std::string string, const int index, message &msg);
 
 public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 
@@ -100,6 +100,7 @@ public:
 	void cmd_GET(const int index, const message &msg);
 	void cmd_HEAD(const int index, const message &msg);
 	void cmd_POST(const int index, message &msg); /* !!!TO BE IMPLEMENETD!!! */
+	void plainText(const int index, message &msg, bool chunk);
 	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 };
 void configParser(map<string, webserv*> &bigacontyantnas);

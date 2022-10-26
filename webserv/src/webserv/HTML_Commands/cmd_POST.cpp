@@ -41,65 +41,7 @@ static bool unchunkCheck(std::string string)
 	return true;
 }
 
-void webserv::cmd_POST(const int index, message &msg) {
-	
-	// cout << YELLOW << msg.getHeadersString() << RESET;
-	
-	map<string, string> _header = msg.getHeaders();
-	// map<string, string>::iterator found = _header.find("Content-Length:");
-	// if (found != msg.getHeaders().end()) {
-
-	// }
-	// else {
-
-	// }
-
-
-	// map<string, string> _header = msg.getHeaders();
-	map<string, string>::iterator itr = _header.begin();
-	map<string, string>::iterator end = _header.end();
-	std::cout << "path ====="  << std::endl;
-	bool chunk = false;
-		//if its cgi, first check if the file is there
-	bool isCGI = false;
-	for (; itr != end; ++itr){
-		std::cout << "first [" << itr->first << "][" << itr->second << std::endl;
-		if (itr->first == "Content-Length:"){
-			if (msg.getContentLength() != msg.getBody().length()){
-				this->send_new_error(sockets[index].fd, 404);
-				this->disconnect_socket(index);
-				return;
-			}
-		}
-		else if (itr->first == "Host:")
-		{
-			std::string tmp = itr->second;
-			msg.doUnHost(tmp);
-			if (msg.isValid() == false){
-				this->send_new_error(sockets[index].fd, 404);
-				this->disconnect_socket(index);
-				return;
-			}
-		}
-		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-			if (unchunkCheck(msg.getBody()) == false){
-				this->send_new_error(sockets[index].fd, 404);
-				this->disconnect_socket(index);
-				return;
-			}
-			//if true, put the chunk message in the file
-			chunk = true;
-		}
-		else if ((itr->first == "Content-Type:")){
-			//use chunks
-			//
-			std::cout << "message == " << itr->second << std::endl;
-			isCGI = false;
-		}
-	}
-	//in cgi-post if ------WebKitFormBoundarybUqfuAsphOOPArLE is not on the first line, error
-	//"--" + string
-	//"--" + string + "--" == end
+void webserv::plainText(const int index, message &msg, bool chunk){
 	std::cout << "path ==" << msg.getPath() << std::endl;
 	ofstream file;
 	//if chunk == true, I need to check if this path is a chunk file. or a normal file
@@ -148,6 +90,81 @@ void webserv::cmd_POST(const int index, message &msg) {
 		file << msg.getBody();
 	file.close();
 	std::cout << "file uploaded" << std::endl;
+}
+
+void webserv::cmd_POST(const int index, message &msg) {
+	
+	// cout << YELLOW << msg.getHeadersString() << RESET;
+	
+	map<string, string> _header = msg.getHeaders();
+	// map<string, string>::iterator found = _header.find("Content-Length:");
+	// if (found != msg.getHeaders().end()) {
+
+	// }
+	// else {
+
+	// }
+
+
+	// map<string, string> _header = msg.getHeaders();
+	map<string, string>::iterator itr = _header.begin();
+	map<string, string>::iterator end = _header.end();
+	std::string store;
+	std::cout << "path ====="  << std::endl;
+	bool chunk = false;
+		//if its cgi, first check if the file is there
+	bool isCGI = false;
+	for (; itr != end; ++itr){
+		std::cout << "first [" << itr->first << "][" << itr->second << std::endl;
+		if (itr->first == "Content-Length:"){
+			if (msg.getContentLength() != msg.getBody().length()){
+				this->send_new_error(sockets[index].fd, 404);
+				this->disconnect_socket(index);
+				return;
+			}
+		}
+		else if (itr->first == "Host:")
+		{
+			std::string tmp = itr->second;
+			msg.doUnHost(tmp);
+			if (msg.isValid() == false){
+				this->send_new_error(sockets[index].fd, 404);
+				this->disconnect_socket(index);
+				return;
+			}
+		}
+		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
+			if (unchunkCheck(msg.getBody()) == false){
+				this->send_new_error(sockets[index].fd, 404);
+				this->disconnect_socket(index);
+				return;
+			}
+			//if true, put the chunk message in the file
+			chunk = true;
+		}
+		else if ((itr->first == "Content-Type:")){
+			//use chunks
+			//
+			vector<std::string> vec;//store the split line
+			vec = configSplit(itr->second, "; ");
+			if (vec[0] == "multipart/form-data"){
+				isCGI = true;
+				vec[1].replace(0, 9, "");
+				store = vec[1];
+			}
+			std::cout << "message == " << itr->second << std::endl;
+			isCGI = true;
+		}
+	}
+	if (isCGI == true){
+		cgi_post(store, index, msg);
+	}
+	else{
+		plainText(index, msg, chunk);
+	}
+	//in cgi-post if ------WebKitFormBoundarybUqfuAsphOOPArLE is not on the first line, error
+	//"--" + string
+	//"--" + string + "--" == end
 }
 
 /*
