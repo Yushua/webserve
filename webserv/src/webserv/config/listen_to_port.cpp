@@ -45,19 +45,22 @@ void webserv::config_listen_to_port(const unsigned int port, int line) {
 			}
 		}
 
-		/* Adding the main socket to the array */
-		/* This socket will always be on possition 0 */
-		sockets[new_socket_count].fd = new_welcome_socket;
-		sockets[new_socket_count].events = POLLIN;
-		sockets[new_socket_count].revents = 0;
-		sockets_info[new_socket_count].listen = true;
-		sockets_info[new_socket_count].address = address;
-		sockets_info[new_socket_count].addrlen = addrlen;
+		/* Adding the new listen socket to the array */
+		int position = this->tryGetAvailablePosition();
+		if (position == -1) {
+			cerr << RED << "  -~={ Can't add more listen sockets! }=~-\n" << RESET;
+			exit(1);
+		}
+		sockets[position].fd = new_welcome_socket;
+		sockets[position].events = POLLIN;
+		sockets[position].revents = 0;
+		sockets_info[position].listen = true;
+		sockets_info[position].address = address;
+		sockets_info[position].addrlen = addrlen;
 		fcntl(new_welcome_socket, F_SETFL, O_NONBLOCK);
 #ifdef DEBUG
-		std::cout << GREEN << "  -~={ " << new_socket_count << " is listening to port " << port << " }=~-\n" << RESET;	
+		std::cout << GREEN << "  -~={ " << position << " is listening to port " << port << " }=~-\n" << RESET;	
 #endif
-		++new_socket_count;
 	}
 	catch(const char *error) {
 		std::cerr << RED << "  -~={ line " << line << ": Can't listen to port " << port << ", because of a " << error << " error }=~-\n" << RESET;

@@ -1,4 +1,5 @@
 #include <webserv.hpp>
+#include <colors.hpp>
 
 #define IS_NOT_CHILD fork_res != 0
 
@@ -12,7 +13,17 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 
 	if (IS_NOT_CHILD) {
 		close(fds[1]);
-		this->send_new(index, "HTTP/1.1 200 OK\n", fds[0]);
+		
+		fcntl(fds[0], O_NONBLOCK);
+		int fd_position = this->connect_new_fd_only(index, fds[0]);
+		if (fd_position == -1) {
+			cout << RED << "CGI FUCK\n" << RESET;
+			exit(1);
+		}
+		
+		this->send_new(index, "HTTP/1.1 200 OK\n", fd_position);
+		
+		
 		sockets_info[index].disconnect_after_send = true;
 		return;
 	}

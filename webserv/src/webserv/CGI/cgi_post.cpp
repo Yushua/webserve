@@ -8,7 +8,7 @@
 
 void webserv::cgi_post(std::string string, const int index, message &msg) {
 
-	boundary = "--" + string;
+	std::string boundary = "--" + string;
 	std::cout << "hey[" << boundary  << "]" << std::endl;
 
 	std::string path = msg.getBody();
@@ -16,11 +16,11 @@ void webserv::cgi_post(std::string string, const int index, message &msg) {
 
 	i = index;
 	// std::cout << YELLOW << path << RESET << std::endl;
-	int end = 0;
+	// int end = 0;
 	std::ifstream infile("root/cgo-bin/cgi-test.txt");
 	std::string line;
-	while (end == 0){
-		if (std::getline(infile, line) == boundary)
-	}
+	// while (end == 0){
+	// 	if (std::getline(infile, line) == boundary)
+	// }
 	return ;
 }

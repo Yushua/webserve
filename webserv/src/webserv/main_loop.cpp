@@ -1,12 +1,11 @@
 #include <webserv.hpp>
 #include <iostream>
+#include <colors.hpp>
 
 void webserv::run()
 {
-	/* Update socket count */
-	socket_count = new_socket_count;
 
-	int event_count = poll(sockets, 1 + socket_count, TIMEOUT);
+	int event_count = poll(sockets, SOCKET_COUNT_MAX, TIMEOUT);
 	switch (event_count) {
 		default: break;
 		case  0: return; /* Skip; there are not events */
@@ -14,14 +13,38 @@ void webserv::run()
 	}
 
 	/* Handle connections */
-	for (int index = 0; index <= socket_count; index++) {
-		short events = sockets[index].revents;
+	for (int index = 0; index < SOCKET_COUNT_MAX; index++) {
+
+		short &events = sockets[index].revents;
 		
+		struct SocketInfo_s &socket = sockets_info[index];
+		struct pollfd &poll_fd = sockets[index];
+
 		/* Nothing to do */	
-		if (!events) continue;
+		if (!events || socket.fd_only) continue;
+
+		if (events & ~(POLLOUT | POLLIN)
+			&& poll_fd.fd != numeric_limits<int>::max()) {
+			// events = 0;
+			this->disconnect(index);
+			// continue;
+		}
 		
+		/* There's something to send */
+		if (socket.recieving_from_server
+			&& events & POLLOUT
+			&& sockets[socket.send_fd_index].revents & POLLIN) {
+
+				this->send_continue(index);
+				continue;
+		}
+
 		/* There's something to read */
-		if (events & POLLIN && sockets_info[index].msg.getState() != msgError) {
+		if (events & POLLIN && socket.msg.getState() != msgError) {
+
+			if (availablePositions.size() < 2)
+				continue;
+
 			if (sockets_info[index].listen)
 				/* Handle new connection */
 				this->connect_new_socket(index);
@@ -29,13 +52,6 @@ void webserv::run()
 				/* Handle new request */
 				this->handle_request(index);
 			continue;
-		}
-
-		/* There's something to send */
-		if (sockets_info[index].recieving_from_server
-			&& events & POLLOUT) {
-				this->send_continue(index);
-				continue;
 		}
 	}
 }

@@ -4,13 +4,11 @@
 #include <iostream>
 
 void webserv::handle_request(const int index)
-{
+{	
 	message &msg = sockets_info[index].msg;
 
 	if (make_sure_messege_is_complete(index))
 		return;
-
-	debug_print_request(index, msg);
 
 	msg.redirect(*this);
 
@@ -24,7 +22,7 @@ void webserv::handle_request(const int index)
 		type);
 	if (found == msg.getConfig().allowed_methods.end()) {
 		this->send_new_error_fatal(index, 403);
-		// this->disconnect_socket(index);
+		// this->disconnect(index);
 		return;
 	}
 

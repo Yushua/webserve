@@ -6,7 +6,7 @@
 #    By: rdrazsky <rdrazsky@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/04 13:52:48 by rdrazsky      #+#    #+#                  #
-#    Updated: 2022/10/19 16:02:47 by rdrazsky      ########   odam.nl          #
+#    Updated: 2022/10/26 15:21:08 by rdrazsky      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,14 +75,14 @@ run: all
 rerun: re run
 
 debug:
-	$(MAKE) DEBUG="-D DEBUG"
+	$(MAKE) DEBUG="-D DEBUG -D NOHEADER"
 
 drun: debug run
 
-debug-noheader:
-	$(MAKE) DEBUG="-D DEBUG -D NOHEADER"
+debug-header:
+	$(MAKE) DEBUG="-D DEBUG"
 
-dnrun: debug-noheader run
+dhrun: debug-header run
 
 $(ARGS):
 	@exit

@@ -17,4 +17,7 @@ const std::string ft_get_extension(const std::string &path);
 const std::string ft_skip_heders(const std::string &str);
 std::vector<std::string> configSplit(std::string string, const char *str);
 
+// TO BE DELETED //
+short ft_cheeky_poll(const int fd);
+
 #endif

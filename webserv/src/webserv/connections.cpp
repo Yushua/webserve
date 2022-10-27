@@ -2,46 +2,83 @@
 #include <colors.hpp>
 #include <iostream>
 
-void webserv::connect_new_socket(const int index)
+int webserv::connect_new_socket(const int index)
 {
-	/* Don't connect new socket when array is full */
-	if (new_socket_count >= SOCKET_COUNT_MAX)
-		return;
+	/* Don't connect new socket when */
+	/*  there are no available positions */
+	int position = this->tryGetAvailablePosition();
+	if (position < 0)
+		return -1;
 
 	/* Connect to new socket */
 	struct SocketInfo_s &sock_info = sockets_info[index];
 	socket_t new_socket = accept(sockets[index].fd, (struct sockaddr *)&sock_info.address, (socklen_t*)&sock_info.addrlen);
-	
+
 	if (new_socket < 0)
 		perror("accept");
 	else
 	{ /* Add new socket to array */
-		new_socket_count++;
 		fcntl(new_socket, F_SETFL, O_NONBLOCK);
-		sockets[new_socket_count].fd = new_socket;
-		sockets[new_socket_count].events = POLLIN | POLLOUT;
-		sockets[new_socket_count].revents = 0;
-		sockets_info[new_socket_count].listen = false;
-		sockets_info[new_socket_count].recieving_from_server = false;
-		sockets_info[new_socket_count].msg.reset(new_socket);
+		sockets[position].fd = new_socket;
+		sockets[position].events = POLLIN | POLLOUT;
+		sockets[position].revents = 0;
+		sockets_info[position].send_fd_index = -1;
+		sockets_info[position].fd_only = false;
+		sockets_info[position].listen = false;
+		sockets_info[position].recieving_from_server = false;
+		sockets_info[position].disconnect_after_send = false;
+		sockets_info[position].msg.reset(new_socket);
+		
 #ifdef DEBUG
-		cout << GREEN << "  -~={ " << new_socket_count << " connected }=~-\n" << RESET;
+		cout << GREEN << "  -~={ " << position << " connected }=~-\n" << RESET;
 #endif
 	}
+	return position;
 }
 
-void webserv::disconnect_socket(const int index)
+int webserv::connect_new_fd_only(const int index, const int fd)
 {
+
+	/* Don't connect new socket when */
+	/*  there are no available positions */
+	int position = this->tryGetAvailablePosition();
+	if (position < 0)
+		return -1;
+
+	{ /* Add new socket to array */
+		sockets[position].fd = fd;
+		sockets[position].events = POLLIN | POLLOUT;
+		sockets[position].revents = 0;
+		sockets_info[position].send_fd_index = index;
+		sockets_info[position].fd_only = true;
+		sockets_info[position].listen = false;
+		sockets_info[position].recieving_from_server = false;
+		sockets_info[position].disconnect_after_send = false;
+	
+#ifdef DEBUG
+		cout << GREEN << "  -~={ " << position << " fd only }=~-\n" << RESET;
+#endif
+	}
+	return position;
+}
+
+void webserv::disconnect(const int index)
+{
+	struct pollfd &poll_fd = sockets[index];
+	struct SocketInfo_s &socket = sockets_info[index];
+
+	if (!socket.fd_only && socket.send_fd_index != -1)
+		this->disconnect(socket.send_fd_index);
+
+	close(sockets[index].fd);
+
+	poll_fd.fd = numeric_limits<int>::max();
+	poll_fd.revents = 0;
+	socket.msg.reset();
+
+	this->returnPosition(index);
+
 #ifdef DEBUG
 	cout << RED << "  -~={ " << index << " diconnected }=~-\n" << RESET;
-	if (new_socket_count != index)
-		cout << YELLOW << "  -~={ " << new_socket_count << " moved to " << index << " }=~-\n" << RESET;
 #endif
-
-	/* Replace disconnecting socket with the last item in the array */
-	/* This is the fastest way to remove an item from an array, without leaving a gap */
-	close(sockets[index].fd);
-	sockets[index].fd = sockets[new_socket_count].fd;
-	sockets_info[index] = sockets_info[new_socket_count];
-	new_socket_count--;
 }

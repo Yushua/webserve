@@ -23,7 +23,7 @@ bool webserv::make_sure_messege_is_complete(const int index)
 
 			/* Client Disconected */
 			if (msg.getHeadersString().length() == 0)
-				{ this->disconnect_socket(index); return true; }
+				{ this->disconnect(index); return true; }
 
 			/* Return to poll if headers aren't complete */
 			if (msg.getState() == loadingHeaders)
@@ -37,6 +37,8 @@ bool webserv::make_sure_messege_is_complete(const int index)
 				this->send_new_error(index, 400);
 				return RETURN_TO_POLL;
 			}
+
+			debug_print_request(index, msg);
 
 			/* Return to poll if body isn't complete */
 			if (msg.getState() == loadingBody)

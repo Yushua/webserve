@@ -14,6 +14,8 @@
 
 #include <string>
 #include <map>
+#include <stack>
+#include <limits>
 
 using namespace std;
 
@@ -23,18 +25,19 @@ using namespace std;
 
 typedef int socket_t;
 
-#define TIMEOUT 3*60*1000
+#define TIMEOUT 100000
 #define READ_BUFFER_SIZE 1024
 
 #define SOCKET_COUNT_MAX 250
 
 struct SocketInfo_s {
 	message msg;
+	bool fd_only;
 	bool listen;
 	struct sockaddr_in address;
 	int addrlen;
 	bool recieving_from_server;
-	int send_fd;
+	int send_fd_index;
 	bool disconnect_after_send;
 	//place content lenght that i will subtract
 };
@@ -44,8 +47,10 @@ struct SocketInfo_s {
 class webserv {
 private:
 
-	int socket_count; /* Number of conected sockets */
-	int new_socket_count; /* Used to update the variable above */
+	stack<int> availablePositions;
+
+	int tryGetAvailablePosition();
+	void returnPosition(int position);
 
 	struct pollfd *sockets;
 	struct SocketInfo_s *sockets_info;
@@ -53,16 +58,18 @@ private:
 	
 	bool make_sure_messege_is_complete(const int index);
 
-	void connect_new_socket(const int index);
+	int connect_new_fd_only(const int index, const int fd);
+	int connect_new_socket(const int index);
+	void disconnect(const int index);
+
 	void handle_request(const int index);
-	void disconnect_socket(const int index);
 
 	void send_new(const int index, string headers, const int fd);
 	void send_new_file(const int index, string headers, const string path);
 	void send_new_error(const int index, const int error_code);
 	void send_new_error_fatal(const int index, const int error_code);
 
-	void send_continue(const int index);
+	void send_continue(int index);
 
 	const string header_get_content_type(const string filename);
 

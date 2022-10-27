@@ -9,7 +9,7 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 	if (stat(msg.getPath().c_str(), &file_info) == -1)
 	{
 		this->send_new_error(sockets[index].fd, 404);
-		this->disconnect_socket(index);
+		this->disconnect(index);
 		return;
 	}
 	this->send_new_error(index, 204);
@@ -26,7 +26,7 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 	}
 	else{
 		this->send_new_error(index, 404);
-		this->disconnect_socket(index);
+		this->disconnect(index);
 			return;
 	}
 }

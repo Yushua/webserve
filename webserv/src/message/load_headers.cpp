@@ -2,14 +2,19 @@
 #include <ft_lib.hpp>
 #include <colors.hpp>
 
+#include <webserv.hpp>
+
 void message::loadHeaders() {
-	
+
 	this->state = loadingHeaders;
 
 	char buffer[PIPE_BUF + 1];
 	int ret;
 
-	ret = read(fd, buffer, PIPE_BUF);
+	if (!(ft_cheeky_poll(fd) & POLLIN))
+		return;
+
+	ret = recv(fd, buffer, PIPE_BUF, 0);
 	if (ret < 0)
 		ft_error("loadHeaders");
 	if (ret == 0)
