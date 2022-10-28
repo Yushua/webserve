@@ -21,9 +21,10 @@ bool webserv::make_sure_messege_is_complete(const int index)
 		case loadingHeaders:
 			msg.loadHeaders();
 
-			/* Client Disconected */
-			if (msg.getHeadersString().length() == 0)
-				{ this->disconnect(index); return true; }
+			/* Client Disconected or Error */
+			if (msg.getHeadersString().length() == 0
+				|| msg.getState() == msgError)
+				{ this->disconnect(index); return RETURN_TO_POLL; }
 
 			/* Return to poll if headers aren't complete */
 			if (msg.getState() == loadingHeaders)
@@ -51,6 +52,10 @@ bool webserv::make_sure_messege_is_complete(const int index)
 
 		case loadingBody:
 			msg.loadBody();
+
+			/* Disconected Error */
+			if (msg.getState() == msgError)
+				{ this->disconnect(index); return RETURN_TO_POLL; }
 
 			/* Check if body doesn't exeed Content_length */
 			if (msg.getBody().length() > msg.getContentLength()) {

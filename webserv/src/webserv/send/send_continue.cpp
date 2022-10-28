@@ -3,18 +3,10 @@
 #include <iostream>
 #include <algorithm>
 
-// #undef PIPE_BUF
-// #define PIPE_BUF 1
-
 void webserv::send_continue(int index) {
 
 	SocketInfo_s *socket = &(sockets_info[index]);
 	pollfd *poll_file = &(sockets[socket->send_fd_index]);
-
-	// if (!(ft_cheeky_poll(poll_file->fd) & POLLIN))
-	// 	return;
-	// if (!(ft_cheeky_poll(sockets[index].fd) & POLLOUT))
-	// 	return;
 
 	/* Send message in parts */
 
@@ -24,7 +16,7 @@ void webserv::send_continue(int index) {
 	int ret = read(poll_file->fd, buffer, PIPE_BUF);
 
 	if (ret < 0)
-		ft_error("send_continue");
+		{ this->disconnect(index); return; }
 
 	if (ret == 0) {
 		this->disconnect(socket->send_fd_index);
@@ -36,6 +28,5 @@ void webserv::send_continue(int index) {
 		return;
 	}
 
-	// ::send(sockets[index].fd, buffer, ret, MSG_OOB);
 	::write(sockets[index].fd, buffer, ret);
 }

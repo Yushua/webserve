@@ -21,15 +21,15 @@ void webserv::run()
 		struct pollfd &poll_fd = sockets[index];
 
 		/* Nothing to do */	
-		if (!events || socket.fd_only) continue;
+		if (!events || socket.fd_only || poll_fd.fd == numeric_limits<int>::max())
+			continue;
 
-		if (events & ~(POLLOUT | POLLIN)
-			&& poll_fd.fd != numeric_limits<int>::max()) {
-			// events = 0;
-			this->disconnect(index);
-			// continue;
+		/* Disconnect connections with errors */	
+		if (events & ~(POLLOUT | POLLIN)) {
+				this->disconnect(index);
+				continue;
 		}
-		
+
 		/* There's something to send */
 		if (socket.recieving_from_server
 			&& events & POLLOUT

@@ -2,8 +2,6 @@
 #include <ft_lib.hpp>
 #include <colors.hpp>
 
-#include <webserv.hpp>
-
 void message::loadHeaders() {
 
 	this->state = loadingHeaders;
@@ -11,19 +9,16 @@ void message::loadHeaders() {
 	char buffer[PIPE_BUF + 1];
 	int ret;
 
-	if (!(ft_cheeky_poll(fd) & POLLIN))
-		return;
-
-	ret = recv(fd, buffer, PIPE_BUF, 0);
+	ret = read(fd, buffer, PIPE_BUF);
 	if (ret < 0)
-		ft_error("loadHeaders");
+		{ this->state = msgError; return; }
 	if (ret == 0)
 		{ this->state = loadingBody; return; }
 	buffer[ret] = '\0';
 
 	size_t index = this->headers_str.length();
 	if (index != 0)
-		index -= 3;
+		--index;
 	this->headers_str += buffer;
 	size_t end = this->headers_str.length();
 
