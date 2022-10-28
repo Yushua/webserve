@@ -8,7 +8,7 @@ print("The current date is " + str(date.today()) + "!")
 
 from time import sleep
 
-sleep(10)
+# sleep(10)
 
 import os
 

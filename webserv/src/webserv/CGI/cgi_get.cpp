@@ -5,7 +5,8 @@
 
 void webserv::cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter) {
 	int fds[2];
-	pipe(fds);
+	if (pipe(fds) != 0)
+		ft_error("cgi_get");
 
 	int fork_res = fork();
 	if (fork_res == -1)
@@ -15,14 +16,7 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 		close(fds[1]);
 		
 		fcntl(fds[0], O_NONBLOCK);
-		int fd_position = this->connect_new_fd_only(index, fds[0]);
-		if (fd_position == -1) {
-			cout << RED << "CGI FUCK\n" << RESET;
-			exit(1);
-		}
-		
-		this->send_new(index, "HTTP/1.1 200 OK\n", fd_position);
-		
+		this->send_new(index, "HTTP/1.1 200 OK\n", fds[0]);
 		
 		sockets_info[index].disconnect_after_send = true;
 		return;

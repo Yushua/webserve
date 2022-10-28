@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <poll.h>
 #include <fcntl.h>
+#include <dirent.h>
 
 #include <string>
 #include <map>
@@ -64,7 +65,7 @@ private:
 
 	void handle_request(const int index);
 
-	void send_new(const int index, string headers, const int fd);
+	int send_new(const int index, string headers, const int fd);
 	void send_new_file(const int index, string headers, const string path);
 	void send_new_error(const int index, const int error_code);
 	void send_new_error_fatal(const int index, const int error_code);
@@ -76,6 +77,8 @@ private:
 	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
 	void cgi_post(std::string string, const int index, message &msg);
 
+	int generate_index_page(const int index, const message &msg);
+
 public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 
 	/* Global config stuff */
@@ -85,9 +88,9 @@ public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 		struct Config_s default_config;
 		map<string, struct Config_s> configs;
 
-	static void debug_print_request(const int index, message &msg);
-
 public:
+	static void debug_print_request(const int index, message &msg);
+	
 	webserv();
 	~webserv();
 
