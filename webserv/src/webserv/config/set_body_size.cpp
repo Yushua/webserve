@@ -39,9 +39,11 @@ void webserv::config_set_body_size(string path, const string &size, int line) {
 		else {
 			actual_value = size.substr(0, split_index - 2);
 			if (type == "kb" || type == "KB")
-				mul_value = 1024;
+				mul_value = KILOBYTE;
 			else if (type == "mb" || type == "MB")
-				mul_value = 1024 * 1024;
+				mul_value = MEGABYTE;
+			else if (type == "gb" || type == "GB")
+				mul_value = GIGABYTE;
 			else {
 				std::cerr << RED << "  -~={ Invalid file size format: " << type << " }=~-\n" << RESET;
 				return;
