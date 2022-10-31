@@ -10,12 +10,10 @@ void webserv::send_continue(int index) {
 
 	/* Send message in parts */
 
-	// Not sure wich buffer is ideal, try experimenting!
-	// SO_SNDBUF PIPE_BUF
 	static char buffer[PIPE_BUF];
 	int ret = read(poll_file->fd, buffer, PIPE_BUF);
 
-	if (ret < 0)
+	if (ret == -1)
 		{ this->disconnect(index); return; }
 
 	if (ret == 0) {
@@ -28,5 +26,6 @@ void webserv::send_continue(int index) {
 		return;
 	}
 
-	::write(sockets[index].fd, buffer, ret);
+	if (write(sockets[index].fd, buffer, ret) == -1)
+		this->disconnect(index);
 }

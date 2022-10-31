@@ -106,7 +106,8 @@ int webserv::generate_index_page(const int index, const message &msg) {
 					<< "\n</a></td>\n"
 			<< "</tr>\n";
 	}
-	closedir(d);
+	if (closedir(d) == -1)
+		ft_error("generate_index_page");
 
 	page_stream << _page_end;
 
@@ -119,9 +120,12 @@ int webserv::generate_index_page(const int index, const message &msg) {
 	string page = page_stream.str();
 	page = "Content-Length: " + ft_to_string(page.length()) + "\n\n" + page;
 	
-	write(fds[1], page.c_str(), page.length());
-	close(fds[1]);
+	if (write(fds[1], page.c_str(), page.length()) == -1)
+		ft_error("generate_index_page");
+	if (close(fds[1]))
+		ft_error("generate_index_page");
 
-	fcntl(fds[0], O_NONBLOCK);
+	if (fcntl(fds[0], O_NONBLOCK))
+		ft_error("generate_index_page");
 	return fds[0];
 }

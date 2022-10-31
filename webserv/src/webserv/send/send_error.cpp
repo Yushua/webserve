@@ -10,7 +10,7 @@ void webserv::send_new_error(const int index, const int error_code) {
 	
 	map<int, string>::iterator found = error_pages.find(error_code);
 	if (found == error_pages.end()) {
-		::send(sockets[index].fd, headers.c_str(), headers.length(), 0);
+		write(sockets[index].fd, headers.c_str(), headers.length());
 		this->disconnect(index);
 		
 #ifdef DEBUG

@@ -8,7 +8,7 @@ void message::loadBody() {
 	int ret;
 	
 	ret = read(fd, buffer, PIPE_BUF);
-	if (ret < 0)
+	if (ret == -1)
 		{ this->state = msgError; return; }
 	if (ret == 0)
 		{ this->state = ready; return; }

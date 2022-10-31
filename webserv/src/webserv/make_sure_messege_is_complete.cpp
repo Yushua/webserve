@@ -22,8 +22,8 @@ bool webserv::make_sure_messege_is_complete(const int index)
 			msg.loadHeaders();
 
 			/* Client Disconected or Error */
-			if (msg.getHeadersString().length() == 0
-				|| msg.getState() == msgError)
+			if (msg.getState() == msgError
+				|| msg.getHeadersString().length() == 0)
 				{ this->disconnect(index); return RETURN_TO_POLL; }
 
 			/* Return to poll if headers aren't complete */

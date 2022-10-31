@@ -16,9 +16,8 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 		close(fds[1]);
 		
 		fcntl(fds[0], O_NONBLOCK);
-		this->send_new(index, "HTTP/1.1 200 OK\n", fds[0]);
-		
-		sockets_info[index].disconnect_after_send = true;
+		if (this->send_new(index, "HTTP/1.1 200 OK\n", fds[0]) != -1)
+			sockets_info[index].disconnect_after_send = true;
 		return;
 	}
 	else {
