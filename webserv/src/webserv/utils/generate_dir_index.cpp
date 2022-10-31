@@ -106,6 +106,8 @@ int webserv::generate_index_page(const int index, const message &msg) {
 
 
 	string page = page_stream.str();
+	page = "Content-Length: " + ft_to_string(page.length()) + "\n\n" + page;
+	
 	write(fds[1], page.c_str(), page.length());
 	close(fds[1]);
 
