@@ -5,55 +5,55 @@
 #include <string>
 #include <sstream>
 
-// static void train_post(){
-// 	std::string tmp = "----WebKitFormBoundaryAf55pAxy5GYiuaMT";
-// 	std::string boundary = "--" + tmp;
-// 	std::cout << "hey[" << boundary  << "]" << std::endl;
-// 	std::ifstream infile("root/cgo-bin/cgi-test.txt");
-// 	std::string line;
-// 	bool post_start = false;
-// 	char **argv;
-// 	int i = 0;
-// 	int y = 0;
-// 	while (line != boundary + "--" && std::getline(infile, line)){
-// 		if (post_start == false){
-// 			if (line == boundary){
-// 				post_start = true;
-// 				i++;
-// 			}
-// 			else{
-// 				std::cout << "error, boundary unfound" << std::endl;
-// 			}
+static void train_post(){
+	std::string tmp = "----WebKitFormBoundaryAf55pAxy5GYiuaMT";
+	std::string boundary = "--" + tmp;
+	std::cout << "hey[" << boundary  << "]" << std::endl;
+	std::ifstream infile("root/cgo-bin/cgi-test.txt");
+	std::string line;
+	bool post_start = false;
+	char **argv;
+	int i = 0;
+	int y = 0;
+	while (line != boundary + "--" && std::getline(infile, line)){
+		if (post_start == false){
+			if (line == boundary){
+				post_start = true;
+				i++;
+			}
+			else{
+				std::cout << "error, boundary unfound" << std::endl;
+			}
 
-// 		}
-// 		else {
-// 			if (line == boundary){
-// 				post_start = false;
-// 				//start fork
-// 			}
-// 			else{
-// 				continue;
-// 				//store string
-// 			}
-// 		}
-// 	}
-// 	//make the forks, using the I, telling me how many forks.
-// 	//and also using that to WHAT they HAVE TO FORK there
-// }
+		}
+		else {
+			if (line == boundary){
+				post_start = false;
+				//start fork
+			}
+			else{
+				continue;
+				//store string
+			}
+		}
+	}
+	//make the forks, using the I, telling me how many forks.
+	//and also using that to WHAT they HAVE TO FORK there
+}
 
 int main() {
 	//loop
-	// train_post();
-	map<std::string, webserv*> webservMap;
-	configParser(webservMap);//normal name
-	map<std::string, webserv*>::iterator it;
+	train_post();
+	// map<std::string, webserv*> webservMap;
+	// configParser(webservMap);//normal name
+	// map<std::string, webserv*>::iterator it;
 
-	while (true){
-		for (it = webservMap.begin(); it != webservMap.end(); it++)
-		{
-			it->second->run();
-		}
-	}
+	// while (true){
+	// 	for (it = webservMap.begin(); it != webservMap.end(); it++)
+	// 	{
+	// 		it->second->run();
+	// 	}
+	// }
 }
 
 // int main()
