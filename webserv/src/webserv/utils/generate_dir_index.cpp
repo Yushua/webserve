@@ -3,47 +3,57 @@
 #include <sstream>
 
 const static char _page_start[] =
-"<!DOCTYPE html>"
-"<head>"
-"<title>Index of /godotengine/4.0/beta1/mono/</title>"
-"<style type=\"text/css\">"
-"a, a:active {text-decoration: none; color: blue;}"
-"a:visited {color: #48468F;}"
-"a:hover, a:focus {text-decoration: underline; color: red;}"
-"body {background-color: #F5F5F5;}"
-"h2 {margin-bottom: 12px;}"
-"table {margin-left: 12px;}"
-"th, td { font: 90% monospace; text-align: left;}"
-"th { font-weight: bold; padding-right: 14px; padding-bottom: 3px;}"
-"td {padding-right: 14px;}"
-"td.s, th.s {text-align: right;}"
-"div.list {"
-	"background-color: white;"
-	"border-top: 1px solid #646464;"
-	"border-bottom: 1px solid #646464;"
-	"border-left: 1px solid #646464;"
-	"border-right: 1px solid #646464;"
-	"padding-top: 10px;"
-	"padding-bottom: 14px;"
-"}"
-"div.foot { font: 90% monospace; color: #787878; padding-top: 4px;}"
-"</style>"
-"</head>"
-"<body>";
+"<!DOCTYPE html>\n"
+"<head>\n"
+"<title>Index of /godotengine/4.0/beta1/mono/</title>\n"
+"<style type=\"text/css\">\n"
+"a, a:active {text-decoration: none; color: blue;}\n"
+"a:visited {color: #48468F;}\n"
+"a:hover, a:focus {text-decoration: underline; color: red;}\n"
+"body {background-color: #F5F5F5;}\n"
+"h2 {margin-bottom: 12px;}\n"
+"table {margin-left: 12px;}\n"
+"th, td { font: 90% monospace; text-align: left;}\n"
+"th { font-weight: bold; padding-right: 14px; padding-bottom: 3px;}\n"
+"td {padding-right: 14px;}\n"
+"td.s, th.s {text-align: right;}\n"
+"div.list {\n"
+	"background-color: white;\n"
+	"border-top: 1px solid #646464;\n"
+	"border-bottom: 1px solid #646464;\n"
+	"border-left: 1px solid #646464;\n"
+	"border-right: 1px solid #646464;\n"
+	"padding-top: 10px;\n"
+	"padding-bottom: 14px;\n"
+"}\n"
+"div.foot { font: 90% monospace; color: #787878; padding-top: 4px;}\n"
+"</style>\n"
+"</head>\n"
+"<body>\n";
 
 const static char _table_start[] =
-"<div class=\"list\">"
-"<table summary=\"Directory Listing\" cellpadding=\"0\" cellspacing=\"0\">"
-"<thead><tr><th class=\"n\">Name</th><th class=\"m\">Last Modified</th><th class=\"s\">Size</th></tr></thead>"
-"<tbody>";
+"<div class=\"list\">\n"
+"<table summary=\"Directory Listing\" cellpadding=\"0\" cellspacing=\"0\">\n"
+"<thead><tr><th class=\"n\">Name</th><th class=\"m\">Last Modified</th><th class=\"s\">Size</th></tr></thead>\n"
+"<tbody>\n";
 
 const static char _page_end[] =
-"</tbody>"
-"</table>"
-"</div>"
-"</body>"
-"</html>";
+"\n</tbody>\n"
+"</table>\n"
+"</div>\n"
+"</body>\n"
+"</html>\n";
 
+static string static_get_file_size(size_t size) {
+	if (size > GIGABYTE)
+		return ft_to_string(size / GIGABYTE) + "gb";
+	else if (size > MEGABYTE)
+		return ft_to_string(size / MEGABYTE) + "mb";
+	else if (size > KILOBYTE)
+		return ft_to_string(size / KILOBYTE) + "kb";
+	else
+		return ft_to_string(size);
+}
 
 int webserv::generate_index_page(const int index, const message &msg) {
 
@@ -57,7 +67,7 @@ int webserv::generate_index_page(const int index, const message &msg) {
 
 	page_stream << _page_start;
 
-	page_stream << "<h2>Index of " << dir_path << "/</h2>";
+	page_stream << "<h2>Index of " << dir_path << "/</h2>\n";
 
 	page_stream << _table_start;
 
@@ -84,16 +94,17 @@ int webserv::generate_index_page(const int index, const message &msg) {
 			ft_error("generate_index_page");
 
 		page_stream
-			<< "<tr>"
-			<< "<td class=\"n\"><a href=\""
+			<< "\n<tr>\n"
+			<< "<td class=\"n\"><a href=\n    \""
 				<< dir_path << '/' << dir->d_name << "\">"
-				<< dir->d_name << "</a>"
-				<< (S_ISDIR(file_info.st_mode)?"/":"") << "</td>"
-			<< "<td class=\"m\">"
-				<< ctime(&file_info.st_mtime) << "</a></td>"
-			<< "<td class=\"s\">"
-				<< file_info.st_size << "</a></td>"
-			<< "</tr>";
+				<< dir->d_name << "\n</a>"
+				<< (S_ISDIR(file_info.st_mode)?"/":"") << "</td>\n"
+			<< "<td class=\"m\">\n    "
+				<< ctime(&file_info.st_mtime) << "</a></td>\n"
+			<< "<td class=\"s\">\n    "
+				<< (S_ISDIR(file_info.st_mode)?"-":static_get_file_size(file_info.st_size))
+					<< "\n</a></td>\n"
+			<< "</tr>\n";
 	}
 	closedir(d);
 

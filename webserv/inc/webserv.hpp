@@ -26,6 +26,10 @@ using namespace std;
 
 typedef int socket_t;
 
+#define KILOBYTE 1000
+#define MEGABYTE 1000000
+#define GIGABYTE 1000000000
+
 #define TIMEOUT 100000
 #define READ_BUFFER_SIZE 1024
 
