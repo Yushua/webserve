@@ -32,6 +32,8 @@ void webserv::handle_request(const int index)
 		this->cmd_POST(index, msg);
 	else if (type == "DELETE")
 		this->cmd_DELETE(index, msg);
+	else
+		this->send_new_error(index, 400);
 	
 	msg.reset();
 }
