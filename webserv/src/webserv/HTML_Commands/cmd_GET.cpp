@@ -21,12 +21,8 @@ void webserv::cmd_GET(const int index, const message &msg) {
 		
 		/* List dictionary */
 		if (dir_behavior == "list") {
-			
-			this->send_new(index, "HTTP/1.1 200 OK\n\n",
+			this->send_new(index, "HTTP/1.1 200 OK\n",
 				this->generate_index_page(index, msg));
-			
-			sockets_info[index].disconnect_after_send = true;
-
 			return;
 		}
 		/* Permision denied */
