@@ -74,7 +74,7 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 			// for (string arg in msg.getArguments()) {
 			// 	write(input_pipe[1], arg + '\n');
 			// }
-			write(input_pipe[1], msg.getBody().substr(posa, posb).c_str(), str.length());
+			write(input_pipe[1], msg.getBody().substr(posa, posb).c_str(), msg.getBody().substr(posa, posb).c_str());
 			cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
 			exit(1);
 		}
