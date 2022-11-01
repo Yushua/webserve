@@ -26,27 +26,22 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 	int posa = 0;
 	int posb = 0;
 	std::string str = "";
-	posa = posb + boundary.length() + 2;
-	posb = msg.getBody().find(boundary, posa);
-	std::cout << posb << std::endl;
-	std::cout << GREEN << "[" << boundary << "]" << RESET << std::endl;
-	std::cout << GREEN << "[" << msg.getBody().substr(posa, posb) << "]" << RESET << std::endl;
-	//check if the end bondary is in there
-	if (msg.getBody().substr(posa, posb).find( boundary + "--") != string::npos){
-		//did not find the end boundary
-		posb = posb - (boundary.length() + 2);
-		std::cout << RED << "[" << msg.getBody().substr(posa, posb)   << "]" << RESET << std::endl;
-	}
-	else if (msg.getBody().substr(posa, posb).find(boundary) != string::npos){
-		posb = posb - boundary.length() - 2;
-		std::cout << YELLOW << "[" << msg.getBody().substr(posa, posb)  << "]" << RESET << std::endl;
-	}
-	// std::cout << RED << "[" << msg.getBody() << "]" << RESET << std::endl;
-	// int tmp;
-	// tmp = index;
-	// std::string tmp1 = requested_file;
-	// std::string tmp2 = interpreter;
-	while (true){
+	bool loop = true;
+	while (loop == true){
+		posa = posb + boundary.length() + 2;
+		posb = msg.getBody().find(boundary, posa);
+		std::cout << posb << std::endl;
+		//check if the end bondary is in there
+		if (msg.getBody().substr(posa, posb).find( boundary + "--") != string::npos){
+			//did not find the end boundary
+			posb = posb - (boundary.length() + 2);
+			// std::cout << RED << "[" << msg.getBody().substr(posa, posb)   << "]" << RESET << std::endl;
+			loop = false;
+		}
+		else if (msg.getBody().substr(posa, posb).find(boundary) != string::npos){
+			posb = posb - boundary.length() - 2;
+			// std::cout << YELLOW << "[" << msg.getBody().substr(posa, posb)  << "]" << RESET << std::endl;
+		}
 		int fork_res = fork();
 		if (fork_res == -1)
 			ft_error("fork");
@@ -71,10 +66,15 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 			const char *envp[1] = { NULL };
 			dup2(output_pip[1], 1);
 			dup2(input_pipe[0], 0);
+			map<string, string>::iterator itr = msg.getArguments().begin();
+			map<string, string>::iterator end = msg.getArguments().end();
+			for (; itr < end; itr++){
+				write(input_pipe[1], arg + '\n');
+			}
 			// for (string arg in msg.getArguments()) {
 			// 	write(input_pipe[1], arg + '\n');
 			// }
-			write(input_pipe[1], str.c_str(), str.length());
+			write(input_pipe[1], msg.getBody().substr(posa, posb).c_str(), str.length());
 			cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
 			exit(1);
 		}
