@@ -52,9 +52,13 @@ void webserv::plainText(const int index, message &msg, bool chunk){
 			this->send_new_error(sockets[index].fd, 404);
 			this->disconnect(index);
 			return;
+		}
 		//when it does not exist, create
-		// file.open("root/cgi-bin/file", fstream::in | fstream::out | fstream::trunc);
-		// if (!file.good()) {
+		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
+		if (!file.good()){
+			this->send_new_error(sockets[index].fd, 404);
+			this->disconnect(index);
+			return;
 		}
 	}
 	else{//if stat fails

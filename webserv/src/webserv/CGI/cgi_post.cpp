@@ -57,6 +57,7 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 		posa = posb + boundary.length() + 2;
 		posb = msg.getBody().find(boundary, posa);
 		//check if the end bondary is in there
+		std::cout << YELLOW << msg.getBody() << RESET << std::endl;
 		if (msg.getBody().substr(posa, posb).find( boundary + "--") != string::npos){
 			//did not find the end boundary
 			posb = posb - (boundary.length() + 2);
@@ -92,8 +93,10 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 			write(file_fd
 			, msg.getBody().substr(posa, posb).c_str()
 			, msg.getBody().substr(posa, posb).length());
+			std::cout << "3\n";
 			close(file_fd);
-			this->send_new(position, "HTTP/1.1 200 OK\n", output_pip[0]);
+			std::cout << "4\n";
+			this->send_new(position, "HTTP/1.1 200 OK\n", output_pip[0]);//casuing the leak problem
 			std::cout <<"the end\n";
 			return;
 		}
@@ -109,6 +112,7 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 			std::cout <<"[1]\n";
 			dup2(output_pip[1], 1);
 			dup2(input_pipe[0], 0);
+			std::cout <<"[3]\n";
 			size_t i = 0;
 			size_t len = args.size();
 			std::cout <<"[2]\n";
@@ -126,4 +130,5 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 		}
 	}
 	std::cout <<"the end11\n";
+	//after upload, maybe go back to the previous page
 }
