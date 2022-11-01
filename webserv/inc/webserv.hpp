@@ -79,7 +79,7 @@ private:
 	const string header_get_content_type(const string filename);
 
 	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
-	void cgi_post(std::string string, const int index, message &msg);
+	void cgi_post(const int index, const message &msg, const string &requested_file, const string &interpreter, std::string boundary);
 
 	int generate_index_page(const int index, const message &msg);
 
