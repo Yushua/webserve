@@ -49,20 +49,18 @@ void webserv::plainText(const int index, message &msg, bool chunk){
 	{
 		//if its folder
 		if (S_ISDIR(msg.getStat().st_mode)){
-			this->send_new_error(sockets[index].fd, 404);
-			this->disconnect(index);
+			send_new_error_fatal(index, 404)
 			return;
 		}
 		//when it does not exist, create
 		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
 		if (!file.good()){
-			this->send_new_error(sockets[index].fd, 404);
-			this->disconnect(index);
+			send_new_error_fatal(index, 404)
 			return;
 		}
 	}
 	else{//if stat fails
-		this->send_new_error(sockets[index].fd, 404);
+		send_new_error_fatal(index, 404);
 		this->disconnect(index);
 		return;
 	}
@@ -123,7 +121,6 @@ void webserv::cmd_POST(const int index, message &msg) {
 		if (itr->first == "Content-Length:"){
 			if (msg.getContentLength() != msg.getBody().length()){
 				this->send_new_error(sockets[index].fd, 404);
-				this->disconnect(index);
 				return;
 			}
 		}
@@ -133,14 +130,12 @@ void webserv::cmd_POST(const int index, message &msg) {
 			msg.doUnHost(tmp);
 			if (msg.isValid() == false){
 				this->send_new_error(sockets[index].fd, 404);
-				this->disconnect(index);
 				return;
 			}
 		}
 		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
 			if (unchunkCheck(msg.getBody()) == false){
 				this->send_new_error(sockets[index].fd, 404);
-				this->disconnect(index);
 				return;
 			}
 			//if true, put the chunk message in the file
