@@ -26,8 +26,34 @@ void message::init() {
 	if (startLine.size() < 2)
 		return;
 
+	string &url = startLine.at(1);
+
+	{/* Ugly way to remove too many '/' */
+		
+		string og_path = startLine.at(1);
+		url.clear();
+		size_t og_path_len = og_path.length();
+		bool last_was_slash = false;
+		for (size_t i = 0; i < og_path_len; i++) {
+			char c = og_path[i];
+			if (c == '?')
+				break;
+			else if (c == '/') {
+				if (!last_was_slash
+					&& (i + 1 != og_path_len))
+					url += c;
+				last_was_slash = true;
+			}
+			else {
+				url += c;
+				last_was_slash = false;
+			}
+		}
+		if (url[url.length() - 1] == '/')
+			url.erase(url.length() - 1);
+	}
+
 	{/* Get path and arguments */
-		string &url = startLine.at(1);
 		size_t len = url.length();
 		size_t index = 0;
 		bool hadArgs = false;
@@ -38,7 +64,9 @@ void message::init() {
 			}
 		}
 		path = url.substr(0, index);
-		if (hadArgs) {/* Get Headers */
+
+		/* Get Headers */
+		if (hadArgs) {
 			int start = ++index;
 			string name, value;
 			for (; index < len; ++index) {
