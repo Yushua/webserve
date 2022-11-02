@@ -80,7 +80,7 @@ private:
 	const string header_get_content_type(const string filename);
 
 	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
-	void cgi_post(std::string string, const int index, message &msg);
+	void cgi_post(const int index, const message &msg, const string &requested_file, const string &interpreter, std::string boundary);
 
 	int generate_index_page(const int index, const message &msg);
 
@@ -118,6 +118,6 @@ public:
 	void plainText(const int index, message &msg, bool chunk);
 	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 };
-void configParser(map<string, webserv*> &bigacontyantnas);
+void configParser(map<string, webserv*> &bigacontyantnas, std::string path_config);
 
 #endif

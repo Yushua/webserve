@@ -52,9 +52,13 @@ void webserv::plainText(const int index, message &msg, bool chunk){
 			this->send_new_error(sockets[index].fd, 404);
 			this->disconnect(index);
 			return;
+		}
 		//when it does not exist, create
-		// file.open("root/cgi-bin/file", fstream::in | fstream::out | fstream::trunc);
-		// if (!file.good()) {
+		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
+		if (!file.good()){
+			this->send_new_error(sockets[index].fd, 404);
+			this->disconnect(index);
+			return;
 		}
 	}
 	else{//if stat fails
@@ -144,7 +148,6 @@ void webserv::cmd_POST(const int index, message &msg) {
 		}
 		else if ((itr->first == "Content-Type:")){
 			//use chunks
-			//
 			vector<std::string> vec;//store the split line
 			vec = configSplit(itr->second, "; ");
 			if (vec[0] == "multipart/form-data"){
@@ -157,14 +160,13 @@ void webserv::cmd_POST(const int index, message &msg) {
 		}
 	}
 	if (isCGI == true){
-		cgi_post(store, index, msg);
+		string extension = ft_get_extension(msg.getPath());
+		map<string, string>::iterator key = cgi_options.find(extension);
+		cgi_post(index, msg, msg.getPath(), key->second, store);
 	}
 	else{
 		plainText(index, msg, chunk);
 	}
-	//in cgi-post if ------WebKitFormBoundarybUqfuAsphOOPArLE is not on the first line, error
-	//"--" + string
-	//"--" + string + "--" == end
 }
 
 /*
