@@ -33,7 +33,8 @@ void webserv::run()
 		/* There's something to send */
 		if (socket.recieving_from_server
 			&& events & POLLOUT
-			&& sockets[socket.send_fd_index].revents & POLLIN) {
+			&& (socket.send_fd_index == -1
+				|| sockets[socket.send_fd_index].revents & POLLIN)) {
 
 				this->send_continue(index);
 				continue;

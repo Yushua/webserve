@@ -11,6 +11,17 @@ void webserv::handle_request(const int index)
 		return;
 
 	msg.redirect(*this);
+	if (msg.getState() != ready) {
+
+		string new_url = msg.getPath().substr(3, msg.getPath().length() - 3);
+		
+		this->send_new(index,
+			"HTTP/1.1 303\n"
+			"Content-Length: 0\n"
+			"Location: "
+			+ new_url + "\n\n", -1);
+		return;
+	}
 
 	/* Get method name */
 	const string &type = msg.getStartLine().at(0);
@@ -21,8 +32,12 @@ void webserv::handle_request(const int index)
 		msg.getConfig().allowed_methods.end(),
 		type);
 	if (found == msg.getConfig().allowed_methods.end()) {
-		this->send_new_error_fatal(index, 403);
-		// this->disconnect(index);
+		if (type == "GET"
+			|| type == "POST"
+			|| type == "DELETE")
+			this->send_new_error_fatal(index, 405);
+		else
+			this->send_new_error_fatal(index, 403);
 		return;
 	}
 

@@ -9,8 +9,11 @@ message::~message(){}
 const vector<string> &message::getStartLine() const
 	{ return startLine; }
 
-const string &message::getPath() const
+const string &message::getURLPath() const
 	{ return path; }
+
+const string &message::getPath() const
+	{ return actualPath; }
 
 const vector<string> &message::getArguments() const
 	{ return arguments; }

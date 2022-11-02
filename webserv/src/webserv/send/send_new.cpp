@@ -6,14 +6,21 @@
 
 int webserv::send_new(const int index, string headers, const int fd) {
 
-	int fd_position = this->connect_new_fd_only(index, fd);
-	if (fd_position == -1) {
-		cout << RED << "FUCK\n" << RESET;
-		exit(1);
+	int fd_position;
+	if (fd == -1)
+		fd_position = -1;
+	else {
+		fd_position = this->connect_new_fd_only(index, fd);
+		if (fd_position == -1) {
+			cout << RED << "FUCK\n" << RESET;
+			exit(1);
+		}
 	}
 
-	if (write(sockets[index].fd, headers.c_str(), headers.length()) == -1)
-		{ this->disconnect(index); return -1; }
+	sockets_info[index].send_headers = headers;
+
+	// if (write(sockets[index].fd, headers.c_str(), headers.length()) == -1)
+	// 	{ this->disconnect(index); return -1; }
 
 	if (sockets_info[index].recieving_from_server) {
 		cout << RED << index << " Reciving new thing\n" << RESET;
