@@ -49,13 +49,13 @@ void webserv::plainText(const int index, message &msg, bool chunk){
 	{
 		//if its folder
 		if (S_ISDIR(msg.getStat().st_mode)){
-			send_new_error_fatal(index, 404)
+			send_new_error_fatal(index, 404);
 			return;
 		}
 		//when it does not exist, create
 		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
 		if (!file.good()){
-			send_new_error_fatal(index, 404)
+			send_new_error_fatal(index, 404);
 			return;
 		}
 	}
