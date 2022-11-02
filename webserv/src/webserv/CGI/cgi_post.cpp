@@ -29,15 +29,13 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 	{
 		//if its folder
 		if (S_ISDIR(msg.getStat().st_mode)){
-			this->send_new_error(sockets[index].fd, 404);
-			this->disconnect(index);
+			this->send_new_error_fatal(index, 404);
 			return;
 		}
 		//when it does not exist, create
 		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
 		if (!file.good()){
-			this->send_new_error(sockets[index].fd, 404);
-			this->disconnect(index);
+			this->send_new_error_fatal(index, 404);
 			return;
 		}
 		file.close();

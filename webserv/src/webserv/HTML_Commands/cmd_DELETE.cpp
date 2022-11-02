@@ -5,28 +5,39 @@
 
 void webserv::cmd_DELETE(const int index, const message &msg) {
 	this->send_new_error(index, 202);
+	ofstream file;
 	struct stat file_info;
-	if (stat(msg.getPath().c_str(), &file_info) == -1)
+	if (msg.getStatState())
 	{
-		this->send_new_error(sockets[index].fd, 404);
-		this->disconnect(index);
-		return;
-	}
-	this->send_new_error(index, 204);
-	ifstream _file;
-	_file.open(msg.getPath());
-	if (_file.good()) {
-		int result;
-		result = remove(msg.getPath().c_str());
-		if (stat(msg.getPath().c_str(), &file_info) == -1)
-		{
-			this->send_new_error(sockets[index].fd, 200);
+		/* if it is a folder*/
+		if (S_ISDIR(msg.getStat().st_mode)){
+			this->send_new_error_fatal(index, 403);
 			return;
 		}
+		/* if it is a file*/
+		ifstream _file;
+		_file.open(msg.getPath());
+		if (_file.good()) {
+			int result;
+			result = remove(msg.getPath().c_str());
+			if (stat(msg.getPath().c_str(), &file_info) == -1)
+			{
+				this->send_new_error(index, 200);
+				return;
+			}
+		}
+		else{
+			this->send_new_error_fatal(index, 404);
+				return;
+		}
 	}
-	else{
-		this->send_new_error(index, 404);
-		this->disconnect(index);
-			return;
+	else{//if it does not exist
+		this->send_new_error_fatal(index, 404);
+		return;
 	}
 }
+
+/*
+curl 127.0.0.1:4242/cgi-bin/lol.lol -X DELETE -v
+
+*/
