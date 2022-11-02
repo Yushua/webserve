@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/26 14:01:59 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/11/02 17:27:29 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,23 @@ vector<std::string> configSplit(std::string string, const char *str)
     return(vec);
 }
 
-// static void throwError(std::string string, int i){
-//     std::cout << "-~={ line [" << i << "] in parser is wrong with input [" << string << "] }=~-\n";
-// }
+static int path_check(std::string path){
+    ifstream myfile;
+    myfile.open(path);
+    if (!myfile){
+        myfile.close();
+        return -1;
+    }return 0;
+}
 
-void configParser(map<string, webserv*> &bigacontyantnas)
+void configParser(map<string, webserv*> &bigacontyantnas, std::string path_config)
 {
-    std::ifstream infile("root/config/default.conf");
+    if (path_check(path_config) == -1){
+        std::cout << "invalid config file path\n";
+        exit(1);
+    }
+    std::ifstream infile(path_config);//root/config/default.conf
+
     std::string line;//stores the line I am checking frm the config file
     vector<std::string> vec;//store the split line
     vector<std::string> _substring;//store the split line before in case it is needed

@@ -117,6 +117,6 @@ public:
 	void plainText(const int index, message &msg, bool chunk);
 	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
 };
-void configParser(map<string, webserv*> &bigacontyantnas);
+void configParser(map<string, webserv*> &bigacontyantnas, std::string path_config);
 
 #endif
