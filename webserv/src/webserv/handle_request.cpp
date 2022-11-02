@@ -31,8 +31,15 @@ void webserv::handle_request(const int index)
 		msg.getConfig().allowed_methods.begin(),
 		msg.getConfig().allowed_methods.end(),
 		type);
-	if (found == msg.getConfig().allowed_methods.end())
-		{ this->send_new_error_fatal(index, 403); return; }
+	if (found == msg.getConfig().allowed_methods.end()) {
+		if (type == "GET"
+			|| type == "POST"
+			|| type == "DELETE")
+			this->send_new_error_fatal(index, 405);
+		else
+			this->send_new_error_fatal(index, 403);
+		return;
+	}
 
 	if (type == "GET")
 		this->cmd_GET(index, msg);
