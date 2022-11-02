@@ -5,7 +5,6 @@
 const static char _page_start[] =
 "<!DOCTYPE html>\n"
 "<head>\n"
-"<title>Index of /godotengine/4.0/beta1/mono/</title>\n"
 "<style type=\"text/css\">\n"
 "a, a:active {text-decoration: none; color: blue;}\n"
 "a:visited {color: #48468F;}\n"
@@ -97,7 +96,7 @@ int webserv::generate_index_page(const int index, const message &msg) {
 			<< "\n<tr>\n"
 			<< "<td class=\"n\"><a href=\n    \""
 				<< dir_path << '/' << dir->d_name << "\">"
-				<< dir->d_name << "\n</a>"
+				<< dir->d_name << "</a>"
 				<< (S_ISDIR(file_info.st_mode)?"/":"") << "</td>\n"
 			<< "<td class=\"m\">\n    "
 				<< ctime(&file_info.st_mtime) << "</a></td>\n"

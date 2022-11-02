@@ -33,6 +33,7 @@ private:
 
 	//the first line of the message from the client
 	vector<string>      startLine;
+	string              actualPath;
 	string              path;
 	vector<string>      arguments;
 	//the body of the client
@@ -84,6 +85,7 @@ public:
 
 	const vector<string>      &getStartLine() const;
 	const string              &getPath() const;
+	const string              &getURLPath() const;
 	const vector<string>      &getArguments() const;
 	const map<string, string> &getHeaders() const;
 	const string              &getHeadersString() const;

@@ -43,6 +43,7 @@ struct SocketInfo_s {
 	int addrlen;
 	bool recieving_from_server;
 	int send_fd_index;
+	string send_headers;
 	bool disconnect_after_send;
 	//place content lenght that i will subtract
 };
