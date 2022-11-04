@@ -87,6 +87,7 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 			write(input_pipe[1]
 			, msg.getBody().substr(posa, posb).c_str()
 			, msg.getBody().substr(posa, posb).length());
+			close(input_pipe[1]);
 			std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
 			exit(1);
 		}
