@@ -6,7 +6,7 @@ void message::loadHeaders() {
 
 	this->state = loadingHeaders;
 
-	char buffer[PIPE_BUF + 1];
+	char buffer[PIPE_BUF];
 	int ret;
 
 	ret = read(fd, buffer, PIPE_BUF);
@@ -14,12 +14,11 @@ void message::loadHeaders() {
 		{ this->state = msgError; return; }
 	if (ret == 0)
 		{ this->state = loadingBody; return; }
-	buffer[ret] = '\0';
 
 	size_t index = this->headers_str.length();
 	if (index != 0)
 		--index;
-	this->headers_str += buffer;
+	this->headers_str.append(buffer, ret);
 	size_t end = this->headers_str.length();
 
 	bool double_nl = false;

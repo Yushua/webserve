@@ -4,7 +4,7 @@
 
 void message::loadBody() {
 	
-	char buffer[PIPE_BUF + 1];
+	char buffer[PIPE_BUF];
 	int ret;
 	
 	ret = read(fd, buffer, PIPE_BUF);
@@ -12,9 +12,8 @@ void message::loadBody() {
 		{ this->state = msgError; return; }
 	if (ret == 0)
 		{ this->state = ready; return; }
-	buffer[ret] = '\0';
 
-	this->body_str += buffer;
+	this->body_str.append(buffer, ret);
 
 	if (ret < PIPE_BUF)
 		this->state = ready;

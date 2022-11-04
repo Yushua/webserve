@@ -41,11 +41,10 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 		file.close();
 	}
 	std::cout <<"file successfull\n";
-	while (loop == true){
+	while (loop == true) {
 		posa = posb + boundary.length() + 2;
 		posb = msg.getBody().find(boundary, posa);
 		//check if the end bondary is in there
-		std::cout << YELLOW << msg.getBody() << RESET << std::endl;
 		if (msg.getBody().substr(posa, posb).find( boundary + "--") != string::npos){
 			//did not find the end boundary
 			posb = posb - (boundary.length() + 2);
@@ -59,9 +58,13 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 			ft_error("fork");
 		/* Is not child */
 		if (fork_res != 0) {
-			close(output_pip[1]);
+			write(input_pipe[1]
+			, msg.getBody().substr(posa, posb).c_str()
+			, msg.getBody().substr(posa, posb).length());
 			close(input_pipe[0]);
 			close(input_pipe[1]);
+			
+			close(output_pip[1]);
 			fcntl(output_pip[0], O_NONBLOCK);
 			this->send_new(index, "HTTP/1.1 200 OK\n", output_pip[0]);//casuing the leak problem
 			sockets_info[index].disconnect_after_send = true;
@@ -78,15 +81,11 @@ void webserv::cgi_post(const int index, const message &msg, const string &reques
 			const char *envp[1] = { NULL };
 			dup2(output_pip[1], 1);
 			dup2(input_pipe[0], 0);
-			size_t i = 0;
 			size_t len = args.size();
-			for (; i < len; ++i) {
+			for (size_t i = 0; i < len; ++i) {
 				write(input_pipe[1], args[i].c_str(), args[i].length());
 				write(input_pipe[1], "\n", 1);
 			}
-			write(input_pipe[1]
-			, msg.getBody().substr(posa, posb).c_str()
-			, msg.getBody().substr(posa, posb).length());
 			close(input_pipe[1]);
 			std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
 			exit(1);
