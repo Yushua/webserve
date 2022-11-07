@@ -12,9 +12,9 @@
 //Through EXECVE
 void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter){
 	/* writing send to see if everythin went well */
-	std::cout << RED << "[" << send << "]" << RESET << std::endl;
-	int fork_res = fork();
+	// std::cout << RED << "[" << send << "]" << RESET << std::endl;
 	std::cout << YELLOW << msg.getBody() << RESET << std::endl;
+	int fork_res = fork();
 	if (fork_res == -1)
 		ft_error("fork");
 	/* Is not child */
@@ -173,16 +173,16 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 
 		/* compare the new_boundary */
 		std::string end_boundary = boundary + "--";
-		std::cout << "new[" << GREEN << new_boundary << RESET << "]" << std::endl;
-		std::cout << "cop[" << GREEN << end_boundary << RESET << "]" << std::endl;
+		std::cout << "new[" << WHITE << new_boundary << RESET << "]" << std::endl;
+		std::cout << "cop[" << WHITE << end_boundary << RESET << "]" << std::endl;
 		if (strcmp(new_boundary.c_str(), end_boundary.c_str()) == 0){
-			loop = false;
 			// cgi_post_nb(input_pipe, output_pip, msg.getBody().substr(posa, posb - posa - 2), index, msg, requested_file, interpreter);
-			std::cout << RED << "[" << msg.getBody().substr(posa, posb - posa - 2) << "]" << RESET << std::endl;
+			std::cout << RED << "end end end[" << msg.getBody().substr(posa, posb - posa - 2) << "]" << RESET << std::endl;
+			break ;
 		}
 		else {
 			/* no -2, because its not the last string*/
-			std::cout << GREEN << "[" << msg.getBody().substr(posa, posb - posa) << "]" << RESET << std::endl;
+			std::cout << GREEN << "continue continue[" << msg.getBody().substr(posa, posb - posa) << "]" << RESET << std::endl;
 			// cgi_post_nb(input_pipe, output_pip, msg.getBody().substr(posa, posb - posa), index, msg, requested_file, interpreter);
 		}
 		// break;
