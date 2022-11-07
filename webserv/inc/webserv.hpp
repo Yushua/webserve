@@ -120,7 +120,7 @@ public:
 	 * @brief inputs the A and B posiiton and uses THIS string for the CGI
 	 * 
 	 */
-	void cgi_post_nb(int *input_pipe, int *output_pip, int posa, int posb, const int index, const message &msg, const string &requested_file, const string &interpreter);
+	void cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter);
 	/**
 	 * @brief inputs string and uses THIS string for the CGI
 	 * 
