@@ -66,7 +66,19 @@ void message::checkHost(string string)
 }
 
 void webserv::plainText(const int index, message &msg, bool chunk){
+	/*
+	seperate CGI_POST so it handles the fork in a seperate function
+	one with using a a, and B location
+		this one is the normal CG
+	another using a string
+		this one is the header and body that I create
+		make the header
+		the body
+
+		everything else is the same
+	*/
 	std::cout << "==plainText==\npath ==" << msg.getPath() << std::endl;
+	std::cout << YELLOW << msg.getBody() << RESET << std::endl;
 	ofstream file;
 	/* get the state which tells me if I need to make something. I need to be sure its not a folder*/
 	if (msg.getStatState())
@@ -144,15 +156,19 @@ void webserv::cmd_POST(const int index, message &msg) {
 		/* checking here if the content type says that its CGI */
 		else if ((itr->first == "Content-Type:")){
 			//use chunks
-			vector<std::string> vec;
-			vec = configSplit(itr->second, "; ");
-			if (vec[0] == "text/plain"){
-				isPLain = true;}
-			else if (vec[0] == "multipart/form-data"){
+
+			if (itr->second == "multipart/form-data"){//i am creating the boundary
+				vector<std::string> vec;
+				// std::cout << itr->second << std::endl;
+				vec = configSplit(itr->second, "; ");
 				isCGI = true;
 				vec[1].replace(0, 9, "");
 				store = vec[1];
 			}
+			else {
+				isPLain = true;
+			}
+			std::cout << "hello" << store << std::endl;
 		}
 	}
 	/* chunk is checked inside of plainText*/
