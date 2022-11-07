@@ -66,17 +66,8 @@ public:
 	void reset();
 	void reset(const int fd);
 	
-	/**
-	 * @brief unchunk checks if the chunk is correct, changes the VALID Bool in Message
-	 * 
-	 */
 	void unChunk();
-	/**
-	 * @brief unhost checks if the Host is valid, changes the VALID bool in Message
-	 * 
-	 */
 	void unHost(string string);
-
 	void loadBody();
 	void loadHeaders();
 

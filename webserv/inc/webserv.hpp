@@ -117,6 +117,17 @@ public:
 	void cmd_POST(const int index, message &msg); /* !!!TO BE IMPLEMENETD!!! */
 	void plainText(const int index, message &msg, bool chunk);
 	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
+
+	/**
+	 * @brief inputs the A and B posiiton and uses THIS string for the CGI
+	 * 
+	 */
+	void cgi_post_nb(int *input_pipe, int *output_pip, int posa, int posb, const int index, const message &msg, const string &requested_file, const string &interpreter);
+	/**
+	 * @brief inputs string and uses THIS string for the CGI
+	 * 
+	 */
+	void cgi_post_string(int *input_pipe, int *output_pip, std::string body, const int index, const message &msg, const std::string &requested_file, const std::string &interpreter);
 };
 void configParser(map<string, webserv*> &bigacontyantnas, std::string path_config);
 

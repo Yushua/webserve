@@ -110,6 +110,10 @@ void webserv::plainText(const int index, message &msg, bool chunk){
 	std::cout << "plain text success" << std::endl;
 }
 
+/*
+Content-Disposition: form-data; name="fileToUpload"; filename="chunk.txt"
+Content-Type: text/plain
+*/
 void webserv::cmd_POST(const int index, message &msg) {
 	
 	map<string, string> _header = msg.getHeaders();
@@ -156,14 +160,18 @@ void webserv::cmd_POST(const int index, message &msg) {
 		/* checking here if the content type says that its CGI */
 		else if ((itr->first == "Content-Type:")){
 			//use chunks
-
-			if (itr->second == "multipart/form-data"){//i am creating the boundary
+			if (itr->second.find("multipart/form-data; ") != string::npos){
 				vector<std::string> vec;
-				// std::cout << itr->second << std::endl;
 				vec = configSplit(itr->second, "; ");
-				isCGI = true;
-				vec[1].replace(0, 9, "");
-				store = vec[1];
+				if (vec[0] == "multipart/form-data"){//i am creating the boundary
+					isCGI = true;
+					vec[1].replace(0, 9, "");
+					store = vec[1];
+				}
+				else{
+					this->send_new_error_fatal(index, 404);
+					return;
+				}
 			}
 			else {
 				isPLain = true;
@@ -172,6 +180,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 		}
 	}
 	/* chunk is checked inside of plainText*/
+
 	std::cout << "==check where==[" << isCGI << "][" << isPLain << "]" << std::endl;
 	if (isCGI == true && msg.isValid() == true){
 		string extension = ft_get_extension(msg.getPath());
