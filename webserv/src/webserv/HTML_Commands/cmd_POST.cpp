@@ -65,7 +65,7 @@ void message::checkHost(string string)
 	std::cout << "value == " << true << " " << this->valid << std::endl;
 }
 
-void webserv::plainText(const int index, message &msg, bool chunk){
+void webserv::plainText(const int index, message &msg, std::string store){
 	/*
 	seperate CGI_POST so it handles the fork in a seperate function
 	one with using a a, and B location
@@ -79,34 +79,42 @@ void webserv::plainText(const int index, message &msg, bool chunk){
 	*/
 	std::cout << "==plainText==\npath ==" << msg.getPath() << std::endl;
 	std::cout << YELLOW << msg.getBody() << RESET << std::endl;
-	ofstream file;
 	/* get the state which tells me if I need to make something. I need to be sure its not a folder*/
-	if (msg.getStatState())
-	{
-		/* checking if its a folder, if so, false */
-		if (S_ISDIR(msg.getStat().st_mode)){
-			send_new_error_fatal(index, 404);
-			return;
-		}
-		/* if not folder, then check if its a true path */
-		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
-		if (!file.good()){
-			send_new_error_fatal(index, 404);
-			return;
-		}
-	}
-	else{//if stat fails
-		send_new_error_fatal(index, 404);
-		this->disconnect(index);
-		return;
-	}
-	if (chunk == true){
-		/* create chunk, needs to be remade due to the new POST test method*/
-		chunk = false;
-	}
-	else
-		file << msg.getBody();
-	file.close();
+	// if (msg.getStatState())
+	// {
+	// 	/* checking if its a folder, if so, false */
+	// 	if (S_ISDIR(msg.getStat().st_mode)){
+	// 		send_new_error_fatal(index, 404);
+	// 		return;
+	// 	}
+	// 	/* if not folder, then check if its a true path */
+	// 	file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
+	// 	if (!file.good()){
+	// 		send_new_error_fatal(index, 404);
+	// 		return;
+	// 	}
+	// }
+	// else{//if stat fails
+	// 	send_new_error_fatal(index, 404);
+	// 	this->disconnect(index);
+	// 	return;
+	// }
+	std::cout << "store[" << store << "]\n";
+	int i = index;
+	i++;
+	/*
+	------WebKitFormBoundaryzStxly5tvEnSHxLf
+	Content-Disposition: form-data; name="fileToUpload"; filename=""
+	
+	Content-Type: application/octet-stream
+
+
+	------WebKitFormBoundaryzStxly5tvEnSHxLf--
+	*/
+
+	/*
+
+	*/
 	std::cout << "plain text success" << std::endl;
 }
 
@@ -175,6 +183,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 			}
 			else {
 				isPLain = true;
+				store = itr->second;
 			}
 			std::cout << "hello" << store << std::endl;
 		}
@@ -188,7 +197,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 		cgi_post(index, msg, msg.getPath(), key->second, store);
 	}
 	else if (isPLain == true){
-		plainText(index, msg, chunk);
+		plainText(index, msg, store);
 	}
 	else
 	{
