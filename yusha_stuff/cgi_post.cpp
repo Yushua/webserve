@@ -113,17 +113,21 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 	}
 	std::cout << "here\n";
 	while (loop == true) {
-		posa = posb + boundary.length() + 2;
-		posb = msg.getBody().find(boundary, posa);
+		// posa = posb + boundary.length() + 2;
+		// posb = msg.getBody().find(boundary, posa);
+		posa = posb;
+		posb = posb + boundary.length() + 2;
 		//check if the end bondary is in there
-		if (msg.getBody().substr(posa, posb).find( boundary + "--") != string::npos){
-			//did not find the end boundary
-			posb = posb - (boundary.length() + 2);
+		std::cout << "check " << RED << msg.getBody().substr(posa, posb) << RESET << std::endl;
+		if (msg.getBody().substr(posa, posb) == (boundary + "--")){
+			/* if it is the last boundary*/
 			loop = false;
+			posb -= 2;
 		}
 		else if (msg.getBody().substr(posa, posb).find(boundary) != string::npos){
-			posb = posb - boundary.length() - 2;
+			loop = true;
 		}
+		posb -= (boundary.length() - 2);
 		/*
 		start of the loop*/
 		std::cout << posa << " " << posb << std::endl;

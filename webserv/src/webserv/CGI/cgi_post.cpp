@@ -109,57 +109,37 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		}
 		file.close();
 	}
+	std::cout << BLUE << "[" << boundary << "]" << RESET << std::endl;
+	int posC = boundary.length();
 	while (loop == true) {
-		posa = posb + boundary.length() + 2;
-		posb = msg.getBody().find(boundary, posa);
-		std::cout << YELLOW << msg.getBody().substr(posa, posb) << RESET << std::endl;
-		//check if the end bondary is in there
-		if (msg.getBody().substr(posa, posb).find( boundary + "--") != string::npos){
-			//did not find the end boundary
-			posb = posb - (boundary.length() + 2);
+		std::cout << "loopstart\n";
+		std::string uhm = requested_file;
+		uhm = interpreter;
+		/* get past the bondary
+		because at the end of this loop, thee nd is posC we give it to posa*/
+		posa = posC;
+
+		/* posb is at the end of the next boundary. for now, we do 2+ because we need to know if this is the end*/
+		posb = msg.getBody().find(boundary, posa) + 2;
+		posC = posb + (2 + boundary.length());
+
+		/* posC is the posiiton AFTER the boudnary, and posB the one BEFORE*/
+
+		/* the next boundary*/
+		std::string new_boundary = msg.getBody().substr(posb, posC - posb);
+		std::cout << "[" << GREEN << new_boundary << RESET << "]" << std::endl;
+
+		/* compare the new_boundary */
+		std::string end_boundary = boundary + "--";
+		if (new_boundary == end_boundary){
 			loop = false;
-		}
-		else if (msg.getBody().substr(posa, posb).find(boundary) != string::npos){
-			posb = posb - boundary.length() - 2;
-		}
-		int fork_res = fork();
-		if (fork_res == -1)
-			ft_error("fork");
-		/* Is not child */
-		if (fork_res != 0) {
-			write(input_pipe[1]
-			, msg.getBody().substr(posa, posb).c_str()
-			, msg.getBody().substr(posa, posb).length());
-			close(input_pipe[0]);
-			close(input_pipe[1]);
-			
-			close(output_pip[1]);
-			fcntl(output_pip[0], O_NONBLOCK);
-			this->send_new(index, "HTTP/1.1 200 OK\n", output_pip[0]);//casuing the leak problem
-			sockets_info[index].disconnect_after_send = true;
-			return;
+			std::cout << RED << "[" << msg.getBody().substr(posa, posb - posa - 2) << "]" << RESET << std::endl;
 		}
 		else {
-			const vector<string> &args = msg.getArguments();
-			const char *argv[3] = {
-				interpreter != ""
-					? interpreter.c_str()
-					: requested_file.c_str(),
-				requested_file.c_str(),
-				NULL};
-			const char *envp[1] = { NULL };
-			dup2(output_pip[1], 1);
-			dup2(input_pipe[0], 0);
-			size_t len = args.size();
-			for (size_t i = 0; i < len; ++i) {
-				write(input_pipe[1], args[i].c_str(), args[i].length());
-				write(input_pipe[1], "\n", 1);
-			}
-			close(input_pipe[1]);
-			std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
-			//if execve fails, return 500
-			exit(1);
+			/* no -2, because its not the last string*/
+			std::cout << YELLOW << "[" << msg.getBody().substr(posa, posb - posa - 2) << "]" << RESET << std::endl;
 		}
+		break;
 	}
 	std::cout << "end of CGI_POST" << std::endl;
 	//after upload, maybe go back to the previous page
