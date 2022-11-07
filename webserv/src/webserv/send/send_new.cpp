@@ -19,9 +19,6 @@ int webserv::send_new(const int index, string headers, const int fd) {
 
 	sockets_info[index].send_headers = headers;
 
-	// if (write(sockets[index].fd, headers.c_str(), headers.length()) == -1)
-	// 	{ this->disconnect(index); return -1; }
-
 	if (sockets_info[index].recieving_from_server) {
 		cout << RED << index << " Reciving new thing\n" << RESET;
 		this->disconnect(sockets_info[index].send_fd_index);
