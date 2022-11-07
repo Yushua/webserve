@@ -13,6 +13,7 @@
 
 void webserv::cgi_post_nb(int *input_pipe, int *output_pip, int posa, int posb, const int index, const message &msg, const string &requested_file, const string &interpreter){
 	int fork_res = fork();
+	std::cout << YELLOW << msg.getBody() << RESET << std::endl;
 	if (fork_res == -1)
 		ft_error("fork");
 	/* Is not child */
@@ -47,25 +48,29 @@ void webserv::cgi_post_nb(int *input_pipe, int *output_pip, int posa, int posb, 
 		}
 		close(input_pipe[1]);
 		std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
+		//if execve fails, return 500
 		exit(1);
 	}
 }
 
-void webserv::cgi_post_string(int *input_pipe, int *output_pip, std::string body, const int index, const message &msg, const string &requested_file, const string &interpreter){
+void webserv::cgi_post_string(int *input_pipe, int *output_pip, std::string header, std::string content, const int index, const message &msg, const string &requested_file, const string &interpreter){
 	int fork_res = fork();
 	if (fork_res == -1)
 		ft_error("fork");
 	/* Is not child */
 	if (fork_res != 0) {
-		write(input_pipe[1]
-		, body.c_str()
-		, body.length());
+		
+		write(input_pipe[1], header.c_str(), header.length());
+		write(input_pipe[1], content.c_str(), content.length());
+		write(input_pipe[1], "\n", 1);
+		write(input_pipe[1], msg.getBody().c_str(), msg.getBody().length());
+
 		close(input_pipe[0]);
 		close(input_pipe[1]);
 		
 		close(output_pip[1]);
 		fcntl(output_pip[0], O_NONBLOCK);
-		this->send_new(index, "HTTP/1.1 200 OK\n", output_pip[0]);//casuing the leak problem
+		this->send_new(index, "HTTP/1.1 200 OK\n", output_pip[0]);//casusing the leak problem
 		sockets_info[index].disconnect_after_send = true;
 		return;
 	}
