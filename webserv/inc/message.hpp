@@ -100,6 +100,7 @@ public:
 	bool					  &changeValid(bool _valid);
 	const bool                &isChunked() const;
 	void				      doUnHost(std::string string);
+	void					  checkHost(string string);
 
 	const Config_s &getConfig() const;
 	const struct stat &getStat() const;

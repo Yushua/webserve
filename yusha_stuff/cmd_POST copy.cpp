@@ -50,20 +50,48 @@ static bool unchunkCheck(std::string string){
 	return true;
 }
 
+void message::unHost(string string)
+{
+	//127.0.0.1:4243
+	// std::string tmp = string.substr(0, string.find(":"));
+	int ip = 0;
+	int i = 0;
+	//check for defaulthost
+	while (string.find(".") != string::npos)
+	{
+		i = string.find(".");
+		if(checkNumber(string, "0123456789") != -1){
+			// std::cout << check << std::endl;
+			this->valid = false;
+		}
+		string.erase(0, i+1);
+		ip++;
+	}
+	if (string.find(":") != string::npos){
+		i = string.find(":");
+		if(checkNumber(string, "0123456789") != -1){
+			// std::cout << check << std::endl;
+			this->valid = false;
+		}
+		ip++;
+	}
+	if (ip != 4)
+		this->valid = false;
+    this->Host = string;
+	// this->valid = true;
+}
+
 void message::checkHost(string string)
 {
 	//localhost:4242
+	// std::string tmp = string.substr(0, string.find(":"));
 	int i = strlen("localhost:");
-	// std::string tmp = string.substr(i, string.length() - i);
-	std::cout << "print host[" << string.substr(i, string.length() - i) << "]" << std::endl;
-	if (string.substr(i, string.length() - i).find_first_not_of("0123456789\n") != string::npos){
-		this->valid = false;
-	}
-	else{
-		this->valid = true;
-	}
-	std::cout << "value == " << true << " " << this->valid << std::endl;
+	std::string tmp = string.substr(i, string.length() - i);
+	std::cout << "print[" << tmp << std::endl;
+	this->valid = true;
 }
+
+
 
 void webserv::plainText(const int index, message &msg, bool chunk){
 	std::cout << "==plainText==\npath ==" << msg.getPath() << std::endl;
@@ -115,7 +143,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 		/* checking to see if the content-lenght is correct*/
 		if (itr->first == "Content-Length:"){
 			if (msg.getContentLength() != msg.getBody().length()){
-				this->send_new_error_fatal(index, 404);
+				this->send_new_error(sockets[index].fd, 404);
 				return;
 			}
 		}
@@ -128,14 +156,14 @@ void webserv::cmd_POST(const int index, message &msg) {
 			else{
 				msg.doUnHost(tmp);}
 			if (msg.isValid() == false){
-				this->send_new_error_fatal(index, 404);
+				this->send_new_error(sockets[index].fd, 404);
 				return;
 			}
 		}
 		/* if there is a chunked then here its checked if its there and if things are working fine */
 		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
 			if (unchunkCheck(msg.getBody()) == false){
-				this->send_new_error_fatal(index, 404);
+				this->send_new_error(sockets[index].fd, 404);
 				return;
 			}
 			//if true, put the chunk message in the file
@@ -167,9 +195,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 	}
 	else
 	{
-		std::cout << "POST failed\n"; 
-		this->send_new_error_fatal(index, 404);
+		this->send_new_error(sockets[index].fd, 404);
 		return;
 	}
-	std::cout << "end POST\n"; 
 }
