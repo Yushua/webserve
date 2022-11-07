@@ -9,7 +9,7 @@ void webserv::run()
 	switch (event_count) {
 		default: break;
 		case  0: return; /* Skip; there are not events */
-		case -1: perror("poll");exit(1); /* !!!ERROR!!! */
+		case -1: ft_error("poll");exit(1); /* !!!ERROR!!! */
 	}
 
 	/* Handle connections */

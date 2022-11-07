@@ -18,10 +18,13 @@ void webserv::send_new_error(const int index, const int error_code) {
 			+ ft_to_string(error_code)
 			+ "</h1></body></html>\n";
 		
-		write(fds[1], default_error_page.c_str(), default_error_page.length());
+		if (write(fds[1], default_error_page.c_str(), default_error_page.length()) == -1)
+			ft_error("send_new_error");
 
-		close(fds[1]);
-		fcntl(fds[0], O_NONBLOCK);
+		if (close(fds[1]) == -1)
+			ft_error("send_new_error");
+		if (fcntl(fds[0], O_NONBLOCK) == -1)
+			ft_error("send_new_error");
 		this->send_new(index, headers + '\n', fds[0]);
 		/*for the content lenght*/
 		sockets_info[index].disconnect_after_send = true;

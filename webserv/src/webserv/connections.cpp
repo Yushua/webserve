@@ -15,10 +15,11 @@ int webserv::connect_new_socket(const int index)
 	socket_t new_socket = accept(sockets[index].fd, (struct sockaddr *)&sock_info.address, (socklen_t*)&sock_info.addrlen);
 
 	if (new_socket < 0)
-		perror("accept");
+		ft_error("connect_new_socket");
 	else
 	{ /* Add new socket to array */
-		fcntl(new_socket, F_SETFL, O_NONBLOCK);
+		if (fcntl(new_socket, F_SETFL, O_NONBLOCK) == -1)
+			ft_error("connect_new_socket");
 		sockets[position].fd = new_socket;
 		sockets[position].events = POLLIN | POLLOUT;
 		sockets[position].revents = 0;
@@ -70,7 +71,8 @@ void webserv::disconnect(const int index)
 	if (!socket.fd_only && socket.send_fd_index != -1)
 		this->disconnect(socket.send_fd_index);
 
-	close(sockets[index].fd);
+	if (close(sockets[index].fd) == -1)
+		ft_error("disconnect");
 
 	poll_fd.fd = numeric_limits<int>::max();
 	poll_fd.revents = 0;

@@ -4,7 +4,6 @@
 
 int ft_error(const char *str)
 {
-	(void)str;
 	perror(str);
 	exit(1);
 	return 0;

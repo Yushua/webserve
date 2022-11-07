@@ -13,9 +13,11 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 		ft_error("fork");
 
 	if (IS_NOT_CHILD) {
-		close(fds[1]);
+		if (close(fds[1]) == -1)
+			ft_error("cgi_get");
 		
-		fcntl(fds[0], O_NONBLOCK);
+		if (fcntl(fds[0], O_NONBLOCK))
+			ft_error("cgi_get");
 		if (this->send_new(index, "HTTP/1.1 200 OK\n", fds[0]) != -1)
 			sockets_info[index].disconnect_after_send = true;
 		return;
@@ -39,7 +41,8 @@ void webserv::cgi_get(const int index, const message &msg, const string &request
 		envp[i] = NULL;
 		
 
-		dup2(fds[1], 1);
+		if (dup2(fds[1], 1) == -1)
+			ft_error("cgi_get");
 		cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
 		exit(1);
 	}

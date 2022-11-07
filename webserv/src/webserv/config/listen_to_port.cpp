@@ -28,19 +28,22 @@ void webserv::config_listen_to_port(const unsigned int port, int line) {
 			/* Setting socket flags */
 			int opt = 1;
 			if (setsockopt(new_welcome_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
-				close(new_welcome_socket);
+				if (close(new_welcome_socket) == -1)
+					ft_error("config_listen_to_port");
 				throw "setsockopt";
 			}
 			
 			/* Attach address (and port) to main socket */
 			if (::bind(new_welcome_socket, (struct sockaddr *)&address, sizeof(address))) {
-				close(new_welcome_socket);
+				if (close(new_welcome_socket) == -1)
+					ft_error("config_listen_to_port");
 				throw "bind";
 			}
 			
 			/* Make socket listen for new connections */
 			if (listen(new_welcome_socket, 3)) {
-				close(new_welcome_socket);
+				if (close(new_welcome_socket) == -1)
+					ft_error("config_listen_to_port");
 				throw "listen";
 			}
 		}
@@ -57,7 +60,8 @@ void webserv::config_listen_to_port(const unsigned int port, int line) {
 		sockets_info[position].listen = true;
 		sockets_info[position].address = address;
 		sockets_info[position].addrlen = addrlen;
-		fcntl(new_welcome_socket, F_SETFL, O_NONBLOCK);
+		if (fcntl(new_welcome_socket, F_SETFL, O_NONBLOCK) == -1)
+			ft_error("config_listen_to_port");
 #ifdef DEBUG
 		std::cout << GREEN << "  -~={ " << position << " is listening to port " << port << " }=~-\n" << RESET;	
 #endif
