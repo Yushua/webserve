@@ -45,7 +45,6 @@ struct SocketInfo_s {
 	int send_fd_index;
 	string send_headers;
 	bool disconnect_after_send;
-	//place content lenght that i will subtract
 };
 
 #include <config_struct.hpp>
@@ -84,7 +83,7 @@ private:
 
 	int generate_index_page(const int index, const message &msg);
 
-public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
+public:
 
 	/* Global config stuff */
 		map<string, string> cgi_options;
@@ -93,7 +92,6 @@ public: /* DELETE THIS LINE ONCE READING THE CONFIG FILE IS IMPLEMENTED */
 		struct Config_s default_config;
 		map<string, struct Config_s> configs;
 
-public:
 	static void debug_print_request(const int index, message &msg);
 	
 	webserv();
