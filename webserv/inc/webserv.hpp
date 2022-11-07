@@ -127,7 +127,7 @@ public:
 	 * @brief inputs string and uses THIS string for the CGI
 	 * 
 	 */
-	void cgi_post_string(int *input_pipe, int *output_pip, std::string header, std::string content, const int index, const message &msg, const std::string &requested_file, const std::string &interpreter);
+	void cgi_post_string(std::string header, std::string Content_Type, const int index, const message &msg, const std::string &requested_file, const std::string &interpreter);
 };
 void configParser(map<string, webserv*> &bigacontyantnas, std::string path_config);
 

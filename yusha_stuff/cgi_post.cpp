@@ -81,7 +81,7 @@ void webserv::cgi_post_string(std::string header, std::string Content_Type, cons
 void webserv::cgi_post(const int index, const message &msg, const std::string &requested_file, const std::string &interpreter, std::string boundary){
     //open the input pipes
 	//information is send to the output files
-	std::cout <<"CGI start\n";
+	std::cout <<"CGI start normal\n";
 	int input_pipe[2];
     if (pipe(input_pipe) != 0)
         ft_error("cgi_pot input");
@@ -94,6 +94,8 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 	std::string str = "";
 	bool loop = true;
 	ofstream file;
+	std::cout << "here\n";
+	std::cout << BLUE << msg.getBody() << RESET << std::endl;
 	if (!msg.getStatState())//need to check if this is a chunk file, meaning it exist because a chunk has been send there
 	{
 		//if its folder
@@ -109,10 +111,10 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		}
 		file.close();
 	}
+	std::cout << "here\n";
 	while (loop == true) {
 		posa = posb + boundary.length() + 2;
 		posb = msg.getBody().find(boundary, posa);
-		std::cout << YELLOW << msg.getBody().substr(posa, posb) << RESET << std::endl;
 		//check if the end bondary is in there
 		if (msg.getBody().substr(posa, posb).find( boundary + "--") != string::npos){
 			//did not find the end boundary
@@ -122,6 +124,10 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		else if (msg.getBody().substr(posa, posb).find(boundary) != string::npos){
 			posb = posb - boundary.length() - 2;
 		}
+		/*
+		start of the loop*/
+		std::cout << posa << " " << posb << std::endl;
+		std::cout << "==\n" << YELLOW << msg.getBody().substr(posa, posb) << RESET << "==\n" << std::endl;
 		int fork_res = fork();
 		if (fork_res == -1)
 			ft_error("fork");

@@ -15,14 +15,6 @@ static bool unchunkCheck(std::string string){
 	int i = 0;
 	int len = string.length();
 	int start = 0;
-	/*
-	because chunk is
-	number
-	string
-	
-	I compare the first string as a nb, then the next as a string.
-	after a number there needs to be a string
-	*/
 	while (i < len){
 		start = i;
 		i = string.find("\r");
@@ -54,15 +46,12 @@ void message::checkHost(string string)
 {
 	//localhost:4242
 	int i = strlen("localhost:");
-	// std::string tmp = string.substr(i, string.length() - i);
-	std::cout << "print host[" << string.substr(i, string.length() - i) << "]" << std::endl;
 	if (string.substr(i, string.length() - i).find_first_not_of("0123456789\n") != string::npos){
 		this->valid = false;
 	}
 	else{
 		this->valid = true;
 	}
-	std::cout << "value == " << true << " " << this->valid << std::endl;
 }
 
 void webserv::plainText(const int index, message &msg, std::string store){
@@ -134,6 +123,14 @@ void webserv::cmd_POST(const int index, message &msg) {
 	bool chunk = false;
 	bool isCGI = false;
 	bool isPLain = false;
+	std::string Content_Disposition = "Content-Disposition: form-data;";
+	std::string name;
+	name += "name=";
+	name += '"';
+	name += "fileToUpload";
+	name += '"';
+	name += ";";
+	std::string filename = "filename=""";
 	for (; itr != end; ++itr){
 		std::cout << "[" << itr->first << "][" << itr->second << "]\n";
 		/* checking to see if the content-lenght is correct*/
@@ -185,23 +182,24 @@ void webserv::cmd_POST(const int index, message &msg) {
 				isPLain = true;
 				store = itr->second;
 			}
-			std::cout << "hello" << store << std::endl;
 		}
 	}
 	/* chunk is checked inside of plainText*/
-
-	std::cout << "==check where==[" << isCGI << "][" << isPLain << "]" << std::endl;
+	string extension = ft_get_extension(msg.getPath());
+	map<string, string>::iterator key = cgi_options.find(extension);
 	if (isCGI == true && msg.isValid() == true){
-		string extension = ft_get_extension(msg.getPath());
-		map<string, string>::iterator key = cgi_options.find(extension);
 		cgi_post(index, msg, msg.getPath(), key->second, store);
 	}
 	else if (isPLain == true){
-		plainText(index, msg, store);
+		// plainText(index, msg, store);
+		std::cout << "plain text start" << std::endl;
+		cgi_post_string(Content_Disposition + " " + name + " " + filename + "\n", "Content-Type: " + store + "\n",
+		index, msg, msg.getPath(), key->second);
+		std::cout << "plain text success" << std::endl;
 	}
 	else
 	{
-		std::cout << "POST failed\n"; 
+		std::cout << "POST failed to find a Content-Type\n"; 
 		this->send_new_error_fatal(index, 404);
 		return;
 	}
