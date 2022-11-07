@@ -29,10 +29,10 @@ int webserv::send_new(const int index, string headers, const int fd) {
 	sockets_info[index].send_fd_index = fd_position;
 	sockets_info[index].disconnect_after_send = false;
 
-	return fd_position;
-
 #ifdef DEBUG
 	cout << MAGENTA << "  -~={ " << index << " is recieving this }=~-\n" << RESET;
 	cout << headers;
 #endif
+
+	return fd_position;
 }
