@@ -4,6 +4,10 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+
+#include <algorithm>
+#include <string>
+
 //check if this body is chunked
 
 #define IS_NOT_CHILD fork_res != 0
@@ -11,9 +15,7 @@
 //CGI turns the body, or the part of the body between the boundries into CGI and let it run
 //Through EXECVE
 void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter){
-	/* writing send to see if everythin went well */
-	// std::cout << RED << "[" << send << "]" << RESET << std::endl;
-	std::cout << YELLOW << msg.getBody() << RESET << std::endl;
+	// std::cout << "in here == " << YELLOW << msg.getBody() << RESET << std::endl;
 	int fork_res = fork();
 	if (fork_res == -1)
 		ft_error("fork");
@@ -29,7 +31,6 @@ void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, co
 		fcntl(output_pip[0], O_NONBLOCK);
 		this->send_new(index, "HTTP/1.1 200 OK\n", output_pip[0]);//casuing the leak problem
 		sockets_info[index].disconnect_after_send = true;
-		return;
 	}
 	else {
 		const vector<string> &args = msg.getArguments();
@@ -49,8 +50,10 @@ void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, co
 		}
 		close(input_pipe[1]);
 		std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
+		//if execve fails, return 500
 		exit(1);
 	}
+	return ;
 }
 
 void webserv::cgi_post_string(std::string header, std::string Content_Type, const int index, const message &msg, const string &requested_file, const string &interpreter){
@@ -124,12 +127,6 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
     //open the input pipes
 	//information is send to the output files
 	std::cout <<"CGI start\n";
-	int input_pipe[2];
-    if (pipe(input_pipe) != 0)
-        ft_error("cgi_pot input");
-    int output_pip[2];
-    if (pipe(output_pip) != 0)
-        ft_error("cgi_post output");
 	boundary = "--" + boundary;
 	int posa = 0;
 	int posb = 0;
@@ -153,7 +150,14 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 	}
 	std::cout << BLUE << "[" << msg.getBody() << "]" << RESET << std::endl;
 	int posC = boundary.length();
+	bool check = false;
 	while (loop == true) {
+		int input_pipe[2];
+		if (pipe(input_pipe) != 0)
+			ft_error("cgi_pot input");
+		int output_pip[2];
+		if (pipe(output_pip) != 0)
+			ft_error("cgi_post output");
 		std::cout << "loopstart\n";
 		std::string uhm = requested_file;
 		uhm = interpreter;
@@ -173,17 +177,18 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 
 		/* compare the new_boundary */
 		std::string end_boundary = boundary + "--";
-		std::cout << "new[" << WHITE << new_boundary << RESET << "]" << std::endl;
-		std::cout << "cop[" << WHITE << end_boundary << RESET << "]" << std::endl;
 		if (strcmp(new_boundary.c_str(), end_boundary.c_str()) == 0){
-			// cgi_post_nb(input_pipe, output_pip, msg.getBody().substr(posa, posb - posa - 2), index, msg, requested_file, interpreter);
-			std::cout << RED << "end end end[" << msg.getBody().substr(posa, posb - posa - 2) << "]" << RESET << std::endl;
+			std::string tmp = msg.getBody().substr(posa + 2, posb - posa - 2);
+			std::cout << RED << "tmp == [" << tmp << "]" << RESET << std::endl;
+			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);
 			break ;
 		}
 		else {
 			/* no -2, because its not the last string*/
-			std::cout << GREEN << "continue continue[" << msg.getBody().substr(posa, posb - posa) << "]" << RESET << std::endl;
-			// cgi_post_nb(input_pipe, output_pip, msg.getBody().substr(posa, posb - posa), index, msg, requested_file, interpreter);
+			std::string tmp = msg.getBody().substr(posa + 2, posb - posa - 2);
+			std::cout << GREEN << "tmp == [" << tmp << "]" << RESET << std::endl;
+			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);
+			check = true;
 		}
 		// break;
 	}
