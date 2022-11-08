@@ -25,5 +25,15 @@ int main() {
 		file << line << '\n';
 	file.close();
 
-	cout << "HTTP/1.1 200\n\n" << "New file: " << filename << "\n";
+	cout <<
+		"HTTP/1.1 200\n\n"
+		"<!DOCTYPE html>"
+		"<html>"
+		"<body>"
+		"<h1>This is the uploading CGI!</h1>"
+		"The file(s) can be found <a href=\"/uploads\">here</a>,"
+		" unless the server says otherwise."
+		"</body>"
+		"</html>"
+		;
 }
