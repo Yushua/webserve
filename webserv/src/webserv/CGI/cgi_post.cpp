@@ -123,6 +123,29 @@ void webserv::cgi_post_string(std::string header, std::string Content_Type, cons
 	}
 }
 
+/*
+start with the position BEFORE the boundary. then we skip it, and go until the next boundary
+*/
+// static int string_string_split(std::string boundary, int posA, const message &msg){
+
+// 	int i = boundary.length() + 2; /*for /n */
+// 	int posC = boundary.find(boundary, i);
+// 	posA = posC;
+// 	posA -= boundary.length();
+// 	std::cout << "posC =[" << GREEN << posC << RESET << std::endl;
+// 	std::cout << "boundary =[" << GREEN << boundary << RESET << std::endl;
+// 	std::cout << "test_string =[" << GREEN << msg.getBody().substr(i, posA - i) << RESET << std::endl;
+// 	std::cout << "test_string =[" << RED << msg.getBody().substr(posA) << RESET << std::endl;
+// 	/*this is how I do it */
+
+// 	/* one, get the posiiton after the boundary
+// 	use that position to find the next
+// 	get the body between them
+// 	ut tis body in the CGI_post execv
+// 	look after, using the second boundary posiiton to see if the rest of it all is the end boundary. if so break from function*/
+// 	return 1;
+// }
+
 void webserv::cgi_post(const int index, const message &msg, const std::string &requested_file, const std::string &interpreter, std::string boundary){
     //open the input pipes
 	//information is send to the output files
@@ -148,7 +171,7 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		}
 		file.close();
 	}
-	std::cout << BLUE << "[" << msg.getBody() << "]" << RESET << std::endl;
+	// string_string_split(boundary, posa, msg);
 	int posC = boundary.length();
 	bool check = false;
 	while (loop == true) {
@@ -158,7 +181,7 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		int output_pip[2];
 		if (pipe(output_pip) != 0)
 			ft_error("cgi_post output");
-		std::cout << "loopstart\n";
+		std::cout << "loop\n";
 		std::string uhm = requested_file;
 		uhm = interpreter;
 		/* get past the bondary
