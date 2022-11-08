@@ -124,12 +124,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 	bool isCGI = false;
 	bool isPLain = false;
 	std::string Content_Disposition = "Content-Disposition: form-data;";
-	std::string name;
-	name += "name=";
-	name += '"';
-	name += "fileToUpload";
-	name += '"';
-	name += ";";
+	std::string name = "name=\"fileToUpload\";";;
 	std::string filename = "filename=""";
 	for (; itr != end; ++itr){
 		std::cout << "[" << itr->first << "][" << itr->second << "]\n";
