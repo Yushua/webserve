@@ -56,101 +56,7 @@ void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, co
 	return ;
 }
 
-void webserv::cgi_post_string(std::string header, std::string Content_Type, const int index, const message &msg, const string &requested_file, const string &interpreter){
-	ofstream file;
-	if (!msg.getStatState())//need to check if this is a chunk file, meaning it exist because a chunk has been send there
-	{
-		//if its folder
-		if (S_ISDIR(msg.getStat().st_mode)){
-			this->send_new_error_fatal(index, 404);
-			return;
-		}
-		//when it does not exist, create
-		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
-		if (!file.good()){
-			this->send_new_error_fatal(index, 404);
-			return;
-		}
-		file.close();
-	}
-
-	std::cout <<"CGI start string\n";
-	std::cout << YELLOW << header << Content_Type << "\n" << msg.getBody() << RESET << std::endl;
-	int input_pipe[2];
-    if (pipe(input_pipe) != 0)
-        ft_error("cgi_pot input");
-    int output_pip[2];
-    if (pipe(output_pip) != 0)
-        ft_error("cgi_post output");
-	int fork_res = fork();
-	if (fork_res == -1)
-		ft_error("fork");
-	if (fork_res != 0) {
-		
-		write(input_pipe[1], header.c_str(), header.length());
-		write(input_pipe[1], Content_Type.c_str(), Content_Type.length());
-		write(input_pipe[1], "\n", 1);
-		write(input_pipe[1], msg.getBody().c_str(), msg.getBody().length());
-		write(input_pipe[1], "\n", 1);
-		close(input_pipe[0]);
-		close(input_pipe[1]);
-		
-		close(output_pip[1]);
-		fcntl(output_pip[0], O_NONBLOCK);
-		this->send_new(index, "HTTP/1.1 200 OK\n", output_pip[0]);//casusing the leak problem
-		sockets_info[index].disconnect_after_send = true;
-		return;
-	}
-	else {
-		const vector<string> &args = msg.getArguments();
-		const char *argv[3] = {
-			interpreter != ""
-				? interpreter.c_str()
-				: requested_file.c_str(),
-			requested_file.c_str(),
-			NULL};
-		const char *envp[1] = { NULL };
-		dup2(output_pip[1], 1);
-		dup2(input_pipe[0], 0);
-		size_t len = args.size();
-		for (size_t i = 0; i < len; ++i) {
-			write(input_pipe[1], args[i].c_str(), args[i].length());
-			write(input_pipe[1], "\n", 1);
-		}
-		close(input_pipe[1]);
-		std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
-		std::cerr << "execve failed\n";
-		exit(1);
-	}
-}
-
-/*
-start with the position BEFORE the boundary. then we skip it, and go until the next boundary
-*/
-// static int string_string_split(std::string boundary, int posA, const message &msg){
-
-// 	int i = boundary.length() + 2; /*for /n */
-// 	int posC = boundary.find(boundary, i);
-// 	posA = posC;
-// 	posA -= boundary.length();
-// 	std::cout << "posC =[" << GREEN << posC << RESET << std::endl;
-// 	std::cout << "boundary =[" << GREEN << boundary << RESET << std::endl;
-// 	std::cout << "test_string =[" << GREEN << msg.getBody().substr(i, posA - i) << RESET << std::endl;
-// 	std::cout << "test_string =[" << RED << msg.getBody().substr(posA) << RESET << std::endl;
-// 	/*this is how I do it */
-
-// 	/* one, get the posiiton after the boundary
-// 	use that position to find the next
-// 	get the body between them
-// 	ut tis body in the CGI_post execv
-// 	look after, using the second boundary posiiton to see if the rest of it all is the end boundary. if so break from function*/
-// 	return 1;
-// }
-
 void webserv::cgi_post(const int index, const message &msg, const std::string &requested_file, const std::string &interpreter, std::string boundary){
-    //open the input pipes
-	//information is send to the output files
-	std::cout <<"CGI start\n";
 	boundary = "--" + boundary;
 	int posa = 0;
 	int posb = 0;
@@ -214,8 +120,5 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);
 			check = true;
 		}
-		// break;
 	}
-	std::cout << "end of CGI_POST" << std::endl;
-	//after upload, maybe go back to the previous page
 }

@@ -20,30 +20,71 @@ void message::checkHost(string string)
 	}
 }
 
+static std::string find_from_end(std::string path, char c){
+	std::string string = "";
+	int i = path.length();
+	while (i > 0){
+		if (path[i] == c){
+			break;
+		}
+		i--;
+	}
+	i++;
+	string = path.substr(i);
+	return (string);
+}
+
 void webserv::plainText(const int index, message &msg){
 	ofstream file;
-	std::cout << YELLOW << "start pain text" << RESET << std::endl;
-	std::cout << YELLOW << msg.getPath() << RESET << std::endl;
-
-	std::string filename = "filename=\"" + msg.getPath() + "\"";
-	int i = index;
-	i++;
+	std::string fileName;
+	std::string pathName;
+	if (msg.getPath().find_first_not_of("\\") == string::npos){
+		fileName = "";
+		pathName = "root/cgi-bin/";
+	}
+	else{
+		fileName = find_from_end(msg.getPath(), '/');
+		pathName = msg.getPath().substr(0, msg.getPath().length() - fileName.length());
+	}
 	/* get the state which tells me if I need to make something. I need to be sure its not a folder*/
-	// struct stat info;
-	// if( stat(pathname, &info ) != 0 )
-    // 	printf( "cannot access %s\n", pathname );
-	// /* check if the first part is a directory, if else fail*/
-	// if( info.st_mode & S_IFDIR )  // S_ISDIR() doesn't exist on my windows 
-	// 	printf( "%s is a directory\n", pathname );
-	// else
-	// 	printf( "%s is no directory\n", pathname );
+	struct stat info1;
+	if (stat(pathName.c_str(), &info1 ) != 0 ){
+    	send_new_error_fatal(index, 404);
+		return;
+	}
+	/* check if the first part is a directory, if else fail*/
+	if (!S_ISDIR(info1.st_mode)){
+		send_new_error_fatal(index, 404);
+		return;
+	}
+	int i = 0;
+	std::stringstream ss;
+	std::string tmp;
+	std::string name;
+	while (true){
+		ss.clear();
+		tmp.clear();
+		ss << i;
+		tmp.append(ss.str());
+		name = pathName + "copy[" + tmp + "]" + fileName;
+		std::string cach = pathName + name;
+		struct stat info;
+		/* check if the first part is a directory, if else fail*/
+		std::cout << "name file " << name << std::endl;
+		if (stat(pathName.c_str(), &info ) == 0 ){
+			break;
+		}
+		i++;
+	}
+	fileName = pathName + "copy[" + tmp + "]" + fileName;
+	/* while loop 
+	if this file exists there, then add number, until it succeeds and change the filename into that*/
 
-	// /* while loop 
-	// if this file exists there, then add number, until it succeeds and change the filename into that*/
-
-	// /* open filename in that path, put shit in there, close*/
-	// file << msg.getBody();
-	// file.close();
+	/* open filename in that path, put the body in there, close*/
+	file.open(fileName.c_str(), fstream::in | fstream::out | fstream::trunc);
+	file << msg.getBody();
+	file.close();
+	send_new_error(index, 200);
 }
 
 void webserv::cmd_POST(const int index, message &msg) {
@@ -52,12 +93,9 @@ void webserv::cmd_POST(const int index, message &msg) {
 	map<string, string>::iterator itr = _header.begin();
 	map<string, string>::iterator end = _header.end();
 	std::string store;
-	std::cout << "==start of POST=="  << std::endl;
-
 	/* setting up the boolians, seeing if there is a chunk or if there is a CGI or Plaintext*/
 	bool isCGI = false;
 	for (; itr != end; ++itr){
-		std::cout << "[" << itr->first << "][" << itr->second << "]\n";
 		/* checking to see if the content-lenght is correct*/
 		if (itr->first == "Content-Length:"){
 			if (msg.getContentLength() != msg.getBody().length()){
@@ -104,10 +142,5 @@ void webserv::cmd_POST(const int index, message &msg) {
 	}
 	else{
 		plainText(index, msg);
-		std::cout << "plain text start" << std::endl;
-		// cgi_post_string(Content_Disposition + " " + name + " " + filename + "\n", "Content-Type: " + store + "\n",
-		// index, msg, msg.getPath(), key->second);
-		std::cout << "plain text success" << std::endl;
 	}
-	std::cout << "end POST\n"; 
 }
