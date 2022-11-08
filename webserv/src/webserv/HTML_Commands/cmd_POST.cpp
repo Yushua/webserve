@@ -35,7 +35,7 @@ static std::string find_from_end(std::string path, char c){
 }
 
 void webserv::plainText(const int index, message &msg){
-	ofstream file;
+	fstream file;
 	std::string fileName;
 	std::string pathName;
 	if (msg.getPath().find_first_not_of("\\") == string::npos){
@@ -58,24 +58,23 @@ void webserv::plainText(const int index, message &msg){
 		return;
 	}
 	int i = 0;
-	std::stringstream ss;
-	std::string tmp;
 	std::string name;
 	while (true){
-		ss.clear();
-		tmp.clear();
+		std::stringstream ss;
+		std::string tmp;
 		ss << i;
-		tmp.append(ss.str());
+		tmp = ss.str();
 		name = pathName + "copy[" + tmp + "]" + fileName;
 		std::string cach = pathName + name;
 		struct stat info;
 		/* check if the first part is a directory, if else fail*/
-		std::cout << "name file " << name << std::endl;
-		if (stat(pathName.c_str(), &info ) == 0 ){
-			break;
-		}
+		if (stat(name.c_str(), &info) == -1)/* if file IS THERE, ++*/{break;}
 		i++;
 	}
+	std::stringstream ss;
+	std::string tmp;
+	ss << i;
+	tmp = ss.str();
 	fileName = pathName + "copy[" + tmp + "]" + fileName;
 	/* while loop 
 	if this file exists there, then add number, until it succeeds and change the filename into that*/
