@@ -66,28 +66,32 @@ void webserv::plainText(const int index, message &msg, std::string store){
 
 		everything else is the same
 	*/
+	/* get the name of the path */
+	std::string filename = "filename=\"" + msg.getPath() + "\"";
+
+
 	std::cout << "==plainText==\npath ==" << msg.getPath() << std::endl;
 	std::cout << YELLOW << msg.getBody() << RESET << std::endl;
 	/* get the state which tells me if I need to make something. I need to be sure its not a folder*/
-	// if (msg.getStatState())
-	// {
-	// 	/* checking if its a folder, if so, false */
-	// 	if (S_ISDIR(msg.getStat().st_mode)){
-	// 		send_new_error_fatal(index, 404);
-	// 		return;
-	// 	}
-	// 	/* if not folder, then check if its a true path */
-	// 	file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
-	// 	if (!file.good()){
-	// 		send_new_error_fatal(index, 404);
-	// 		return;
-	// 	}
-	// }
-	// else{//if stat fails
-	// 	send_new_error_fatal(index, 404);
-	// 	this->disconnect(index);
-	// 	return;
-	// }
+	if (msg.getStatState())
+	{
+		/* checking if its a folder, if so, false */
+		if (S_ISDIR(msg.getStat().st_mode)){
+			send_new_error_fatal(index, 404);
+			return;
+		}
+		/* if not folder, then check if its a true path */
+		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
+		if (!file.good()){
+			send_new_error_fatal(index, 404);
+			return;
+		}
+	}
+	else{//if stat fails
+		send_new_error_fatal(index, 404);
+		this->disconnect(index);
+		return;
+	}
 	std::cout << "store[" << store << "]\n";
 	int i = index;
 	i++;
@@ -125,7 +129,8 @@ void webserv::cmd_POST(const int index, message &msg) {
 	bool isPLain = false;
 	std::string Content_Disposition = "Content-Disposition: form-data;";
 	std::string name = "name=\"fileToUpload\";";;
-	std::string filename = "filename=""";
+	/* get the name of the path */
+	std::string filename = "filename=\"" + msg.getPath() + "\"";
 	for (; itr != end; ++itr){
 		std::cout << "[" << itr->first << "][" << itr->second << "]\n";
 		/* checking to see if the content-lenght is correct*/
@@ -186,10 +191,10 @@ void webserv::cmd_POST(const int index, message &msg) {
 		cgi_post(index, msg, msg.getPath(), key->second, store);
 	}
 	else if (isPLain == true){
-		// plainText(index, msg, store);
+		plainText(index, msg, store);
 		std::cout << "plain text start" << std::endl;
-		cgi_post_string(Content_Disposition + " " + name + " " + filename + "\n", "Content-Type: " + store + "\n",
-		index, msg, msg.getPath(), key->second);
+		// cgi_post_string(Content_Disposition + " " + name + " " + filename + "\n", "Content-Type: " + store + "\n",
+		// index, msg, msg.getPath(), key->second);
 		std::cout << "plain text success" << std::endl;
 	}
 	else

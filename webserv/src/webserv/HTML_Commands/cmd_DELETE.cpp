@@ -22,7 +22,7 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 			result = remove(msg.getPath().c_str());
 			if (stat(msg.getPath().c_str(), &file_info) == -1)
 			{
-				this->send_new_error(index, 200);
+				this->send_new_error(index, 204);
 				return;
 			}
 		}
