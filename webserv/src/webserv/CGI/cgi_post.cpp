@@ -15,7 +15,7 @@
 //CGI turns the body, or the part of the body between the boundries into CGI and let it run
 //Through EXECVE
 void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter){
-	// std::cout << "in here == " << YELLOW << msg.getBody() << RESET << std::endl;
+	std::cout << "in here == " << YELLOW << send << RESET << std::endl;
 	int fork_res = fork();
 	if (fork_res == -1)
 		ft_error("fork");
@@ -91,7 +91,7 @@ void webserv::cgi_post_string(std::string header, std::string Content_Type, cons
 		write(input_pipe[1], Content_Type.c_str(), Content_Type.length());
 		write(input_pipe[1], "\n", 1);
 		write(input_pipe[1], msg.getBody().c_str(), msg.getBody().length());
-
+		write(input_pipe[1], "\n", 1);
 		close(input_pipe[0]);
 		close(input_pipe[1]);
 		
@@ -119,6 +119,7 @@ void webserv::cgi_post_string(std::string header, std::string Content_Type, cons
 		}
 		close(input_pipe[1]);
 		std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
+		std::cerr << "execve failed\n";
 		exit(1);
 	}
 }
