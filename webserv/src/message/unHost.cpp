@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 10:27:32 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/10/07 16:04:38 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/11/09 15:56:32 by rdrazsky      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ void message::unHost(string string)
 	while (string.find(".") != string::npos)
 	{
 		i = string.find(".");
-		if(checkNumber(string, "0123456789") != -1){
+		if(checkNumber(string, "0123456789") != -1) {
 			// std::cout << check << std::endl;
 			this->valid = false;
 		}
 		string.erase(0, i+1);
 		ip++;
 	}
-	if (string.find(":") != string::npos){
+	if (string.find(":") != string::npos) {
 		i = string.find(":");
-		if(checkNumber(string, "0123456789") != -1){
+		if(checkNumber(string, "0123456789") != -1) {
 			// std::cout << check << std::endl;
 			this->valid = false;
 		}

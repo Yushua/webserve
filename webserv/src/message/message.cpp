@@ -4,7 +4,7 @@ message::message() {
 	this->state = loadingHeaders;
 }
 
-message::~message(){}
+message::~message() {}
 
 const vector<string> &message::getStartLine() const
 	{ return startLine; }
@@ -31,6 +31,9 @@ const string &message::getOriginal() const
 
 const bool &message::isValid() const
 	{ return valid; }
+
+const bool &message::isChunked() const
+	{ return chunked; }
 
 bool &message::changeValid(bool _valid)
 	{ return (valid = _valid); }

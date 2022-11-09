@@ -10,11 +10,11 @@ void message::checkGet()
 {
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
-	for (; itr != end; ++itr){
-		if (itr->first == "Host:"){
+	for (; itr != end; ++itr) {
+		if (itr->first == "Host:") {
 			this->unHost(itr->second);
 		}
-		else if (itr->first == "Referer"){
+		else if (itr->first == "Referer") {
 			this->unReferer(itr->second);
 		}
 	}
@@ -25,11 +25,11 @@ void message::checkPost()
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
 
-	for (; itr != end; ++itr){
-		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")){
+	for (; itr != end; ++itr) {
+		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")) {
 			this->contentLength = atoi(itr->second.c_str());
 		}
-		else if (itr->first == "Host:"){
+		else if (itr->first == "Host:") {
 			this->unHost(itr->second);
 		}
 	}
@@ -39,8 +39,8 @@ void message::checkDelete()
 {
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
-	for (; itr != end; ++itr){
-		if (itr->first == "Host:"){
+	for (; itr != end; ++itr) {
+		if (itr->first == "Host:") {
 			this->unHost(itr->second);
 		}
 	}

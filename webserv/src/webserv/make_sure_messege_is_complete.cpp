@@ -41,10 +41,17 @@ bool webserv::make_sure_messege_is_complete(const int index)
 
 			debug_print_request(index, msg);
 
+			if (msg.isChunked()) {
+				msg.tryDechunk();
+				
+				/* Disconected Error */
+				if (msg.getState() == msgError)
+					{ this->disconnect(index); return RETURN_TO_POLL; }
+			}
+
 			/* Return to poll if body isn't complete */
 			if (msg.getState() == loadingBody)
 				return RETURN_TO_POLL;
-			
 
 			/* All good to go! */
 			return CONTINUE;
@@ -53,27 +60,37 @@ bool webserv::make_sure_messege_is_complete(const int index)
 		case loadingBody:
 			msg.loadBody();
 
-			/* Disconected Error */
+			/* Disconect Error */
 			if (msg.getState() == msgError)
 				{ this->disconnect(index); return RETURN_TO_POLL; }
 
+			if (msg.isChunked()) {
+				msg.tryDechunk();
+				
+				/* Disconect Error */
+				if (msg.getState() == msgError)
+					{ this->disconnect(index); return RETURN_TO_POLL; }
+				
+				/* Return to poll if body isn't complete */
+				if (msg.getState() == loadingBody)
+					return RETURN_TO_POLL;
+
+				/* All good to go! */
+				return CONTINUE;
+			}
+
 			/* Check if body doesn't exeed Content_length */
 			if (msg.getBody().length() > msg.getContentLength()) {
-				this->send_new_error(index, 413);
+				this->send_new_error_fatal(index, 413);
 				return RETURN_TO_POLL;
 			}
 
-			/* Return to poll if body isn't complete */
-			if (msg.getState() == loadingBody)
+			/* Check if body is complete */
+			if (msg.getBody().length() < msg.getContentLength())
 				return RETURN_TO_POLL;
-		
-			/* Check if body matches Content_length */
-			if (msg.getBody().length() != msg.getContentLength()) {
-				this->send_new_error(index, 413);
-				return RETURN_TO_POLL;
-			}
 
 			/* All good to go! */
+			msg.setState(ready);
 			return CONTINUE;
 
 	}

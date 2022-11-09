@@ -30,6 +30,10 @@ private:
 
 	string headers_str;
 	string body_str;
+	string chunk_buffer;
+
+	size_t dechunk_chunk_size;
+	bool dechunk_looking_for_chunk;
 
 	//the first line of the message from the client
 	vector<string>      startLine;
@@ -40,8 +44,7 @@ private:
 	map<string, string> headers;
 	string              read_buffer;
 	bool                valid;
-	bool				chunkS;
-	bool				chunkE;
+	bool                chunked;
 	struct stat         stat_result;
 	bool                stat_state;
 	struct Config_s     config;
@@ -68,8 +71,9 @@ public:
 	
 	void unChunk();
 	void unHost(string string);
-	void loadBody();
 	void loadHeaders();
+	void loadBody();
+	void tryDechunk();
 
 	message();
 	~message();

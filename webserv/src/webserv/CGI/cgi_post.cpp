@@ -14,7 +14,7 @@
 
 //CGI turns the body, or the part of the body between the boundries into CGI and let it run
 //Through EXECVE
-void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter){
+void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter) {
 	std::cout << "in here == " << YELLOW << send << RESET << std::endl;
 	int fork_res = fork();
 	if (fork_res == -1)
@@ -56,7 +56,7 @@ void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, co
 	return ;
 }
 
-void webserv::cgi_post(const int index, const message &msg, const std::string &requested_file, const std::string &interpreter, std::string boundary){
+void webserv::cgi_post(const int index, const message &msg, const std::string &requested_file, const std::string &interpreter, std::string boundary) {
 	boundary = "--" + boundary;
 	int posa = 0;
 	int posb = 0;
@@ -66,13 +66,13 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 	if (!msg.getStatState())//need to check if this is a chunk file, meaning it exist because a chunk has been send there
 	{
 		//if its folder
-		if (S_ISDIR(msg.getStat().st_mode)){
+		if (S_ISDIR(msg.getStat().st_mode)) {
 			this->send_new_error_fatal(index, 404);
 			return;
 		}
 		//when it does not exist, create
 		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
-		if (!file.good()){
+		if (!file.good()) {
 			this->send_new_error_fatal(index, 404);
 			return;
 		}
@@ -107,7 +107,7 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 
 		/* compare the new_boundary */
 		std::string end_boundary = boundary + "--";
-		if (strcmp(new_boundary.c_str(), end_boundary.c_str()) == 0){
+		if (strcmp(new_boundary.c_str(), end_boundary.c_str()) == 0) {
 			std::string tmp = msg.getBody().substr(posa + 2, posb - posa - 2);
 			std::cout << RED << "tmp == [" << tmp << "]" << RESET << std::endl;
 			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);

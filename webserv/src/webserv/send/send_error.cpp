@@ -11,7 +11,7 @@ void webserv::send_new_error(const int index, const int error_code) {
 	if (found == error_pages.end()) {
 		int fds[2];
 		if (pipe(fds) == -1)
-			ft_error("send_default_error_page_error");
+			ft_error("send_new_error");
 		
 		string default_error_page
 			= "<!DOCTYPE html><html><body><h1>"

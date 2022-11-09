@@ -20,11 +20,11 @@ std::vector<std::string> configSplit(std::string string, const char *str)
     */
     while (i < length && value == true)
     {
-        if (string[i] == str[0]){
-            for (int y = 0; str[y] && value == true; y++){
+        if (string[i] == str[0]) {
+            for (int y = 0; str[y] && value == true; y++) {
                 if (string[i] == str[y])
                     value = false;
-                else{
+                else {
                     value = true;
                     break;
                 }

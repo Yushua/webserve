@@ -39,7 +39,4 @@ void message::loadHeaders() {
 		this->state = loadingBody;
 		return;
 	}
-	
-	if (ret < PIPE_BUF)
-		this->state = loadingBody;
 }

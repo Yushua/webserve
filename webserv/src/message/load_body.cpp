@@ -14,7 +14,4 @@ void message::loadBody() {
 		{ this->state = ready; return; }
 
 	this->body_str.append(buffer, ret);
-
-	if (ret < PIPE_BUF)
-		this->state = ready;
 }

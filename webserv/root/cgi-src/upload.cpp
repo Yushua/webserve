@@ -31,7 +31,7 @@ int main() {
 		"<html>"
 		"<body>"
 		"<h1>This is the uploading CGI!</h1>"
-		"The file(s) can be found <a href=\"/uploads\">here</a>,"
+		"The file(s) can be found <a href=\"..\\uploads\">here</a>,"
 		" unless the server says otherwise."
 		"</body>"
 		"</html>"

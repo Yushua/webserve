@@ -14,6 +14,11 @@ void message::reset() {
 	this->headersLength = 0;
 	this->body_str.clear();
 	this->headers_str.clear();
+	this->chunk_buffer.clear();
+
+	this->chunked = false;
+	this->dechunk_looking_for_chunk = true;
+	this->dechunk_chunk_size = 0;
 }
 
 void message::reset(const int new_fd) {

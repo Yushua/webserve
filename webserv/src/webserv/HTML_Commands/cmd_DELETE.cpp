@@ -4,13 +4,12 @@
 #include <cstdio>
 
 void webserv::cmd_DELETE(const int index, const message &msg) {
-	this->send_new_error(index, 202);
 	ofstream file;
 	struct stat file_info;
 	if (msg.getStatState())
 	{
 		/* if it is a folder*/
-		if (S_ISDIR(msg.getStat().st_mode)){
+		if (S_ISDIR(msg.getStat().st_mode)) {
 			this->send_new_error_fatal(index, 403);
 			return;
 		}
@@ -22,16 +21,16 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 			result = remove(msg.getPath().c_str());
 			if (stat(msg.getPath().c_str(), &file_info) == -1)
 			{
-				this->send_new_error(index, 204);
+				this->send_new(index, "HTTP/1.1 204\nContent-Length: 0\n\n", -1);
 				return;
 			}
 		}
-		else{
+		else {
 			this->send_new_error_fatal(index, 404);
 				return;
 		}
 	}
-	else{//if it does not exist
+	else {//if it does not exist
 		this->send_new_error_fatal(index, 404);
 		return;
 	}

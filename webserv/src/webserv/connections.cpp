@@ -68,6 +68,13 @@ void webserv::disconnect(const int index)
 	struct pollfd &poll_fd = sockets[index];
 	struct SocketInfo_s &socket = sockets_info[index];
 
+#ifdef DEBUG
+	if (socket.msg.getState() == msgError)
+		cout << RED << "  -~={ " << index << " diconnected: msgError }=~-\n" << RESET;
+	else
+		cout << RED << "  -~={ " << index << " diconnected }=~-\n" << RESET;
+#endif
+
 	if (!socket.fd_only && socket.send_fd_index != -1)
 		this->disconnect(socket.send_fd_index);
 
@@ -79,8 +86,4 @@ void webserv::disconnect(const int index)
 	socket.msg.reset();
 
 	this->returnPosition(index);
-
-#ifdef DEBUG
-	cout << RED << "  -~={ " << index << " diconnected }=~-\n" << RESET;
-#endif
 }

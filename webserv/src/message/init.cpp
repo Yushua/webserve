@@ -105,6 +105,18 @@ void message::init() {
 	/* Check Message Validity */
 	this->check();
 
+	/* Does the message have a chunked body? */
+	map<string, string>::iterator found = headers.find("Transfer-Encoding:");
+	if (found != headers.end() && found->second == "chunked") {
+		this->chunked = true;
+		this->state = loadingBody;
+		this->contentLength = 0;
+		this->chunk_buffer = this->body_str;
+		this->body_str.clear();
+		return;
+	}
+	
+	/* Does the message even have a body? */
 	if (contentLength > 0)
 		this->state = loadingBody;
 	else
