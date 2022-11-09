@@ -5,13 +5,19 @@
 
 void webserv::send_new_file(const int index, string headers, const string path) {
 
-	int fd = open(path.c_str(), O_RDONLY);
-	if (fd < 0)
-		ft_error("send_new_file");
-
+	int fd;
 	struct stat file_info;
-	if (stat(path.c_str(), &file_info) == -1)
-		ft_error("send_new_file");
+	
+	{/* Check if file exists and open it */
+		if (stat(path.c_str(), &file_info) == -1)
+			ft_error("send_new_file");
+
+		fd = open(path.c_str(), O_RDONLY);
+		if (fd < 0)
+			ft_error("send_new_file");
+	}
+
+	/* Generate headers */
 	headers += this->header_get_content_type(path);
 	headers += "Content-Length: " + ft_to_string(file_info.st_size) + "\n\n";
 

@@ -8,14 +8,10 @@
 #include <algorithm>
 #include <string>
 
-//check if this body is chunked
-
-#define IS_NOT_CHILD fork_res != 0
-
 //CGI turns the body, or the part of the body between the boundries into CGI and let it run
 //Through EXECVE
 void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter) {
-	std::cout << "in here == " << YELLOW << send << RESET << std::endl;
+	// std::cout << "in here == " << YELLOW << send << RESET << std::endl;
 	int fork_res = fork();
 	if (fork_res == -1)
 		ft_error("fork");
@@ -88,7 +84,7 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		int output_pip[2];
 		if (pipe(output_pip) != 0)
 			ft_error("cgi_post output");
-		std::cout << "loop\n";
+		// std::cout << "loop\n";
 		std::string uhm = requested_file;
 		uhm = interpreter;
 		/* get past the bondary
@@ -109,14 +105,14 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		std::string end_boundary = boundary + "--";
 		if (strcmp(new_boundary.c_str(), end_boundary.c_str()) == 0) {
 			std::string tmp = msg.getBody().substr(posa + 2, posb - posa - 2);
-			std::cout << RED << "tmp == [" << tmp << "]" << RESET << std::endl;
+			// std::cout << RED << "tmp == [" << tmp << "]" << RESET << std::endl;
 			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);
 			break ;
 		}
 		else {
 			/* no -2, because its not the last string*/
 			std::string tmp = msg.getBody().substr(posa + 2, posb - posa - 2);
-			std::cout << GREEN << "tmp == [" << tmp << "]" << RESET << std::endl;
+			// std::cout << GREEN << "tmp == [" << tmp << "]" << RESET << std::endl;
 			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);
 			check = true;
 		}

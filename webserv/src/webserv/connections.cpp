@@ -27,11 +27,10 @@ int webserv::connect_new_socket(const int index)
 		sockets_info[position].fd_only = false;
 		sockets_info[position].listen = false;
 		sockets_info[position].recieving_from_server = false;
-		sockets_info[position].disconnect_after_send = false;
 		sockets_info[position].msg.reset(new_socket);
 		
 #ifdef DEBUG
-		cout << GREEN << "  -~={ " << position << " connected }=~-\n" << RESET;
+		cout << GREEN << "  -~={ " << position << " connected }=~-" << RESET << '\n';
 #endif
 	}
 	return position;
@@ -39,7 +38,6 @@ int webserv::connect_new_socket(const int index)
 
 int webserv::connect_new_fd_only(const int index, const int fd)
 {
-
 	/* Don't connect new socket when */
 	/*  there are no available positions */
 	int position = this->tryGetAvailablePosition();
@@ -53,11 +51,9 @@ int webserv::connect_new_fd_only(const int index, const int fd)
 		sockets_info[position].send_fd_index = index;
 		sockets_info[position].fd_only = true;
 		sockets_info[position].listen = false;
-		sockets_info[position].recieving_from_server = false;
-		sockets_info[position].disconnect_after_send = false;
 	
 #ifdef DEBUG
-		cout << GREEN << "  -~={ " << position << " fd only }=~-\n" << RESET;
+		cout << GREEN << "  -~={ " << position << " fd only }=~-" << RESET << '\n';
 #endif
 	}
 	return position;
@@ -70,9 +66,9 @@ void webserv::disconnect(const int index)
 
 #ifdef DEBUG
 	if (socket.msg.getState() == msgError)
-		cout << RED << "  -~={ " << index << " diconnected: msgError }=~-\n" << RESET;
+		cout << RED << "  -~={ " << index << " diconnected: msgError }=~-" << RESET << '\n';
 	else
-		cout << RED << "  -~={ " << index << " diconnected }=~-\n" << RESET;
+		cout << RED << "  -~={ " << index << " diconnected }=~-" << RESET << '\n';
 #endif
 
 	if (!socket.fd_only && socket.send_fd_index != -1)
@@ -82,7 +78,7 @@ void webserv::disconnect(const int index)
 		ft_error("disconnect");
 
 	poll_fd.fd = numeric_limits<int>::max();
-	poll_fd.revents = 0;
+	poll_fd.events = 0;
 	socket.msg.reset();
 
 	this->returnPosition(index);

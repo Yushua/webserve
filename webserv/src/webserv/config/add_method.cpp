@@ -11,7 +11,7 @@ void webserv::config_add_method(string path, const string &method, int line) {
 		if (found != configs.end())
 			config = &(found->second);
 		else {
-			std::cerr << RED << "  -~={ line " << line << ": No redirect from: " << path << " }=~-\n" << RESET;
+			std::cerr << RED << "  -~={ line " << line << ": No redirect from: " << path << " }=~-" << RESET << '\n';
 			exit(1);
 		}
 	}
@@ -23,6 +23,6 @@ void webserv::config_add_method(string path, const string &method, int line) {
 	config->allowed_methods.push_back(method);
 
 #ifdef DEBUG
-	std::cout << GREEN << "  -~={ " << path << ": Added method " << method << " }=~-\n" << RESET;	
+	std::cout << GREEN << "  -~={ " << path << ": Added method " << method << " }=~-" << RESET << '\n';	
 #endif
 }
