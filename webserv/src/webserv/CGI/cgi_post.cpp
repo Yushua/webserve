@@ -8,14 +8,11 @@
 #include <algorithm>
 #include <string>
 
-//CGI turns the body, or the part of the body between the boundries into CGI and let it run
-//Through EXECVE
+/* uses the numbers attached to it to put the string inbetween through post */
 void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter) {
-	// std::cout << "in here == " << YELLOW << send << RESET << std::endl;
 	int fork_res = fork();
 	if (fork_res == -1)
 		ft_error("fork");
-	/* Is not child */
 	if (fork_res != 0) {
 		write(input_pipe[1]
 		, send.c_str()
@@ -59,19 +56,15 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 	std::string str = "";
 	bool loop = true;
 	ofstream file;
-	if (!msg.getStatState())//need to check if this is a chunk file, meaning it exist because a chunk has been send there
+	if (!msg.getStatState())
 	{
-		//if its folder
-		if (S_ISDIR(msg.getStat().st_mode)) {
-			this->send_new_error_fatal(index, 404);
-			return;
-		}
-		//when it does not exist, create
+		/* is hi s a folder */
+		if (S_ISDIR(msg.getStat().st_mode))
+			{ this->send_new_error_fatal(index, 404); return; }
+		/* if successful, make the file and see if that was successfull*/
 		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
-		if (!file.good()) {
-			this->send_new_error_fatal(index, 404);
-			return;
-		}
+		if (!file.good())
+			{ this->send_new_error_fatal(index, 404); return; }
 		file.close();
 	}
 	// string_string_split(boundary, posa, msg);
@@ -84,11 +77,10 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		int output_pip[2];
 		if (pipe(output_pip) != 0)
 			ft_error("cgi_post output");
-		// std::cout << "loop\n";
 		std::string uhm = requested_file;
 		uhm = interpreter;
 		/* get past the bondary
-		because at the end of this loop, thee nd is posC we give it to posa*/
+		because at the end of this loop, the end is posC we give it to posa*/
 		posa = posC;
 
 		/* posb is at the end of the next boundary. for now, we do 2+ because we need to know if this is the end*/
@@ -105,14 +97,12 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		std::string end_boundary = boundary + "--";
 		if (strcmp(new_boundary.c_str(), end_boundary.c_str()) == 0) {
 			std::string tmp = msg.getBody().substr(posa + 2, posb - posa - 2);
-			// std::cout << RED << "tmp == [" << tmp << "]" << RESET << std::endl;
 			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);
 			break ;
 		}
 		else {
 			/* no -2, because its not the last string*/
 			std::string tmp = msg.getBody().substr(posa + 2, posb - posa - 2);
-			// std::cout << GREEN << "tmp == [" << tmp << "]" << RESET << std::endl;
 			cgi_post_nb(input_pipe, output_pip, tmp, index, msg, requested_file, interpreter);
 			check = true;
 		}
