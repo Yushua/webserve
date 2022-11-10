@@ -10,6 +10,6 @@ int ft_error(const char *str);
 /* string and path */
 const std::string ft_to_string(const size_t n);
 const std::string ft_get_extension(const std::string &path);
-std::vector<std::string> configSplit(std::string string, const char *str);
+std::vector<std::string> splitStringByString(std::string string, const char *str);
 
 #endif

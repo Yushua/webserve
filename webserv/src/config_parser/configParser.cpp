@@ -6,21 +6,14 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/11/09 16:11:31 by rdrazsky      ########   odam.nl         */
+/*   Updated: 2022/11/10 20:11:05 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <webserv.hpp>
 #include <message.hpp>
 
-//make own class
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-
-#include <colors.hpp>
-vector<std::string> configSplit(std::string string, const char *str)
+vector<std::string> splitStringByString(std::string string, const char *str)
 {
     vector<std::string> vec;
     int length = string.length();
@@ -29,11 +22,13 @@ vector<std::string> configSplit(std::string string, const char *str)
     bool value = true;
 
     /*
-    checks if the sequence,
-    when the string[i] equals the first character in the sequence
-    then it will go through, if somewhere it fails, then it stops.
-    only when all of them compare, does it elave the false bool
-    and leaves the while.
+        checks if the sequence,
+        when the string[i] equals the first character in the sequence
+        then it will go through, if somewhere it fails, then it stops.
+        only when all of them compare, does it leave the false bool
+        and leaves the while.
+
+        creates a vector of wo strings split by another string
     */
     while (i < length && value == true)
     {
@@ -107,7 +102,7 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
             while (line[0] == '\t' || line[0] == ' ' ) {
                 line.replace(0, 1, "");
             }
-            vec = configSplit(line, ": ");
+            vec = splitStringByString(line, ": ");
             if(line[0] == '/') {//syntax
                 _reDirect = vec;
                 // std::cout << "adding normal syntax[" << _reDirect[0] << "]\n";
@@ -144,11 +139,11 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
                 bigacontyantnas.at(webservName)->config_listen_to_port(vec[1], i);
             }
             else if (vec[0] == "cgi") {
-                _substring = configSplit(vec[1], "=");//kk
+                _substring = splitStringByString(vec[1], "=");//kk
                 bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1], i);
             }
             else if (vec[0] == "error_page") {
-                _substring = configSplit(vec[1], "=");
+                _substring = splitStringByString(vec[1], "=");
                 bigacontyantnas.at(webservName)->config_add_error_page(_substring[0], _substring[1], i);
             }
             else if (reDirect == true) {

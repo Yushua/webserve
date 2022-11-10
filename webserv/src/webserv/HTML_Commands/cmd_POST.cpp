@@ -93,51 +93,27 @@ void webserv::cmd_POST(const int index, message &msg) {
 	/* setting up the boolians, seeing if there is a chunk or if there is a CGI or Plaintext*/
 	bool isCGI = false;
 	for (; itr != end; ++itr) {
-		/* checking to see if the content-lenght is correct*/
-		if (itr->first == "Content-Length:") {
-			if (msg.getContentLength() != msg.getBody().length()) {
-				this->send_new_error_fatal(index, 404);
-				return;
-			}
-		}
-		/* checking to see if the host is correct*/
-		else if (itr->first == "Host:")
-		{
-			std::string tmp = itr->second;
-			if (tmp.find("localhost:") != string::npos) {
-				msg.checkHost(tmp);}
-			else {
-				msg.unHost(tmp);}
-			if (msg.isValid() == false) {
-				this->send_new_error_fatal(index, 404);
-				return;
-			}
-		}
 		/* checking here if the content type says that its CGI */
-		else if ((itr->first == "Content-Type:")) {
-			//use chunks
+		if ((itr->first == "Content-Type:")) {
 			if (itr->second.find("multipart/form-data; ") != string::npos) {
 				vector<std::string> vec;
-				vec = configSplit(itr->second, "; ");
+				vec = splitStringByString(itr->second, "; ");
 				if (vec[0] == "multipart/form-data") {//i am creating the boundary
 					isCGI = true;
 					vec[1].replace(0, 9, "");
 					store = vec[1];
 				}
-				else {
-					this->send_new_error_fatal(index, 404);
-					return;
-				}
+				else
+					{ this->send_new_error_fatal(index, 404); return; }
 			}
 		}
 	}
-	/* chunk is checked inside of plainText*/
-	string extension = ft_get_extension(msg.getPath());
-	map<string, string>::iterator key = cgi_options.find(extension);
-	if (isCGI == true && msg.isValid() == true) {
-		cgi_post(index, msg, msg.getPath(), key->second, store);
-	}
-	else {
-		plainText(index, msg);
-	}
+	std::cout << true << msg.isValid() << std::endl;
+	map<string, string>::iterator key = cgi_options.find(ft_get_extension(msg.getPath()));
+	if (isCGI && msg.isValid())
+		{ cgi_post(index, msg, msg.getPath(), key->second, store); }
+	else if (!isCGI && msg.isValid())/* if its not CGI, then it can be done by plainText, which follows the html_POSt cmd logic */
+		{ plainText(index, msg); }
+	else
+		{ this->send_new_error_fatal(index, 404); return; }
 }

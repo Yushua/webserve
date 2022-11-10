@@ -13,6 +13,8 @@
 #include <fcntl.h>
 #include <fstream>
 
+#include <colors.hpp>
+
 using namespace std;
 
 #include <config_struct.hpp>
