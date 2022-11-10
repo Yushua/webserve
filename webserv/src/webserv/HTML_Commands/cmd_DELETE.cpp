@@ -30,7 +30,8 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 				return;
 		}
 	}
-	else {//if it does not exist
+	/* if path given doesn't exist */
+	else {
 		this->send_new_error_fatal(index, 404);
 		return;
 	}

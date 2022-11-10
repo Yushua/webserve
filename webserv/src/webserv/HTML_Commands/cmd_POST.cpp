@@ -10,7 +10,6 @@
 
 void message::checkHost(string string)
 {
-	//localhost:4242
 	int i = strlen("localhost:");
 	if (string.substr(i, string.length() - i).find_first_not_of("0123456789\n") != string::npos) {
 		this->valid = false;
@@ -67,7 +66,9 @@ void webserv::plainText(const int index, message &msg) {
 		std::string cach = pathName + name;
 		struct stat info;
 		/* check if the first part is a directory, if else fail*/
-		if (stat(name.c_str(), &info) == -1)/* if file IS THERE, ++*/{break;}
+		/* if file IS THERE, ++*/
+		if (stat(name.c_str(), &info) == -1)
+			{break;}
 		i++;
 	}
 	if (i == 0)
@@ -98,7 +99,8 @@ void webserv::cmd_POST(const int index, message &msg) {
 			if (itr->second.find("multipart/form-data; ") != string::npos) {
 				vector<std::string> vec;
 				vec = splitStringByString(itr->second, "; ");
-				if (vec[0] == "multipart/form-data") {//i am creating the boundary
+				/* creating the boundary */
+				if (vec[0] == "multipart/form-data") {
 					isCGI = true;
 					vec[1].replace(0, 9, "");
 					store = vec[1];

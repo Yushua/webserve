@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/11/10 20:11:05 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/11/10 20:41:29 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ vector<std::string> splitStringByString(std::string string, const char *str)
     return(vec);
 }
 
-static int path_check(std::string path) {
+static int pathCheck(std::string path) {
     ifstream myfile;
     myfile.open(path);
     if (!myfile) {
@@ -63,7 +63,7 @@ static int path_check(std::string path) {
 
 void configParser(map<string, webserv*> &bigacontyantnas, std::string path_config)
 {
-    if (path_check(path_config) == -1) {
+    if (pathCheck(path_config) == -1) {
         std::cout << "invalid config file path\n";
         exit(1);
     }
@@ -76,8 +76,8 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
     std::string webservName;
     int status = 0;
     /*
-    -1: the start of the server creation
-    0 : name created, now looking for whats next
+        -1: the start of the server creation
+        0 : name created, now looking for whats next
     */
     bool reDirect = false;
     for (int i = 1; std::getline(infile, line); i++) {
@@ -94,7 +94,6 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
             reDirect = false;
         }
         else if (line.find(": ") == string::npos || line.length() < 2) {
-
             std::cerr << RED << "  -~={ 1 Invalid syntax on line: " << i << " }=~-" << RESET << '\n';
             exit(1);
         }
@@ -105,13 +104,10 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
             vec = splitStringByString(line, ": ");
             if(line[0] == '/') {//syntax
                 _reDirect = vec;
-                // std::cout << "adding normal syntax[" << _reDirect[0] << "]\n";
                 bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1], i);
                 reDirect = true;
             }
             else if ((vec[0] == "method" || vec[0] == "client_body_size" || vec[0] == "dir_behavior") && reDirect == false) {
-                // std::cout << "adding default syntax [" << _reDirect[0] << "]\n";
-                // std::cout << "name of server " << webservName << std::endl;
                 bigacontyantnas.at(webservName)->config_new_redirect(_reDirect[0], _reDirect[1], i);
                 reDirect = true;
             }
@@ -119,7 +115,6 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
             if (vec[0] == "method") {
                 std::string full = vec[1];
                 std::string tmp;
-                // std::cout << "name of server " << webservName << std::endl;
                 if (full.length() > 0) {
                     while (full.find(" ") != string::npos) {
                         tmp = full.substr(0, full.find(" "));
@@ -139,7 +134,7 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
                 bigacontyantnas.at(webservName)->config_listen_to_port(vec[1], i);
             }
             else if (vec[0] == "cgi") {
-                _substring = splitStringByString(vec[1], "=");//kk
+                _substring = splitStringByString(vec[1], "=");
                 bigacontyantnas.at(webservName)->config_add_cgi_option(_substring[0], _substring[1], i);
             }
             else if (vec[0] == "error_page") {
@@ -150,7 +145,6 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
                 continue;
             }
             else {
-                // std::cerr << YELLOW << "[" << line << RESET << "]" << std::endl;
                 std::cerr << RED << "  -~={ Invalid syntax on line: " << i << " }=~-" << RESET << '\n';
                 exit(1);
             }
