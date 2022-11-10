@@ -27,11 +27,11 @@ void message::init() {
 		return;
 
 	string &url = startLine.at(1);
-	string og_path = startLine.at(1);
-	url.clear();
 
 	{/* Ugly way to remove too many '/' */
 		
+		string og_path = startLine.at(1);
+		url.clear();
 		size_t og_path_len = og_path.length();
 		bool last_was_slash = false;
 		for (size_t i = 0; i < og_path_len; i++) {
@@ -56,22 +56,26 @@ void message::init() {
 	{/* Get path and arguments */
 		size_t len = url.length();
 		size_t index = 0;
-		for (; index < len; ++index);
-
+		bool hadArgs = false;
+		for (; index < len; ++index) {
+			if (url[index] == '?') {
+				hadArgs = true;
+				break;
+			}
+		}
 		path = url.substr(0, index);
-		
-		/* Get arguments */
-		len = og_path.length();
-		if (index < len) {
+
+		/* Get Headers */
+		if (hadArgs) {
 			int start = ++index;
 			string name, value;
 			for (; index < len; ++index) {
-				if (og_path[index] == '&') {
-					arguments.push_back(og_path.substr(start, index - start));
+				if (url[index] == '&') {
+					arguments.push_back(url.substr(start, index - start));
 					start = ++index;
 				}
 			}
-			arguments.push_back(og_path.substr(start, index - start));
+			arguments.push_back(url.substr(start, index - start));
 		}
 	}
 

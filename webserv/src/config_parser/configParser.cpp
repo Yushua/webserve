@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 09:43:50 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/11/09 16:11:31 by rdrazsky      ########   odam.nl         */
+/*   Updated: 2022/11/09 15:56:32 by rdrazsky      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
         }
         else if (line.find(": ") == string::npos || line.length() < 2) {
 
-            std::cerr << RED << "  -~={ 1 Invalid syntax on line: " << i << " }=~-" << RESET << '\n';
+            std::cerr << RED << "  -~={ 1 Invalid syntax on line: " << i << " }=~-\n" << RESET;
             exit(1);
         }
         else if (status == 1) {
@@ -156,7 +156,7 @@ void configParser(map<string, webserv*> &bigacontyantnas, std::string path_confi
             }
             else {
                 // std::cerr << YELLOW << "[" << line << RESET << "]" << std::endl;
-                std::cerr << RED << "  -~={ Invalid syntax on line: " << i << " }=~-" << RESET << '\n';
+                std::cerr << RED << "  -~={ Invalid syntax on line: " << i << " }=~-\n" << RESET;
                 exit(1);
             }
         }

@@ -3,15 +3,20 @@
 
 using namespace std;
 
+#define BUFFER_SIZE 25
+static char static_buffer[BUFFER_SIZE];
+
 const string ft_to_string(size_t n) {
-
-	static char buffer[25];
-
-	char *buffer_ptr = buffer + sizeof(buffer) - 1;
-	*buffer_ptr = '\0';
+	static_buffer[BUFFER_SIZE - 1] = '\0';
+	char *buffer_ptr = static_buffer + BUFFER_SIZE - 2;
 	
-	do { *--buffer_ptr = n % 10 + '0'; }
-	while (n /= 10);
+	while (n > 9) {
+		*buffer_ptr = n % 10 + '0';
+		n /= 10;
+		--buffer_ptr;
+	}
+	*buffer_ptr = n % 10 + '0';
+	n /= 10;
 
 	return string(buffer_ptr);
 }

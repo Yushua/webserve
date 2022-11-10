@@ -4,7 +4,7 @@
 void webserv::debug_print_request(const int index, message &msg) {
 #ifdef DEBUG
 	/* Print out request without body */
-	cout << CYAN << "  -~={ " << index << " sent this }=~-" << RESET << '\n';
+	cout << CYAN << "  -~={ " << index << " sent this }=~-\n" << RESET;
 	
 	{/* Print out the first line */
 		vector<string>::const_iterator itr = msg.getStartLine().cbegin();
