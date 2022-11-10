@@ -50,8 +50,6 @@ const bool &message::getStatState() const
 const size_t &message::getContentLength() const
 	{ return contentLength; }
 
-void message::doUnHost(std::string string)
-	{ unHost(string); return ;}
 
 const msgState &message::getState() const
 	{ return state; }

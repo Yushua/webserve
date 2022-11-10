@@ -4,7 +4,7 @@
 #include <cstdio>
 
 void webserv::cmd_DELETE(const int index, const message &msg) {
-	ofstream file;
+	fstream file;
 	struct stat file_info;
 	if (msg.getStatState())
 	{
@@ -35,8 +35,3 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 		return;
 	}
 }
-
-/*
-curl 127.0.0.1:4242/cgi-bin/lol.lol -X DELETE -v
-
-*/

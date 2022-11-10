@@ -9,6 +9,9 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <ctype.h>
+#include <fcntl.h>
+#include <fstream>
 
 using namespace std;
 
@@ -94,7 +97,6 @@ public:
 	const bool                &isValid() const;
 	bool					  &changeValid(bool _valid);
 	const bool                &isChunked() const;
-	void				      doUnHost(std::string string);
 	void					  checkHost(string string);
 
 	const Config_s &getConfig() const;

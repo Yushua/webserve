@@ -107,7 +107,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 			if (tmp.find("localhost:") != string::npos) {
 				msg.checkHost(tmp);}
 			else {
-				msg.doUnHost(tmp);}
+				msg.unHost(tmp);}
 			if (msg.isValid() == false) {
 				this->send_new_error_fatal(index, 404);
 				return;
