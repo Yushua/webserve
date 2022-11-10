@@ -50,36 +50,36 @@ static bool unchunkCheck(std::string string){
 	return true;
 }
 
-void message::unHost(string string)
-{
-	//127.0.0.1:4243
-	// std::string tmp = string.substr(0, string.find(":"));
-	int ip = 0;
-	int i = 0;
-	//check for defaulthost
-	while (string.find(".") != string::npos)
-	{
-		i = string.find(".");
-		if(checkNumber(string, "0123456789") != -1){
-			// std::cout << check << std::endl;
-			this->valid = false;
-		}
-		string.erase(0, i+1);
-		ip++;
-	}
-	if (string.find(":") != string::npos){
-		i = string.find(":");
-		if(checkNumber(string, "0123456789") != -1){
-			// std::cout << check << std::endl;
-			this->valid = false;
-		}
-		ip++;
-	}
-	if (ip != 4)
-		this->valid = false;
-    this->Host = string;
-	// this->valid = true;
-}
+// void message::checkHost(string string)
+// {
+// 	//127.0.0.1:4243
+// 	// std::string tmp = string.substr(0, string.find(":"));
+// 	int ip = 0;
+// 	int i = 0;
+// 	//check for defaulthost
+// 	while (string.find(".") != string::npos)
+// 	{
+// 		i = string.find(".");
+// 		if(checkNumber(string, "0123456789") != -1){
+// 			// std::cout << check << std::endl;
+// 			this->valid = false;
+// 		}
+// 		string.erase(0, i+1);
+// 		ip++;
+// 	}
+// 	if (string.find(":") != string::npos){
+// 		i = string.find(":");
+// 		if(checkNumber(string, "0123456789") != -1){
+// 			// std::cout << check << std::endl;
+// 			this->valid = false;
+// 		}
+// 		ip++;
+// 	}
+// 	if (ip != 4)
+// 		this->valid = false;
+//     this->hostName = string;
+// 	// this->valid = true;
+// }
 
 void message::checkHost(string string)
 {
@@ -94,34 +94,21 @@ void message::checkHost(string string)
 
 
 void webserv::plainText(const int index, message &msg, bool chunk){
-	std::cout << "==plainText==\npath ==" << msg.getPath() << std::endl;
-	ofstream file;
+	fstream file;
 	/* get the state which tells me if I need to make something. I need to be sure its not a folder*/
 	if (msg.getStatState())
 	{
 		/* checking if its a folder, if so, false */
-		if (S_ISDIR(msg.getStat().st_mode)){
-			send_new_error_fatal(index, 404);
-			return;
-		}
+		if (S_ISDIR(msg.getStat().st_mode))
+			{ send_new_error_fatal(index, 404); return; }
 		/* if not folder, then check if its a true path */
 		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
-		if (!file.good()){
-			send_new_error_fatal(index, 404);
-			return;
-		}
+		if (!file.good())
+		{ send_new_error_fatal(index, 404); return; }
 	}
-	else{//if stat fails
-		send_new_error_fatal(index, 404);
-		this->disconnect(index);
-		return;
-	}
-	if (chunk == true){
-		/* create chunk, needs to be remade due to the new POST test method*/
-		chunk = false;
-	}
-	else
-		file << msg.getBody();
+	else /* if stat fails */
+		{ send_new_error_fatal(index, 404); this->disconnect(index); return;}
+	file << msg.getBody();
 	file.close();
 	std::cout << "plain text success" << std::endl;
 }
@@ -135,20 +122,10 @@ void webserv::cmd_POST(const int index, message &msg) {
 	std::cout << "==start of POST=="  << std::endl;
 
 	/* setting up the boolians, seeing if there is a chunk or if there is a CGI or Plaintext*/
-	bool chunk = false;
 	bool isCGI = false;
 	bool isPLain = false;
 	for (; itr != end; ++itr){
-		std::cout << "[" << itr->first << "][" << itr->second << "]\n";
-		/* checking to see if the content-lenght is correct*/
-		if (itr->first == "Content-Length:"){
-			if (msg.getContentLength() != msg.getBody().length()){
-				this->send_new_error(sockets[index].fd, 404);
-				return;
-			}
-		}
-		/* checking to see if the host is correct*/
-		else if (itr->first == "Host:")
+		if (itr->first == "Host:")
 		{
 			std::string tmp = itr->second;
 			if (tmp.find("localhost:") != string::npos){
@@ -159,15 +136,6 @@ void webserv::cmd_POST(const int index, message &msg) {
 				this->send_new_error(sockets[index].fd, 404);
 				return;
 			}
-		}
-		/* if there is a chunked then here its checked if its there and if things are working fine */
-		else if ((itr->first == "Transfer-Encoding:" || itr->first == "TE:" ) && itr->second.find("chunked")){
-			if (unchunkCheck(msg.getBody()) == false){
-				this->send_new_error(sockets[index].fd, 404);
-				return;
-			}
-			//if true, put the chunk message in the file
-			chunk = true;
 		}
 		/* checking here if the content type says that its CGI */
 		else if ((itr->first == "Content-Type:")){
@@ -184,7 +152,6 @@ void webserv::cmd_POST(const int index, message &msg) {
 		}
 	}
 	/* chunk is checked inside of plainText*/
-	std::cout << "==check where==[" << isCGI << "][" << isPLain << "]" << std::endl;
 	if (isCGI == true && msg.isValid() == true){
 		string extension = ft_get_extension(msg.getPath());
 		map<string, string>::iterator key = cgi_options.find(extension);

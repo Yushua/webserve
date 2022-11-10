@@ -52,9 +52,12 @@ private:
 	size_t              contentLength;
 	size_t              bodyLength;
 
+
+	/* store the ostname for future use in the check */
+	std::string 		hostName;
 	void check();
 
-	std::string 		Host;
+	/* get checks host and*/
 	void checkGet();
 	void unReferer(string string);
 	
@@ -70,7 +73,7 @@ public:
 	void reset(const int fd);
 	
 	void unChunk();
-	void unHost(string string);
+	void checkHost(string string);
 	void loadHeaders();
 	void loadBody();
 	void tryDechunk();
@@ -95,7 +98,7 @@ public:
 	bool					  &changeValid(bool _valid);
 	const bool                &isChunked() const;
 	void				      doUnHost(std::string string);
-	void					  checkHost(string string);
+	void					  checkPostHost(string string);
 
 	const Config_s &getConfig() const;
 	const struct stat &getStat() const;
