@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-void message::checkPostHost(string string)
+void message::checkHost(string string)
 {
 	//localhost:4242
 	int i = strlen("localhost:");

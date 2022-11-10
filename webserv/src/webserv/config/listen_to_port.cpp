@@ -3,7 +3,7 @@
 
 void webserv::config_listen_to_port(const unsigned int port, int line) {
 	if (port < 0 || port > 65535) {
-		std::cerr << RED << "  -~={ line " << line << ": Invalid port number " << port << " }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ line " << line << ": Invalid port number " << port << " }=~-" << RESET << '\n';
 		exit(1);
 	}
 	
@@ -51,7 +51,7 @@ void webserv::config_listen_to_port(const unsigned int port, int line) {
 		/* Adding the new listen socket to the array */
 		int position = this->tryGetAvailablePosition();
 		if (position == -1) {
-			cerr << RED << "  -~={ Can't add more listen sockets! }=~-\n" << RESET;
+			cerr << RED << "  -~={ Can't add more listen sockets! }=~-" << RESET << '\n';
 			exit(1);
 		}
 		sockets[position].fd = new_welcome_socket;
@@ -63,18 +63,18 @@ void webserv::config_listen_to_port(const unsigned int port, int line) {
 		if (fcntl(new_welcome_socket, F_SETFL, O_NONBLOCK) == -1)
 			ft_error("config_listen_to_port");
 #ifdef DEBUG
-		std::cout << GREEN << "  -~={ " << position << " is listening to port " << port << " }=~-\n" << RESET;	
+		std::cout << GREEN << "  -~={ " << position << " is listening to port " << port << " }=~-" << RESET << '\n';	
 #endif
 	}
 	catch(const char *error) {
-		std::cerr << RED << "  -~={ line " << line << ": Can't listen to port " << port << ", because of a " << error << " error }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ line " << line << ": Can't listen to port " << port << ", because of a " << error << " error }=~-" << RESET << '\n';
 		exit(1);
 	}
 }
 
 void webserv::config_listen_to_port(const string port, int line) {
 	if (port == "" || port.find_first_not_of("0123456789") != string::npos) {
-		std::cerr << RED << "  -~={ line " << line << ": Invalid port number " << port << " }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ line " << line << ": Invalid port number " << port << " }=~-" << RESET << '\n';
 		exit(1);
 	}
 	config_listen_to_port(atoi(port.c_str()), line);

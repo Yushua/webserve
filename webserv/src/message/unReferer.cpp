@@ -6,7 +6,7 @@
 /*   By: ybakker <ybakker@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/07 10:34:09 by ybakker       #+#    #+#                 */
-/*   Updated: 2022/11/10 15:34:47 by ybakker       ########   odam.nl         */
+/*   Updated: 2022/10/07 16:05:14 by ybakker       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void message::unReferer(string string)
 	//make it smaller by directly putting everything in
 	if (string.substr(0, 7) != "http://")
 		this->valid = false;
-	if (string.substr(7, this->hostName.length() - 1) == this->hostName)
+	if (string.substr(7, this->Host.length() - 1) == this->Host)
 		this->valid = false;
-	std::string check = string.substr(this->hostName.length() + 6,  string.length());
+	std::string check = string.substr(this->Host.length() + 6,  string.length());
 	if (check == "/")
 		this->valid = true;
 	

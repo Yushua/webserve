@@ -51,7 +51,7 @@ const size_t &message::getContentLength() const
 	{ return contentLength; }
 
 void message::doUnHost(std::string string)
-	{ checkHost(string); return ;}
+	{ unHost(string); return ;}
 
 const msgState &message::getState() const
 	{ return state; }

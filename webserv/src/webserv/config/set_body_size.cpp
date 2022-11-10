@@ -11,7 +11,7 @@ void webserv::config_set_body_size(string path, const string &size, int line) {
 		if (found != configs.end())
 			config = &(found->second);
 		else {
-			std::cerr << RED << "  -~={ line " << line << ": No redirect from: " << path << " }=~-\n" << RESET;
+			std::cerr << RED << "  -~={ line " << line << ": No redirect from: " << path << " }=~-" << RESET << '\n';
 			exit(1);
 		}
 	}
@@ -21,7 +21,7 @@ void webserv::config_set_body_size(string path, const string &size, int line) {
 #endif
 
 	if (size == "") {
-		std::cerr << RED << "  -~={ line " << line << ": Invalid file size format: " << size << " }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ line " << line << ": Invalid file size format: " << size << " }=~-" << RESET << '\n';
 		exit(1);
 	}
 
@@ -45,22 +45,22 @@ void webserv::config_set_body_size(string path, const string &size, int line) {
 			else if (type == "gb" || type == "GB")
 				mul_value = GIGABYTE;
 			else {
-				std::cerr << RED << "  -~={ Invalid file size format: " << type << " }=~-\n" << RESET;
+				std::cerr << RED << "  -~={ Invalid file size format: " << type << " }=~-" << RESET << '\n';
 				return;
 			}
 		}
 	}
 	if (actual_value.length() > 10) {
-		std::cerr << RED << "  -~={ Number too long: " << actual_value << " }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ Number too long: " << actual_value << " }=~-" << RESET << '\n';
 		return;
 	}
 	if (actual_value.find_first_not_of("0123456789") != string::npos) {
-		std::cerr << RED << "  -~={ Invalid number: " << actual_value << " }=~-\n" << RESET;
+		std::cerr << RED << "  -~={ Invalid number: " << actual_value << " }=~-" << RESET << '\n';
 		return;
 	}
 
 	config->client_body_size = atoi(actual_value.c_str()) * mul_value;
 #ifdef DEBUG
-	std::cout << GREEN << "  -~={ " << path << ": Body size set to " << size << " }=~-\n" << RESET;	
+	std::cout << GREEN << "  -~={ " << path << ": Body size set to " << size << " }=~-" << RESET << '\n';	
 #endif
 }

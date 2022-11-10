@@ -11,7 +11,7 @@ void webserv::handle_request(const int index)
 		return;
 
 	msg.redirect(*this);
-	if (msg.getState() != ready) {
+	if (msg.getState() != ready) { /* Redirecting to different server */
 
 		string new_url = msg.getPath().substr(3, msg.getPath().length() - 3);
 		
@@ -35,20 +35,19 @@ void webserv::handle_request(const int index)
 		if (type == "GET"
 			|| type == "POST"
 			|| type == "DELETE")
-			this->send_new_error_fatal(index, 405);
+			this->send_new_error_fatal(index, 405); /* Known Method */
 		else
-			this->send_new_error_fatal(index, 403);
+			this->send_new_error_fatal(index, 400); /* Unknown Method*/
 		return;
 	}
 
+	/* Call method */
 	if (type == "GET")
 		this->cmd_GET(index, msg);
 	else if (type == "POST")
 		this->cmd_POST(index, msg);
 	else if (type == "DELETE")
 		this->cmd_DELETE(index, msg);
-	else
-		this->send_new_error(index, 400);
-	
+
 	msg.reset();
 }
