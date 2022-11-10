@@ -99,6 +99,13 @@ void message::init() {
 	}
 
 	/* Check Message Validity */
+
+	/* suggestion, either remove this due ot its usselessness
+	or we add some of the init function to it
+	
+	add the chunk and check fi the body is there to the check
+	
+	*/
 	this->check();
 
 	/* Does the message have a chunked body? */

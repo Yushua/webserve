@@ -90,7 +90,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 	map<string, string>::iterator itr = _header.begin();
 	map<string, string>::iterator end = _header.end();
 	std::string store;
-	/* setting up the boolians, seeing if there is a chunk or if there is a CGI or Plaintext*/
+	/* setting up the boolians, CGI or cmd_POST */
 	bool isCGI = false;
 	for (; itr != end; ++itr) {
 		/* checking here if the content type says that its CGI */
@@ -108,11 +108,11 @@ void webserv::cmd_POST(const int index, message &msg) {
 			}
 		}
 	}
-	std::cout << true << msg.isValid() << std::endl;
 	map<string, string>::iterator key = cgi_options.find(ft_get_extension(msg.getPath()));
 	if (isCGI && msg.isValid())
 		{ cgi_post(index, msg, msg.getPath(), key->second, store); }
-	else if (!isCGI && msg.isValid())/* if its not CGI, then it can be done by plainText, which follows the html_POSt cmd logic */
+	/* if its not CGI, then it can be done by plainText, which follows the html_POSt cmd logic */
+	else if (!isCGI && msg.isValid())
 		{ plainText(index, msg); }
 	else
 		{ this->send_new_error_fatal(index, 404); return; }

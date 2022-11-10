@@ -59,7 +59,7 @@ private:
 
 	void check();
 
-	std::string 		Host;
+	std::string 		hostName;
 	void checkGet();
 	void unReferer(string string);
 	

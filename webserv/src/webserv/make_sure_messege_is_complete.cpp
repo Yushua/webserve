@@ -31,6 +31,7 @@ bool webserv::make_sure_messege_is_complete(const int index)
 				return RETURN_TO_POLL;
 			
 			msg.init();
+			//move check to here?
 
 			/* Check if message is valid */
 			if (!msg.isValid()) {

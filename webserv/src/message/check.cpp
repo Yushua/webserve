@@ -14,24 +14,20 @@ void message::unHost(string string)
 	while (string.find(".") != string::npos)
 	{
 		i = string.find(".");
-		if(checkNumber(string, "0123456789") != -1) {
-			// std::cout << check << std::endl;
-			this->valid = false;
-		}
+		if(checkNumber(string, "0123456789") != -1)
+			{ this->valid = false; }
 		string.erase(0, i+1);
 		ip++;
 	}
 	if (string.find(":") != string::npos) {
 		i = string.find(":");
-		if(checkNumber(string, "0123456789") != -1) {
-			// std::cout << check << std::endl;
-			this->valid = false;
-		}
+		if(checkNumber(string, "0123456789") != -1)
+			{this->valid = false; }
 		ip++;
 	}
 	if (ip != 4)
 		this->valid = false;
-    this->Host = string;
+    this->hostName = string;
 	this->valid = true;
 }
 
@@ -39,12 +35,11 @@ void message::unReferer(string string)
 {
 	if (string.substr(0, 7) != "http://")
 		this->valid = false;
-	if (string.substr(7, this->Host.length() - 1) == this->Host)
+	if (string.substr(7, this->hostName.length() - 1) == this->hostName)
 		this->valid = false;
-	std::string check = string.substr(this->Host.length() + 6,  string.length());
+	std::string check = string.substr(this->hostName.length() + 6,  string.length());
 	if (check == "/")
 		this->valid = true;
-	
 	ifstream _file;
 	_file.open(check);
 	if (!_file.good()) {
@@ -73,12 +68,11 @@ void message::checkPost()
 	map<string, string>::iterator end = headers.end();
 
 	for (; itr != end; ++itr) {
-		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789")) {
-			this->contentLength = atoi(itr->second.c_str());
+		if (itr->first == "Content-Length:" && checkNumber(itr->second, "0123456789"))
+			{ this->contentLength = atoi(itr->second.c_str());
 		}
-		else if (itr->first == "Host:") {
-			this->unHost(itr->second);
-		}
+		else if (itr->first == "Host:")
+			{ this->unHost(itr->second); }
 	}
 }
 
@@ -87,11 +81,9 @@ void message::checkDelete()
 	map<string, string>::iterator itr = headers.begin();
 	map<string, string>::iterator end = headers.end();
 	for (; itr != end; ++itr) {
-		if (itr->first == "Host:") {
-			this->unHost(itr->second);
-		}
+		if (itr->first == "Host:")
+			{ this->unHost(itr->second); }
 	}
-
 }
 
 void message::check()
