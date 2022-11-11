@@ -23,7 +23,7 @@ void message::init() {
 		}
 	}
 
-	if (startLine.size() < 2) return;
+	if (startLine.size() != 3) return;
 
 	string &url = startLine.at(1);
 	string og_path = startLine.at(1);
