@@ -31,7 +31,7 @@ typedef int socket_t;
 #define GIGABYTE 1000000000
 
 #define TIMEOUT 100000
-#define SOCKET_COUNT_MAX 1000
+#define SOCKET_COUNT_MAX 250
 
 struct SocketInfo_s {
 	message msg;

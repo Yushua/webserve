@@ -9,7 +9,9 @@ void message::redirect(webserv &server) {
 	const string *redirect_from;	
 	for (; itr != end; ++itr) {
 		redirect_from = &(itr->first);
-		if (strncmp(redirect_from->c_str(), path.c_str(), redirect_from->length()) == 0)
+		if (strncmp(redirect_from->c_str(), path.c_str(), redirect_from->length()) == 0
+			&& (path.length() <= redirect_from->length()
+				|| path[redirect_from->length()] == '/'))
 			{ found_conf = &(itr->second); break; }
 	}
 
