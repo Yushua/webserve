@@ -21,6 +21,7 @@ void message::redirect(webserv &server) {
 		stat_state = false;
 		actualPath = config.redirect_path + path;
 		this->reset();
+		this->state = msgRedirect;
 		return;
 	}
 
@@ -29,8 +30,6 @@ void message::redirect(webserv &server) {
 	else {
 		actualPath = config.redirect_path + path.substr(redirect_from->length(), path.length() - redirect_from->length());
 	}
-
-
 
 	struct stat file_info;	
 	if (stat(actualPath.c_str(), &file_info) == -1)

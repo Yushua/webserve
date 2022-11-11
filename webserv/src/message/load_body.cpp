@@ -13,6 +13,8 @@ void message::loadBody() {
 	if (ret == 0)
 		{ this->state = ready; return; }
 
+	this->amount_read += ret;
+
 	if (chunked)
 		this->chunk_buffer.append(buffer, ret);
 	else

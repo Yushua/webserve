@@ -24,7 +24,8 @@ enum msgState {
 	loadingHeaders,
 	loadingBody,
 	ready,
-	msgError
+	msgError,
+	msgRedirect
 };
 
 class message {
@@ -53,9 +54,10 @@ private:
 		string              headers_str;
 
 	/* Body */
-		size_t  contentLength;
 		string  body_str;
 		string  chunk_buffer;
+		size_t  contentLength;
+		size_t  amount_read;
 
 
 	void check();
@@ -84,6 +86,7 @@ public:
 	const string              &getHeadersString() const;
 	const string              &getBody() const;
 	const size_t              &getContentLength() const;
+	const size_t              &getReadAmount() const;
 	const msgState            &getState() const;
 	const Config_s            &getConfig() const;
 	const struct stat         &getStat() const;

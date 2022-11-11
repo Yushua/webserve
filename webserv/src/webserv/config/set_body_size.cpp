@@ -62,5 +62,6 @@ void webserv::config_set_body_size(string path, const string &size, int line) {
 	config->client_body_size = atoi(actual_value.c_str()) * mul_value;
 #ifdef DEBUG
 	std::cout << GREEN << "  -~={ " << path << ": Body size set to " << size << " }=~-" << RESET << '\n';	
+	std::cout << GREEN << "  -~={ " << config->client_body_size << " }=~-" << RESET << '\n';	
 #endif
 }

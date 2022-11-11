@@ -1,3 +1,4 @@
+#include <webserv.hpp>
 #include <message.hpp>
 #include <ft_lib.hpp>
 #include <unistd.h>
@@ -97,14 +98,6 @@ void message::init() {
 		}
 	}
 
-	/* Check Message Validity */
-
-	/* suggestion, either remove this due ot its usselessness
-	or we add some of the init function to it
-	
-	add the chunk and check fi the body is there to the check
-	
-	*/
 	this->check();
 	if (!valid) return;
 

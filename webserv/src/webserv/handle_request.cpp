@@ -10,8 +10,8 @@ void webserv::handle_request(const int index)
 	if (make_sure_messege_is_complete(index))
 		return;
 
-	msg.redirect(*this);
-	if (msg.getState() != ready) { /* Redirecting to different server */
+	/* Redirecting to different server */
+	if (msg.getState() == msgRedirect) {
 
 		string new_url = msg.getPath().substr(3, msg.getPath().length() - 3);
 		

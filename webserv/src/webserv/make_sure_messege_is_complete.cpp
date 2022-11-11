@@ -14,9 +14,9 @@ bool webserv::make_sure_messege_is_complete(const int index)
 		case ready:
 			return CONTINUE;
 		
+		case msgRedirect:
 		case msgError:
 			return RETURN_TO_POLL;
-
 
 		case loadingHeaders:
 			msg.loadHeaders();
@@ -31,12 +31,14 @@ bool webserv::make_sure_messege_is_complete(const int index)
 				return RETURN_TO_POLL;
 			
 			msg.init();
-			//move check to here?
+			msg.redirect(*this);
+			if (msg.getState() == msgRedirect)
+				return CONTINUE;
 
 			/* Check if message is valid */
 			if (!msg.isValid()) {
 				msg.reset();
-				this->send_new_error(index, 400);
+				this->send_new_error_fatal(index, 400);
 				return RETURN_TO_POLL;
 			}
 
@@ -65,6 +67,12 @@ bool webserv::make_sure_messege_is_complete(const int index)
 			if (msg.getState() == msgError)
 				{ this->disconnect(index); return RETURN_TO_POLL; }
 
+			/* Body too large for server */
+			if (msg.getReadAmount() > msg.getConfig().client_body_size) {
+				this->send_new_error_fatal(index, 413);
+				return RETURN_TO_POLL;
+			}
+
 			if (msg.isChunked()) {
 				msg.tryDechunk();
 				
@@ -82,7 +90,7 @@ bool webserv::make_sure_messege_is_complete(const int index)
 
 			/* Check if body doesn't exeed Content_length */
 			if (msg.getBody().length() > msg.getContentLength()) {
-				this->send_new_error_fatal(index, 413);
+				this->send_new_error_fatal(index, 400);
 				return RETURN_TO_POLL;
 			}
 

@@ -44,6 +44,8 @@ const bool &message::getStatState() const
 const size_t &message::getContentLength() const
 	{ return contentLength; }
 
+const size_t &message::getReadAmount() const
+	{ return amount_read; }
 
 const msgState &message::getState() const
 	{ return state; }

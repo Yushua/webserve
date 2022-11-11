@@ -13,6 +13,7 @@ void message::reset() {
 	this->headers_str.clear();
 	this->chunk_buffer.clear();
 
+	this->amount_read = 0;
 	this->chunked = false;
 	this->dechunk_looking_for_chunk = true;
 	this->dechunk_chunk_size = 0;
