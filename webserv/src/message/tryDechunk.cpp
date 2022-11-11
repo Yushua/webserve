@@ -26,12 +26,16 @@ static size_t hextoi(string &chunk_buffer, int nl_pos) {
 
 void message::tryDechunk() {
 	
+	// cout << BLUE << chunk_buffer << RESET << '\n';
+
 	start:
 
 	size_t end = chunk_buffer.length();
 	
-	if (dechunk_looking_for_chunk && end > 2) {
+	if (dechunk_looking_for_chunk) {
 
+		if (end < 2)
+			return;
 		--end;
 
 		int nl_pos = -1;
@@ -58,12 +62,10 @@ void message::tryDechunk() {
 		}
 
 		dechunk_chunk_size = hextoi(chunk_buffer, nl_pos - 1);
-		// cout << BLUE  << chunk_buffer << RESET << '\n';
 		if (c == '\r')
 			chunk_buffer.erase(0, nl_pos + 2);
 		else
 			chunk_buffer.erase(0, nl_pos + 1);
-		// cout << CYAN  << chunk_buffer << RESET << '\n';
 		dechunk_looking_for_chunk = false;
 		goto start;
 	}

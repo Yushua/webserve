@@ -23,8 +23,7 @@ void message::init() {
 		}
 	}
 
-	if (startLine.size() < 2)
-		return;
+	if (startLine.size() < 2) return;
 
 	string &url = startLine.at(1);
 	string og_path = startLine.at(1);
@@ -107,10 +106,12 @@ void message::init() {
 	
 	*/
 	this->check();
+	if (!valid) return;
 
 	/* Does the message have a chunked body? */
 	map<string, string>::iterator found = headers.find("Transfer-Encoding:");
 	if (found != headers.end() && found->second == "chunked") {
+		cout << MAGENTA << "chunked" << RESET << '\n';
 		this->chunked = true;
 		this->state = loadingBody;
 		this->contentLength = 0;
@@ -120,8 +121,13 @@ void message::init() {
 	}
 	
 	/* Does the message even have a body? */
-	if (contentLength > 0)
+	found = headers.find("Content-Length:");
+	if (found != headers.end()) {
+		if (found->second.find_first_not_of("0123456789") != string::npos)
+			{ valid = false; return; }
+		contentLength = atoi(found->second.c_str());
 		this->state = loadingBody;
+	}
 	else
 		this->state = ready;
 }

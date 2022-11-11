@@ -8,7 +8,7 @@ void message::reset() {
 	this->arguments.clear();
 	this->headers.clear();
 	this->read_buffer.clear();
-	this->valid = true;
+	this->valid = false;
 	this->state = loadingHeaders;
 	this->contentLength = 0;
 	this->headersLength = 0;

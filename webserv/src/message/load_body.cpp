@@ -13,5 +13,8 @@ void message::loadBody() {
 	if (ret == 0)
 		{ this->state = ready; return; }
 
-	this->body_str.append(buffer, ret);
+	if (chunked)
+		this->chunk_buffer.append(buffer, ret);
+	else
+		this->body_str.append(buffer, ret);
 }
