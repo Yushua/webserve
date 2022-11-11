@@ -43,7 +43,6 @@ void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, co
 		}
 		close(input_pipe[1]);
 		std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
-		//if execve fails, return 500
 		exit(1);
 	}
 	return ;
