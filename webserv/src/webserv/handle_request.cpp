@@ -20,6 +20,7 @@ void webserv::handle_request(const int index)
 			"Content-Length: 0\n"
 			"Location: "
 			+ new_url + "\n\n", -1);
+		msg.setState(loadingHeaders);
 		return;
 	}
 

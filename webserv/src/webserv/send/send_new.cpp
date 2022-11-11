@@ -35,7 +35,7 @@ int webserv::send_new(const int index, string headers, const int fd) {
 	sockets_info[index].disconnect_after_send = false;
 
 #ifdef DEBUG
-	cout << MAGENTA << "  -~={ " << index << " is recieving this }=~-" << RESET << '\n';
+	cout << MAGENTA << "  -~={ " << index << " is recieving this from " << sockets_info[index].send_fd_index <<  " }=~-" << RESET << '\n';
 	cout << headers;
 #endif
 
