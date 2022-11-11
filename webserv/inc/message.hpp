@@ -29,59 +29,52 @@ enum msgState {
 
 class message {
 private:
-	msgState state;
 
-	int fd;
+	int             fd;
+	msgState        state;
+	struct Config_s config;
+	bool            valid;
+	bool            chunked;
 
-	string headers_str;
-	string body_str;
-	string chunk_buffer;
+	/* Dechunk */
+		size_t  dechunk_chunk_size;
+		bool    dechunk_looking_for_chunk;
 
-	size_t dechunk_chunk_size;
-	bool dechunk_looking_for_chunk;
+	/* Start Line */
+		vector<string> startLine;
+		string         path;
+		string         actualPath;
+		vector<string> arguments;
+		struct stat    stat_result;
+		bool           stat_state;
 
-	//the first line of the message from the client
-	vector<string>      startLine;
-	string              actualPath;
-	string              path;
-	vector<string>      arguments;
-	//the body of the client
-	map<string, string> headers;
-	string              read_buffer;
-	bool                valid;
-	bool                chunked;
-	struct stat         stat_result;
-	bool                stat_state;
-	struct Config_s     config;
-	size_t              headersLength;
-	size_t              contentLength;
-	size_t              bodyLength;
+	/* Headers */
+		map<string, string> headers;
+		string              headers_str;
+
+	/* Body */
+		size_t  contentLength;
+		string  body_str;
+		string  chunk_buffer;
+
 
 	void check();
 
-	std::string 		hostName;
-	void checkGet();
-	void unReferer(string string);
-	
-	void checkPost();
-	void checkDelete();
-	int checkNumber(std::string string, const char *input);
-	
-
 public:
+
+	message();
+	~message();
 
 	void init();
 	void reset();
 	void reset(const int fd);
 	
-	void unChunk();
-	void unHost(string string);
 	void loadHeaders();
 	void loadBody();
-	void tryDechunk();
 
-	message();
-	~message();
+	void tryDechunk();
+	
+	void redirect(webserv &server);
 
 	const vector<string>      &getStartLine() const;
 	const string              &getPath() const;
@@ -90,23 +83,16 @@ public:
 	const map<string, string> &getHeaders() const;
 	const string              &getHeadersString() const;
 	const string              &getBody() const;
-	const string              &getOriginal() const;
 	const size_t              &getContentLength() const;
-
-	const msgState &getState() const;
-	void            setState(msgState new_state);
+	const msgState            &getState() const;
+	const Config_s            &getConfig() const;
+	const struct stat         &getStat() const;
+	const bool                &getStatState() const;
+	
+	void                      setState(msgState new_state);
 
 	const bool                &isValid() const;
-	bool					  &changeValid(bool _valid);
 	const bool                &isChunked() const;
-	void					  checkHost(string string);
-
-	const Config_s &getConfig() const;
-	const struct stat &getStat() const;
-	const bool &getStatState() const;
-	void redirect(webserv &server);
 };
-
-ostream &operator<<(ostream &ostr, const message &msg);
 
 #endif

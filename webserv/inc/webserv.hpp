@@ -31,9 +31,7 @@ typedef int socket_t;
 #define GIGABYTE 1000000000
 
 #define TIMEOUT 100000
-#define READ_BUFFER_SIZE 1024
-
-#define SOCKET_COUNT_MAX 250
+#define SOCKET_COUNT_MAX 1000
 
 struct SocketInfo_s {
 	message msg;
@@ -52,80 +50,74 @@ struct SocketInfo_s {
 class webserv {
 private:
 
-	stack<int> availablePositions;
-
-	int tryGetAvailablePosition();
-	void returnPosition(int position);
-
-	struct pollfd *sockets;
-	struct SocketInfo_s *sockets_info;
-
-	
-	bool make_sure_messege_is_complete(const int index);
-
-	int connect_new_fd_only(const int index, const int fd);
-	int connect_new_socket(const int index);
-	void disconnect(const int index);
-
 	void handle_request(const int index);
 
-	int send_new(const int index, string headers, const int fd);
-	void send_new_file(const int index, string headers, const string path);
-	void send_new_error(const int index, const int error_code);
-	void send_new_error_fatal(const int index, const int error_code);
+	/* Socket information */
+		struct pollfd *sockets;
+		struct SocketInfo_s *sockets_info;
 
-	void send_continue(int index);
+	/* PollArray position managment */
+		stack<int> availablePositions;
+		int tryGetAvailablePosition();
+		void returnPosition(int position);
 
-	const string header_get_content_type(const string filename);
+	/* Connections */
+		int connect_new_fd_only(const int index, const int fd);
+		int connect_new_socket(const int index);
+		void disconnect(const int index);
 
-	void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
-	void cgi_post(const int index, const message &msg, const string &requested_file, const string &interpreter, std::string boundary);
+	/* Send */
+		int send_new(const int index, string headers, const int fd);
+		void send_new_file(const int index, string headers, const string path);
+		void send_new_error(const int index, const int error_code);
+		void send_new_error_fatal(const int index, const int error_code);
 
-	int generate_index_page(const int index, const message &msg);
+		void send_continue(int index);
+
+	/* CGI */
+		void cgi_get(const int index, const message &msg, const string &requested_file, const string &interpreter);
+		void cgi_post(const int index, const message &msg, const string &requested_file, const string &interpreter, std::string boundary);
+		void cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter);
+
+	/* Utils */
+		bool make_sure_messege_is_complete(const int index);
+		const string header_get_content_type(const string filename);
+		int generate_index_page(const int index, const message &msg);
 
 public:
 
-	/* Global config stuff */
-		map<string, string> cgi_options;
-		map<int, string> error_pages;
-	/* Local config stuff */
-		struct Config_s default_config;
-		map<string, struct Config_s> configs;
-
-	static void debug_print_request(const int index, message &msg);
-	
 	webserv();
 	~webserv();
 
-	void config_listen_to_port(const unsigned port, int line);
-	void config_listen_to_port(const string port, int line);
-	void config_add_cgi_option(const string extension, const string interpreter_path, int line);
-	void config_add_error_page(const unsigned int error, const string page_path, int line);
-	void config_add_error_page(const string error, const string page_path, int line);
-
-	void config_new_redirect(string redirect_from, string redirect_to, int line);
-	void config_set_body_size(string redirect_from, const string &str, int line);
-	void config_add_method(string redirect_from, const string &method, int line);
-	void config_set_dir_behavior(string redirect_from, const string &behavior, int line);
-
 	void run();
 
-	void cmd_GET(const int index, const message &msg);
-	void cmd_HEAD(const int index, const message &msg);
-	void cmd_POST(const int index, message &msg); /* !!!TO BE IMPLEMENETD!!! */
-	void plainText(const int index, message &msg);
-	void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
+	/* Config Default */
+		map<string, string> cgi_options;
+		map<int, string> error_pages;
 
-	/**
-	 * @brief inputs the A and B posiiton and uses THIS string for the CGI
-	 * 
-	 */
-	void cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter);
-	/**
-	 * @brief inputs string and uses THIS string for the CGI
-	 * 
-	 */
-	void cgi_post_string(std::string header, std::string Content_Type, const int index, const message &msg, const std::string &requested_file, const std::string &interpreter);
+		void config_listen_to_port(const unsigned port, int line);
+		void config_listen_to_port(const string port, int line);
+		void config_add_cgi_option(const string extension, const string interpreter_path, int line);
+		void config_add_error_page(const unsigned int error, const string page_path, int line);
+		void config_add_error_page(const string error, const string page_path, int line);
+	
+	/* Config Redirect */
+		struct Config_s default_config;
+		map<string, struct Config_s> configs;
+
+		void config_new_redirect(string redirect_from, string redirect_to, int line);
+		void config_set_body_size(string redirect_from, const string &str, int line);
+		void config_add_method(string redirect_from, const string &method, int line);
+		void config_set_dir_behavior(string redirect_from, const string &behavior, int line);
+
+	/* HTTP Methods */
+		void cmd_GET(const int index, const message &msg);
+		void cmd_HEAD(const int index, const message &msg);
+		void cmd_POST(const int index, message &msg); /* !!!TO BE IMPLEMENETD!!! */
+		void plainText(const int index, message &msg);
+		void cmd_DELETE(const int index, const message &msg); /* !!!TO BE IMPLEMENETD!!! */
+
+	static void debug_print_request(const int index, message &msg);
 };
 void configParser(map<string, webserv*> &bigacontyantnas, std::string path_config);
 

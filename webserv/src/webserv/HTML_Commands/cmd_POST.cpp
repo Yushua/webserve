@@ -8,17 +8,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-void message::checkHost(string string)
-{
-	int i = strlen("localhost:");
-	if (string.substr(i, string.length() - i).find_first_not_of("0123456789\n") != string::npos) {
-		this->valid = false;
-	}
-	else {
-		this->valid = true;
-	}
-}
-
 static std::string find_from_end(std::string path, char c) {
 	std::string string = "";
 	int i = path.length();

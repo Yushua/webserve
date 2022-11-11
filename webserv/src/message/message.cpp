@@ -25,18 +25,12 @@ const string &message::getHeadersString() const
 	{ return headers_str; }
 const string &message::getBody() const
 	{ return body_str; }
-	
-const string &message::getOriginal() const
-	{ return read_buffer; }
 
 const bool &message::isValid() const
 	{ return valid; }
 
 const bool &message::isChunked() const
 	{ return chunked; }
-
-bool &message::changeValid(bool _valid)
-	{ return (valid = _valid); }
 
 const Config_s &message::getConfig() const
 	{ return config; }
