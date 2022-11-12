@@ -8,20 +8,20 @@
 #include <algorithm>
 #include <string>
 
+#define CHECKED(x) if (x == -1) ft_error("cgi_post_nb");
+
 /* uses the numbers attached to it to put the string inbetween through post */
 void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, const int index, const message &msg, const string &requested_file, const string &interpreter) {
 	int fork_res = fork();
 	if (fork_res == -1)
 		ft_error("fork");
 	if (fork_res != 0) {
-		write(input_pipe[1]
-		, send.c_str()
-		, send.length());
-		close(input_pipe[0]);
-		close(input_pipe[1]);
+		CHECKED( write(input_pipe[1], send.c_str(), send.length()));
+		CHECKED( close(input_pipe[0]) );
+		CHECKED( close(input_pipe[1]) );
 		
-		close(output_pip[1]);
-		fcntl(output_pip[0], O_NONBLOCK);
+		CHECKED( close(output_pip[1]) );
+		CHECKED( fcntl(output_pip[0], O_NONBLOCK) );
 		this->send_new(index, "HTTP/1.1 200 OK\n", output_pip[0]);//casuing the leak problem
 		sockets_info[index].disconnect_after_send = true;
 	}
@@ -38,10 +38,10 @@ void webserv::cgi_post_nb(int *input_pipe, int *output_pip, std::string send, co
 		dup2(input_pipe[0], 0);
 		size_t len = args.size();
 		for (size_t i = 0; i < len; ++i) {
-			write(input_pipe[1], args[i].c_str(), args[i].length());
-			write(input_pipe[1], "\n", 1);
+			CHECKED( write(input_pipe[1], args[i].c_str(), args[i].length()) );
+			CHECKED( write(input_pipe[1], "\n", 1) );
 		}
-		close(input_pipe[1]);
+		CHECKED( close(input_pipe[1]) );
 		std::cerr << execve(argv[0], (char * const *)argv, (char * const *)envp) << '\n';
 		exit(1);
 	}
@@ -55,17 +55,6 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 	std::string str = "";
 	bool loop = true;
 	ofstream file;
-	if (!msg.getStatState())
-	{
-		/* is hi s a folder */
-		if (S_ISDIR(msg.getStat().st_mode))
-			{ this->send_new_error_fatal(index, 404); return; }
-		/* if successful, make the file and see if that was successfull*/
-		file.open(msg.getPath(), fstream::in | fstream::out | fstream::trunc);
-		if (!file.good())
-			{ this->send_new_error_fatal(index, 404); return; }
-		file.close();
-	}
 	// string_string_split(boundary, posa, msg);
 	int posC = boundary.length();
 	bool check = false;
@@ -76,8 +65,6 @@ void webserv::cgi_post(const int index, const message &msg, const std::string &r
 		int output_pip[2];
 		if (pipe(output_pip) != 0)
 			ft_error("cgi_post output");
-		std::string uhm = requested_file;
-		uhm = interpreter;
 		/* get past the bondary
 		because at the end of this loop, the end is posC we give it to posa*/
 		posa = posC;

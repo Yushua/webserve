@@ -22,4 +22,8 @@ int main(int argc, char **argv) {
 	while (true)
 		for (it = webservMap.begin(); it != webservMap.end(); it++)
 			it->second->run();
+	
+	/* Unreachable code here, just for the sake of argument */
+	for (it = webservMap.begin(); it != webservMap.end(); it++)
+		delete it->second;
 }

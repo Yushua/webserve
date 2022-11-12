@@ -44,24 +44,12 @@ bool webserv::make_sure_messege_is_complete(const int index)
 
 			debug_print_request(index, msg);
 
-			if (msg.isChunked()) {
-				msg.tryDechunk();
-				
-				/* Disconected Error */
-				if (msg.getState() == msgError)
-					{ this->disconnect(index); return RETURN_TO_POLL; }
-			}
-
-			/* Return to poll if body isn't complete */
-			if (msg.getState() == loadingBody)
-				return RETURN_TO_POLL;
-
-			/* All good to go! */
-			return CONTINUE;
-
+			goto check_body;
 
 		case loadingBody:
 			msg.loadBody();
+
+			check_body:
 
 			/* Disconect Error */
 			if (msg.getState() == msgError)

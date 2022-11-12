@@ -104,7 +104,6 @@ void message::init() {
 	/* Does the message have a chunked body? */
 	map<string, string>::iterator found = headers.find("Transfer-Encoding:");
 	if (found != headers.end() && found->second == "chunked") {
-		cout << MAGENTA << "chunked" << RESET << '\n';
 		this->chunked = true;
 		this->state = loadingBody;
 		this->contentLength = 0;
