@@ -45,8 +45,8 @@ void webserv::plainText(const int index, message &msg) {
 			name = directory + ft_to_string(i) + "_" + fileName;
 		std::string cach = directory + name;
 		struct stat info;
-		/* check if the first part is a directory, if else fail*/
-		/* if file IS THERE, ++*/
+		/* check if the first part is a directory, if else fail */
+		/* if file IS THERE, ++ */
 		if (stat(name.c_str(), &info) == -1)
 			{break;}
 		i++;
@@ -60,6 +60,8 @@ void webserv::plainText(const int index, message &msg) {
 
 	/* open filename in that path, put the body in there, close*/
 	file.open(fileName.c_str(), fstream::in | fstream::out | fstream::trunc);
+	if (!file)
+		ft_error("plainText");
 	file << msg.getBody();
 	file.close();
 	
