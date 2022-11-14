@@ -27,6 +27,8 @@ void message::init() {
 	if (startLine.size() != 3) return;
 
 	string &url = startLine.at(1);
+	if (url.length() < 1 || url[0] != '/')
+		return;
 	string og_path = startLine.at(1);
 	url.clear();
 
