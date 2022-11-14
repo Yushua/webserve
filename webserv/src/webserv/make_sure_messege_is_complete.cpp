@@ -31,14 +31,19 @@ bool webserv::make_sure_messege_is_complete(const int index)
 				return RETURN_TO_POLL;
 			
 			msg.init();
-			msg.redirect(*this);
-			if (msg.getState() == msgRedirect)
-				return CONTINUE;
-
 			/* Check if message is valid */
 			if (!msg.isValid()) {
 				msg.reset();
 				this->send_new_error_fatal(index, 400);
+				return RETURN_TO_POLL;
+			}
+			
+			msg.redirect(*this);
+			if (msg.getState() == msgRedirect)
+				return CONTINUE;
+
+			if (msg.getContentLength() > msg.getConfig().client_body_size) {
+				this->send_new_error_fatal(index, 413);
 				return RETURN_TO_POLL;
 			}
 
@@ -78,8 +83,6 @@ bool webserv::make_sure_messege_is_complete(const int index)
 
 			/* Check if body doesn't exeed Content_length */
 			if (msg.getBody().length() > msg.getContentLength()) {
-				cout << msg.getBody().length() << '\n';
-				cout << msg.getContentLength() << '\n';
 				this->send_new_error_fatal(index, 400);
 				return RETURN_TO_POLL;
 			}
