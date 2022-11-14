@@ -17,7 +17,8 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 	/* if failed */
 	int result;
 	result = remove(msg.getPath().c_str());
-	if (result == -1)
+	std::cout << result << std::endl;
+	if (result != -1)
 	{
 		this->send_new(index, "HTTP/1.1 204\nContent-Length: 0\n\n", -1);
 		return;
