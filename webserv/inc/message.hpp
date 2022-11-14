@@ -82,6 +82,7 @@ public:
 	const string              &getPath() const;
 	const string              &getURLPath() const;
 	const vector<string>      &getArguments() const;
+	string                    getHeader(string name);
 	const map<string, string> &getHeaders() const;
 	const string              &getHeadersString() const;
 	const string              &getBody() const;

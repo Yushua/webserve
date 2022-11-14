@@ -78,6 +78,8 @@ bool webserv::make_sure_messege_is_complete(const int index)
 
 			/* Check if body doesn't exeed Content_length */
 			if (msg.getBody().length() > msg.getContentLength()) {
+				cout << msg.getBody().length() << '\n';
+				cout << msg.getContentLength() << '\n';
 				this->send_new_error_fatal(index, 400);
 				return RETURN_TO_POLL;
 			}

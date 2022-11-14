@@ -89,7 +89,7 @@ void message::init() {
 				if (!gettingHeader) {
 					gettingHeader = true;
 					value = headers_str.substr(start, index - start - 1);
-					headers.insert(pair<string, string>(head, value));
+					headers.insert(pair<string, string>(ft_to_lower(head), value));
 					start = ++index;
 				}
 				else
@@ -102,8 +102,8 @@ void message::init() {
 	if (!valid) return;
 
 	/* Does the message have a chunked body? */
-	map<string, string>::iterator found = headers.find("Transfer-Encoding:");
-	if (found != headers.end() && found->second == "chunked") {
+	const string Transfer_Encoding = this->getHeader("transfer-encoding:");
+	if (Transfer_Encoding == "chunked") {
 		this->chunked = true;
 		this->state = loadingBody;
 		this->contentLength = 0;
@@ -113,11 +113,11 @@ void message::init() {
 	}
 	
 	/* Does the message even have a body? */
-	found = headers.find("Content-Length:");
-	if (found != headers.end()) {
-		if (found->second.find_first_not_of("0123456789") != string::npos)
+	const string Content_Length = this->getHeader("content-length:");
+	if (Content_Length != "") {
+		if (Content_Length.find_first_not_of("0123456789") != string::npos)
 			{ valid = false; return; }
-		contentLength = atoi(found->second.c_str());
+		contentLength = atoi(Content_Length.c_str());
 		this->state = loadingBody;
 	}
 	else

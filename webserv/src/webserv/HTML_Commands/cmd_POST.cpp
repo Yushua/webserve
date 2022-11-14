@@ -88,7 +88,7 @@ void webserv::cmd_POST(const int index, message &msg) {
 	bool has_cgi_body = false;
 	bool is_cgi_file = false;
 	
-	map<string, string>::iterator Content_Type = _headers.find("Content-Type:");
+	string Content_Type = msg.getHeader("Content-Type:");
 	map<string, string>::iterator Interpreter;
 
 	if (!msg.getStatState())
@@ -102,16 +102,16 @@ void webserv::cmd_POST(const int index, message &msg) {
 
 	/* Checking if Content-Type is for cgi */
 	if (is_cgi_file
-		&& Content_Type != _headers.end()
-		&& strncmp(Content_Type->second.c_str(), "multipart/form-data; ", 21) == 0) {
+		&& Content_Type.length() > 21
+		&& strncmp(Content_Type.c_str(), "multipart/form-data; ", 21) == 0) {
 		
-		Content_Type->second.erase(0, 30);
+		Content_Type.erase(0, 30);
 		has_cgi_body = true;
 	}
 	
 	
 	if (has_cgi_body && is_cgi_file)
-		cgi_post(index, msg, msg.getPath(), Interpreter->second, Content_Type->second);
+		cgi_post(index, msg, msg.getPath(), Interpreter->second, Content_Type);
 	else
 		plainText(index, msg);
 }
