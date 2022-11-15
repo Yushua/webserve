@@ -23,5 +23,5 @@ void webserv::cmd_DELETE(const int index, const message &msg) {
 		this->send_new(index, "HTTP/1.1 204\nContent-Length: 0\n\n", -1);
 		return;
 	}
-	else{ this->send_new_error_fatal(index, 500); return; }
+	this->send_new_error_fatal(index, 500);
 }

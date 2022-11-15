@@ -27,9 +27,11 @@ void webserv::send_new_error(const int index, const int error_code) {
 			ft_error("send_new_error");
 		if (fcntl(fds[0], O_NONBLOCK) == -1)
 			ft_error("send_new_error");
-		this->send_new(index, headers + '\n', fds[0]);
-		/*for the content lenght*/
-		sockets_info[index].disconnect_after_send = true;
+		this->send_new(index,
+				headers
+				+ "Content-Length: "
+				+ ft_to_string(default_error_page.length())
+				+ "\n\n", fds[0]);
 		
 #ifdef DEBUG
 		cout << RED << "  -~={ error code #" << error_code << " has no page assigned }=~-" << RESET << '\n';
